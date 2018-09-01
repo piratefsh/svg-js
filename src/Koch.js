@@ -5,9 +5,26 @@ export default class Koch {
   }
 
   points(){
-    return this.edge([{
-      x: 0, y: 0
-    }], this.length, 1);
+
+    // return this.edge([], this.length, 1)
+    const points = [];
+    this.ctx.translate(50, 0);
+    points.push(this.ctx.origin());
+    this.ctx.translate(50, 0);
+    this.ctx.rotate(90);
+    points.push(this.ctx.origin());
+    this.ctx.rotate(90);
+    // points.push(this.ctx.origin());
+    this.ctx.rotate(90);
+    // points.push(this.ctx.origin());
+    // this.ctx.translate(50, 0);
+    console.log(this.ctx)
+    // return this.edge([{
+    //   x: 0, y: 0
+    // }], this.length, 1);
+    return points;
+
+
   }
 
   edge(points=[], length, depth){

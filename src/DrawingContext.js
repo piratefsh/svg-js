@@ -13,14 +13,12 @@ export default class DrawingContext{
   }
 
   translate(x, y){
-    this.translation.x += x;
-    this.translation.y += y;
     this.o = translate(this.o, x, y);
   }
 
   rotate(deg){
     this.rotation += deg;
-    this.o = rotate(this.o, this.rotation);
+    this.o = rotate(this.o, this.o, this.rotation);
   }
 
 }

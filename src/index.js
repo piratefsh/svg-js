@@ -25,7 +25,7 @@ function plotPoints(ctx, points){
   return;
 }
 
-s.rect(90, 90)
+s.rect(50, 50)
   .cx(150)
   .cy(150)
   .attr({
