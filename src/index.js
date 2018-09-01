@@ -1,39 +1,13 @@
 import SVG from 'svg.js';
 import './styles/index.scss';
-import DrawingContext from './DrawingContext';
-import Koch from './Koch';
+import Grid from './Grid';
 
-const WIDTH = 300;
-const HEIGHT = 300;
-const s = SVG('my-drawing').size(WIDTH, HEIGHT);
-const CX = WIDTH/2;
-const CY = HEIGHT/2;
-const state = []
+const width = 400*0.8;
+const height = 800*0.8;
 
+const canvas = SVG('my-drawing')
+  .size(width, height);
 
-function plotPoints(ctx, points){
-  ctx
-    .cx(CX)
-    .cy(CY)
-  points
-    .forEach(p => {
-      ctx.ellipse(3, 3)
-      .cx(p.x)
-      .cy(p.y)
-  })
+const g = new Grid(canvas, width, height)
 
-  return;
-}
-
-s.rect(50, 50)
-  .cx(150)
-  .cy(150)
-  .attr({
-    stroke: '#f00',
-    fill: 'none'
-    })
-
-const ctx = new DrawingContext();
-const k = new Koch(ctx);
-
-plotPoints(s.nested(), k.points())
+g.draw()
