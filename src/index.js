@@ -1,15 +1,17 @@
+import SVG from 'svg.js';
+import './styles/index.scss';
 
-require('normalize.css/normalize.css');
-require('./styles/index.scss');
+const s = SVG('my-drawing').size(300, 300);
+const ellipse = s
+  .ellipse(90, 90)
+  .cx(150)
+  .cy(150)
+  .attr({
+    stroke: '#f00',
+    fill: 'none'
+    })
 
-document.addEventListener("DOMContentLoaded", () => {
 
-    const pluginsTriggerElement = document.getElementById('plugins-trigger');
-    const pluginsElement = document.getElementById('plugins');
+function kochCurve(){
 
-    const pluginsVisibleClass = "splash-overview-plugins__list--visible";
-
-    pluginsTriggerElement.onclick = () => {
-        pluginsElement.classList.toggle(pluginsVisibleClass);
-    }
-});
+}
