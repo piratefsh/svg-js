@@ -1,4 +1,7 @@
 
+function random(start, end){
+  return Math.random() * (end-start) + start;
+}
 export default class Grid{
   constructor(ctx, width, height){
     this.ctx = ctx;
@@ -13,25 +16,37 @@ export default class Grid{
 
     const grid = {
       x: 8,
-      y: 16,
+      y: 18,
     }
 
-    let gutter = 6;
-    const margin = 12;
+    let gutter = 0;
+    const margin = 20;
 
     const size = {
       x: (width - margin*2)/grid.x,
-      y: (height - margin*2)/grid.y,
+      y: (width - margin*2)/grid.x,
     }
 
-    for(let i = 0; i < grid.x; i++){
-      for(let j = 0; j < grid.y; j++){
-        const rotMag = (1 - Math.cos(j/grid.y * Math.PI/2)) * 360;
+    console.log(size)
+    let gutterX = gutter
+    let gutterY = gutter
+    let offsetY = 0
+    let offsetX = 0
+
+    for(let j = 0; j < grid.y; j++){
+      for(let i = 0; i < grid.x; i++){
+        const noise = 1 - Math.cos(j/grid.y * Math.PI/2)
+        const offsetMag = noise * size.x*2
+
+        offsetY = random(-offsetMag/2, offsetMag/2)
+        offsetX = random(-offsetMag/2, offsetMag/2)
+
+        const rotMag = noise * 180;
         canvas
           .rect(size.x - gutter, size.y - gutter)
-          .x(i*size.x + margin)
-          .y(j*size.y + margin)
-          .rotate(-rotMag/2 + (rotMag/2 * Math.random()))
+          .x(i*size.x + margin + offsetX)
+          .y(j*size.y + margin + offsetY)
+          .rotate(random(-rotMag/2, rotMag/2))
           .attr({
             fill: 'none',
             stroke: 'black'
