@@ -1675,6 +1675,10 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
 
+complex.js@2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.11.tgz#09a873fbf15ffd8c18c9c2201ccef425c32b8bf1"
+
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
@@ -2017,6 +2021,10 @@ decamelize@^2.0.0:
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-2.0.0.tgz#656d7bbc8094c4c788ea53c5840908c9c7d063c7"
   dependencies:
     xregexp "4.0.0"
+
+decimal.js@10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.0.1.tgz#d04b16b277f0f9af09671cee225c4882e8857c58"
 
 decode-uri-component@^0.2.0:
   version "0.2.0"
@@ -2367,6 +2375,10 @@ es6-promise@^4.0.3:
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
+
+escape-latex@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/escape-latex/-/escape-latex-1.1.1.tgz#657d8632af8849a5db8766778d4a43da9dec3376"
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -2831,6 +2843,10 @@ form-data@~2.3.1, form-data@~2.3.2:
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
+
+fraction.js@4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.8.tgz#e53618112e3b36b348c61a81323173bceb01e418"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -3886,6 +3902,10 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
+javascript-natural-sort@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/javascript-natural-sort/-/javascript-natural-sort-0.7.1.tgz#f9e2303d4507f6d74355a73664d1440fb5a0ef59"
+
 jimp@^0.2.13, jimp@^0.2.21:
   version "0.2.28"
   resolved "https://registry.yarnpkg.com/jimp/-/jimp-0.2.28.tgz#dd529a937190f42957a7937d1acc3a7762996ea2"
@@ -4342,6 +4362,19 @@ math-expression-evaluator@^1.2.14:
 math-random@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.1.tgz#8b3aac588b8a66e4975e3cdea67f7bb329601fac"
+
+mathjs@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-5.1.1.tgz#8010cfc4711af155addc3358d58ff138a2e27247"
+  dependencies:
+    complex.js "2.0.11"
+    decimal.js "10.0.1"
+    escape-latex "1.1.1"
+    fraction.js "4.0.8"
+    javascript-natural-sort "0.7.1"
+    seed-random "2.2.0"
+    tiny-emitter "2.0.2"
+    typed-function "1.1.0"
 
 md5.js@^1.3.4:
   version "1.3.4"
@@ -6235,6 +6268,10 @@ scss-tokenizer@^0.2.3:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
 
+seed-random@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/seed-random/-/seed-random-2.2.0.tgz#2a9b19e250a817099231a5b99a4daf80b7fbed54"
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
@@ -6823,6 +6860,10 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
+tiny-emitter@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
+
 tinycolor2@^1.1.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
@@ -6932,6 +6973,10 @@ type-is@~1.6.15, type-is@~1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.18"
+
+typed-function@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.1.0.tgz#ea149706e0fb42aca1791c053a6d94ccd6c4fdcb"
 
 typedarray@^0.0.6:
   version "0.0.6"

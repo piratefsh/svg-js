@@ -21,6 +21,7 @@
     },
     "homepage": "",
     "dependencies": {
+        "mathjs": "^5.1.1",
         "normalize.css": "^8.0.0",
         "svg.js": "^2.6.6"
     },
