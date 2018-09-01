@@ -1,7 +1,5 @@
+import { random } from './helpers';
 
-function random(start, end){
-  return Math.random() * (end-start) + start;
-}
 export default class Grid{
   constructor(ctx, width, height){
     this.ctx = ctx;
