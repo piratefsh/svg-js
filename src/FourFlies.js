@@ -12,17 +12,19 @@
     rather than the path they walked.
 */
 export default class FourFlies {
-  constructor(canvas, width, height){
+  constructor(canvas, width, height, stepSize=10, numBugs=4){
     this.ctx = canvas;
-    this.bugs = [
-      makeBug(-width/2, -height/2),
-      makeBug(-width/2, height/2),
-      makeBug(width/2, height/2),
-      makeBug(width/2, -height/2)
-    ];
+    this.bugs = [];
+
+    const rotStep = Math.PI*2/numBugs
+    const rotOffset = 0;
+    const rad = width/2;
+    for(let i = 0; i < numBugs; i++){
+      this.bugs.push(makeBug(rad*Math.sin(rotStep*i + rotOffset), rad*Math.cos(rotStep*i + rotOffset)));
+    }
 
     this.paths = this.bugs.map((b) => [{x: b.x, y: b.y}])
-    this.velocity = {x: 20, y: 20};
+    this.velocity = {x: stepSize, y: stepSize};
     this.minDist = this.velocity.x;
 
   }
@@ -37,7 +39,7 @@ export default class FourFlies {
   }
 
   draw(){
-    while (this.bugDistances() > this.minDist) {
+    while (this.bugDistances() > this.minDist + 1) {
       this.drawOneStep()
     }
 
