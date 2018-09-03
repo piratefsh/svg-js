@@ -18,13 +18,21 @@ const gh = height/grid.y
 for(let i = 0; i < grid.x * 2 + 1; i++){
   for(let j = 0; j < grid.y * 2; j++){
 
-    const offsetX = i % 2 ? -gw/2 : -gw;
-    const offsetY = i % 2 ? -gh/2 : -gh;
+    const rad = Math.sqrt(gw * gw + gh*gh);
+    const offsetX = i % 2 ? -rad/2 : -rad;
+    const offsetY = i % 2 ? -rad/2 : -rad;
+
+    const rotOffset = i % 2 ? 0 : Math.PI
     const inner = canvas.nested(gw, gh)
+
     inner
-      .cx(i/2*gw)
-      .cy(j*gh + offsetY)
-    const g = new FourFlies(inner, gw, gh, 8)
+      .cx(i/2*rad)
+      .cy(j*(rad) + offsetY)
+
+    inner
+      .rect(rad, rad)
+      .attr({fill: 'none', stroke: 'red'})
+    const g = new FourFlies(inner, gw, gh, 13, 4, rotOffset)
     g.draw()
   }
 }

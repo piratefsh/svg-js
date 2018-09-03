@@ -12,18 +12,18 @@
     rather than the path they walked.
 */
 export default class FourFlies {
-  constructor(canvas, width, height, stepSize=10, numBugs=4){
+  constructor(canvas, width, height, stepSize=10, numBugs=4, rotOffset=0){
     this.ctx = canvas;
     this.bugs = [];
+    this.rotOffset = rotOffset;
 
     const rotStep = Math.PI*2/numBugs
-    const rotOffset = 0;
-    const rad = width/2;
+    const rad = Math.sqrt(width * width + height*height)/2;
     for(let i = 0; i < numBugs; i++){
       this.bugs.push(makeBug(rad*Math.sin(rotStep*i + rotOffset), rad*Math.cos(rotStep*i + rotOffset)));
     }
 
-    this.paths = this.bugs.map((b) => [{x: b.x, y: b.y}])
+    this.paths = this.bugs.map((b) => [])
     this.velocity = {x: stepSize, y: stepSize};
     this.minDist = this.velocity.x;
 
@@ -48,15 +48,23 @@ export default class FourFlies {
 
   drawPaths(){
     this.paths.forEach((path)=> {
-      const points = path.map((p) => `L ${p.x} ${p.y}`).join(' ')
-      const s = path[0];
-      this.ctx.path(`M ${s.x} ${s.y} ${points}`)
-        .attr({
-          fill: 'none',
-          stroke: 'black',
-          'stroke-weight': 1,
-          'stroke-opacity': 1,
-        })
+      const segments = path.map((segment) => {
+        const s = segment[0];
+        const e = segment[1];
+        debugger
+        return `M ${s.x} ${s.y} L ${e.x} ${e.y}`;
+      })
+      // const s = path[0];
+
+      segments.forEach(s => {
+        this.ctx.path(s)
+          .attr({
+            fill: 'none',
+            stroke: 'black',
+            'stroke-weight': 1,
+            'stroke-opacity': 1,
+          })
+      })
     })
   }
 
@@ -78,8 +86,8 @@ export default class FourFlies {
   }
 
   addPointToBugpath(i, p1, p2){
-    this.paths[i].push({x: p1.x, y: p1.y});
-    this.paths[i].push({x: p2.x, y: p2.y});
+    this.paths[i].push([{x: p1.x, y: p1.y}, {x: p2.x, y: p2.y}]);
+    // this.paths[i].push({x: p2.x, y: p2.y});
   }
 
   drawLineFromBugs(bug1, bug2){
