@@ -11,6 +11,8 @@
     I drew the lines between each bug as they moved
     rather than the path they walked.
 */
+
+import { debugAttr } from './helpers'
 export default class FourFlies {
   constructor(canvas, width, height, stepSize=10, numBugs=4, rotOffset=0){
     this.ctx = canvas;
@@ -18,7 +20,11 @@ export default class FourFlies {
     this.rotOffset = rotOffset;
 
     const rotStep = Math.PI*2/numBugs
-    const rad = Math.sqrt(width * width + height*height)/2;
+
+    // c2 = a2 + b2
+    // a = sqrt(c2-b2)
+    const rad = width/2;
+    this.ctx.ellipse(rad*2, rad*2).cx(0).cy(0).attr(debugAttr)
     for(let i = 0; i < numBugs; i++){
       this.bugs.push(makeBug(rad*Math.sin(rotStep*i + rotOffset), rad*Math.cos(rotStep*i + rotOffset)));
     }
@@ -60,7 +66,7 @@ export default class FourFlies {
         this.ctx.path(s)
           .attr({
             fill: 'none',
-            stroke: 'black',
+            stroke: 'cornflowerblue',
             'stroke-weight': 1,
             'stroke-opacity': 1,
           })
