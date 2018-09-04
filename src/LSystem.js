@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { radians } from './helpers';
+import { radians } from "./helpers";
 
 const LSystemConstants = {};
 LSystemConstants.PLUS_ANGLE = "+";
@@ -153,13 +153,11 @@ export default class LSystems {
         // pop();
     }
 
-    drawLine(x1, y1, x2, y2){
-        this.ctx
-            .path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`)
-            .attr({
-                fill: 'none',
-                stroke: 'black'
-            })
+    drawLine(x1, y1, x2, y2) {
+        this.ctx.path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`).attr({
+            fill: "none",
+            stroke: "black"
+        });
     }
 
     getString() {

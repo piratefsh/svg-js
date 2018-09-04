@@ -1,40 +1,42 @@
 import SVG from "svg.js";
 import "./styles/index.scss";
-import { debugAttr } from "./helpers";
-import LSystem from "./LSystems";
+import LSystem from "./LSystem";
+import examples from "./LSystemExamples";
 
-const width = 400;
-const height = 400;
+const fitCanvas = (canvas, inner) => {
+    const bb = inner.bbox();
+    canvas.viewbox(bb.x, bb.y, bb.width, bb.height);
+};
 
-const canvas = SVG("my-drawing").size(width, height);
-const inner = canvas.nested();
-inner.rect(width, height).attr(debugAttr);
-inner.x(width / 2).y(height);
+const makeExample = options => {
+    const width = 250;
+    const height = 250;
 
-const binaryTree = new LSystem({
-    ctx: inner,
-    name: "binary tree",
-    angle: 30,
-    axiom: "X",
-    rules: {
-        X: "F[-X][+X]"
-    },
-    iterations: 4,
-    length: 36
+    // make parent element
+    const id = options.name;
+    const node = document.createElement("div");
+    node.id = id;
+    document.body.appendChild(node);
+
+    // make svg
+    const parent = SVG(id).size(width, height);
+    const ctx = parent.nested();
+
+    const opts = Object.assign(
+            {
+                ctx,
+                width,
+                height
+            },
+            options
+        )
+    const system = new LSystem(opts);
+
+    system.run(options.iterations);
+    fitCanvas(parent, ctx);
+};
+
+console.log(examples)
+examples.forEach(e => {
+    makeExample(e);
 });
-
-const weed = new LSystem({
-    ctx: inner,
-    name: "fuzzy weed",
-    angle: 22.5,
-    axiom: "X",
-    rules: {
-        X: "F-[[X]+X]+F[+FX]-X",
-        F: "FF"
-    },
-    length: 5,
-    iterations: 5
-});
-
-weed.run(5);
-// binaryTree.run(4);
