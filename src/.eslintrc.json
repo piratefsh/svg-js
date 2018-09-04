@@ -1,0 +1,9 @@
+{
+  "extends": ["eslint-config-airbnb", "plugin:prettier/recommended", "prettier/react"],
+  "plugins": [
+      "prettier"
+  ],
+  "rules": {
+      "prettier/prettier": "error"
+  }
+}
