@@ -23,93 +23,39 @@ export default class ParametricPatterns {
         this.colorsUpdated = false;
         this.fillColors = [];
 
-        this.util = new Util(this.p5);
-
         this.reset();
     }
 
-    genFillColors() {
-        this.colorsUpdated = true;
-        this.fillColors = [];
-        for (let i = 0; i < this.numLines; i++) {
-            const r = this.p5.map(
-                i,
-                0,
-                this.numLines,
-                this.color2[0],
-                this.color[0]
-            );
-            const g = this.p5.map(
-                i,
-                0,
-                this.numLines,
-                this.color2[1],
-                this.color[1]
-            );
-            const b = this.p5.map(
-                i,
-                0,
-                this.numLines,
-                this.color2[2],
-                this.color[2]
-            );
-            const a = this.p5.map(i, 0, this.numLines, 0, 255);
-            this.fillColors.push(this.p5.color(r, g, b, a));
-        }
+    reset() {
+        this.t = 0;
+        this.randVar = Util.random(0, this.seed);
+        this.x1 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
+        this.y1 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
+        this.x2 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
+        this.y2 = Util.generateParametricEqn(
+            this.height / Util.random(2, 5),
+            6
+        );
     }
 
-    reset() {
-        this.t = (Math.floor(this.p5.random(8)) * this.p5.PI) / 2;
-        this.randVar = this.p5.random(0, this.seed);
-        this.x1 = this.util.generateParametricEqn(
-            this.width / this.p5.random(2, 5),
-            6
-        );
-        this.y1 = this.util.generateParametricEqn(
-            this.width / this.p5.random(2, 5),
-            6
-        );
-        this.x2 = this.util.generateParametricEqn(
-            this.width / this.p5.random(2, 5),
-            6
-        );
-        this.y2 = this.util.generateParametricEqn(
-            this.height / this.p5.random(2, 5),
-            6
-        );
-
-        this.genFillColors();
+    drawLine(x1, y1, x2, y2) {
+        this.ctx.path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`).attr({
+            fill: "none",
+            stroke: "black"
+        });
     }
 
     draw() {
-        this.genFillColors();
-        const debug = false;
-        // this.p5.push();
-        // this.p5.strokeWeight(this.strokeWeight);
-
-        // this.p5.translate(this.props.x + this.padding / 2, this.props.y + this.padding / 2);
-        // this.p5.translate(this.width / 2, this.height / 2);
         const count = this.numLines * this.spacing;
 
-        // this.p5.fill(0, 0, 0, 0);
         for (let i = 0; i < count; i += this.spacing) {
             const t = this.t + i;
-            const color = this.fillColors[Math.floor(i / this.spacing)];
-            this.p5.stroke(color);
+
             const points = [this.x1(t), this.y1(t), this.x2(t), this.y2(t)].map(
                 pt => pt * this.amp
             );
-            this.p5.line(...points);
-            // console.log('calc', this.x2(t), this.y2(t));
-
-            if (debug) {
-                this.p5.ellipse(this.x1(t), this.y1(t), 10, 10);
-                this.p5.ellipse(this.cx1(t), this.cy1(t), 5, 5);
-                this.p5.ellipse(this.x2(t), this.y2(t), 10, 10);
-                this.p5.ellipse(this.cx2(t), this.cy2(t), 5, 5);
-            }
+            this.drawLine(...points);
         }
-        // this.p5.pop();
     }
 
     update() {
@@ -117,19 +63,19 @@ export default class ParametricPatterns {
     }
 
     cx1(t) {
-        return (this.width / 2) * this.p5.cos(t);
+        return (this.width / 2) * Math.cos(t);
     }
 
     cy1(t) {
-        return (this.height / 2) * this.p5.sin(t);
+        return (this.height / 2) * Math.sin(t);
     }
 
     cx2(t) {
-        return (-this.width / 2) * this.p5.sin(t / 2);
+        return (-this.width / 2) * Math.sin(t / 2);
     }
 
     cy2(t) {
-        return (-this.height / 2) * this.p5.cos(t);
+        return (-this.height / 2) * Math.cos(t);
     }
 }
 
