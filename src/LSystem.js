@@ -15,7 +15,7 @@ export default class LSystems {
         this.setAxiom(options.axiom);
         this.rules = {};
         this.addRules(options.rules);
-        this.length = options.length || 5;
+        this.lengths = options.lengths || { default: 5 };
         this.name = options.name || "l-system";
         this.iterations = options.iterations || 4;
         this.lineWidth = options.lineWidth || 1;
@@ -82,6 +82,13 @@ export default class LSystems {
         return result;
     }
 
+    adjustTurtleMag(turtle, v) {
+        return turtle
+            .copy()
+            .normalize()
+            .mult(this.lengths[v] || this.lengths.default);
+    }
+
     draw(state, offset, drawLines) {
         // track min-max coords
         // push();
@@ -99,7 +106,7 @@ export default class LSystems {
 
         const validVariables = Object.keys(this.rules);
         let variable;
-        let turtle = new p5.Vector(0, -this.length);
+        let turtle = new p5.Vector(0, -this.lengths.default);
         const states = [];
 
         for (let i = 0; i < state.length; i += 1) {
@@ -132,6 +139,8 @@ export default class LSystems {
                         validVariables.indexOf(variable) > -1 ||
                         variable.match(LSystemConstants.VALID_VAR_PTN)
                     ) {
+                        // adjust turtle magnitude
+                        turtle = this.adjustTurtleMag(turtle, variable);
                         if (drawLines) {
                             this.drawLine(
                                 coord.x,
@@ -167,5 +176,6 @@ export default class LSystems {
     run(n) {
         this.string = this.replace(n || this.iterations);
         this.draw(this.string);
+        console.log(this.string);
     }
 }

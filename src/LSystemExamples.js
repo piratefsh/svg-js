@@ -2,6 +2,21 @@ import LSystem from "./LSystem";
 
 export default [
     {
+        name: "stained glass windows",
+        angle: 45,
+        axiom: "+H++H++H++H",
+        rules: {
+            X: "H",
+            // F: "X--K+Y++Y+K--X",
+            H: "X++K-X--X-K++X"
+        },
+        iterations: 5,
+        lengths: {
+            default: 12,
+            K: 6
+        }
+    },
+    {
         name: "binary tree",
         angle: 30,
         axiom: "X",

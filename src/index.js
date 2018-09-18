@@ -23,20 +23,35 @@ const makeExample = options => {
     const ctx = parent.nested();
 
     const opts = Object.assign(
-            {
-                ctx,
-                width,
-                height
-            },
-            options
-        )
+        {
+            ctx,
+            width,
+            height
+        },
+        options
+    );
     const system = new LSystem(opts);
 
     system.run(options.iterations);
     fitCanvas(parent, ctx);
 };
 
-console.log(examples)
-examples.forEach(e => {
-    makeExample(e);
-});
+for (let i = 1; i <= 3; i++) {
+    makeExample({
+        name: "stained glass windows",
+        angle: 45,
+        axiom: "H++H++H++H",
+        rules: {
+            // F: "X--K+Y++Y+K--X",
+            H: "H++K-H--H-K++H",
+            K: "H"
+        },
+        iterations: i,
+        lengths: {
+            default: 12,
+            K: 6
+        }
+    });
+}
+// examples.forEach(e => {
+// });
