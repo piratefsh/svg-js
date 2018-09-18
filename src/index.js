@@ -1,7 +1,9 @@
 import SVG from "svg.js";
 import "./styles/index.scss";
-import LSystem from "./LSystem";
-import examples from "./LSystemExamples";
+import ParametricPatterns from "./ParametricPatterns";
+
+const width = 250;
+const height = 250;
 
 const fitCanvas = (canvas, inner) => {
     const bb = inner.bbox();
@@ -9,9 +11,6 @@ const fitCanvas = (canvas, inner) => {
 };
 
 const makeExample = options => {
-    const width = 250;
-    const height = 250;
-
     // make parent element
     const id = options.name;
     const node = document.createElement("div");
@@ -30,28 +29,26 @@ const makeExample = options => {
         },
         options
     );
-    const system = new LSystem(opts);
+    const system = new ParametricPatterns(opts);
 
     system.run(options.iterations);
     fitCanvas(parent, ctx);
 };
 
-for (let i = 1; i <= 3; i++) {
-    makeExample({
-        name: "stained glass windows",
-        angle: 45,
-        axiom: "H++H++H++H",
-        rules: {
-            // F: "X--K+Y++Y+K--X",
-            H: "H++K-H--H-K++H",
-            K: "H"
-        },
-        iterations: i,
-        lengths: {
-            default: 12,
-            K: 6
-        }
-    });
-}
-// examples.forEach(e => {
-// });
+const offsetX = 0;
+const offsetY = 0;
+const cellSizeX = width;
+const cellSizeY = height;
+const i = 0;
+const j = 0;
+makeExample({
+    x: i * cellSizeX + offsetX,
+    y: j * cellSizeY + offsetY,
+    width: cellSizeX,
+    height: cellSizeY,
+    color: [0, 0, 0],
+    numLines: 100,
+    spacing: 0.04,
+    speed: 0.005,
+    amp: 1.2
+});
