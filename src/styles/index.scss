@@ -4,9 +4,7 @@
     border: 1px solid #ddd;
 }
 
-div > svg{
-  // display: inline-block;
-  position: absolute;
-  top:0;
-  left:0;
+div{
+  display: inline-block;
+  border: 1px solid #ccc;
 }

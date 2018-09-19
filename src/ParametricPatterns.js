@@ -5,7 +5,7 @@ export default class ParametricPatterns {
         this.ctx = props.ctx;
         this.fillOpacity = 90;
         this.props = props;
-        this.padding = 100;
+        this.padding = 10;
         this.seed = props.seed;
         this.strokeWeight = 2;
         this.strokeOpacity = 1;
@@ -27,35 +27,63 @@ export default class ParametricPatterns {
     }
 
     reset() {
-        this.t = 0;
+        this.t = Util.random(Math.PI * 2);
         this.randVar = Util.random(0, this.seed);
-        this.x1 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
-        this.y1 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
-        this.x2 = Util.generateParametricEqn(this.width / Util.random(2, 5), 6);
+        const xRatio = Util.random(4, 6);
+        this.x1 = Util.generateParametricEqn(this.width / xRatio, 4);
+        this.y1 = Util.generateParametricEqn(this.height / 6 - xRatio, 3);
+        this.x2 = Util.generateParametricEqn(this.width / Util.random(4, 6), 3);
         this.y2 = Util.generateParametricEqn(
-            this.height / Util.random(2, 5),
-            6
+            this.height / Util.random(4, 6),
+            3
         );
     }
 
     drawLine(x1, y1, x2, y2) {
         this.ctx.path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`).attr({
             fill: "none",
-            stroke: "black"
+            stroke: "black",
+            "stroke-weight": 1
         });
     }
 
     draw() {
+        // this.ctx
+        //     .rect(this.width, this.height)
+        //     .cx(0)
+        //     .cy(0)
+        //     .attr({
+        //         fill: "none",
+        //         stroke: "black",
+        //         "stroke-weight": 1
+        //     });
+        // console.log(0, 0, this.width, this.height);
         const count = this.numLines * this.spacing;
 
         for (let i = 0; i < count; i += this.spacing) {
             const t = this.t + i;
 
-            const points = [this.x1(t), this.y1(t), this.x2(t), this.y2(t)].map(
-                pt => pt * this.amp
-            );
-            this.drawLine(...points);
+            const points = [
+                this.x1.fn(t),
+                this.y1.fn(t),
+                this.x2.fn(t + Math.PI),
+                this.y2.fn(t + Math.PI)
+            ].map(pt => pt * this.amp);
+            this.drawLine(...this.shiftPoints(...points));
         }
+    }
+
+    equations() {
+        return [this.x1.string, this.y1.string, this.x2.string, this.y2.string];
+    }
+
+    shiftPoints(x1, y1, x2, y2) {
+        return [
+            x1 + this.width / 2 + this.padding,
+            y1 + this.height / 2 + this.padding,
+            x2 + this.width / 2 + this.padding,
+            y2 + this.height / 2 + this.padding
+        ];
     }
 
     update() {

@@ -1,7 +1,7 @@
 export default class Util {
     static random(arg1, arg2) {
         if (typeof arg1 === "number") {
-            if (typeof arg1 === "number") {
+            if (typeof arg2 === "number") {
                 return arg1 + Math.random() * (arg2 - arg1);
             }
 
@@ -20,12 +20,14 @@ export default class Util {
         const expressions = [];
         for (let i = 0; i < numTerms; i += 1) {
             const trig = Util.random(trigFuncs);
-            const freq = 1 + Math.random() * (maxFreqDenom - 1);
-            const expr = `${amp} * ${trig}(t/${freq})`;
+            const freq = Math.floor(1 + Math.random() * (maxFreqDenom - 1));
+            const expr = `${Math.floor(amp)} * ${trig}(t/${freq})`;
             expressions.push(expr);
         }
         const params = ["t"];
-        const body = `return (${expressions.join("+")});`;
-        return new Function(...params, body);
+        const expr = expressions.join("+");
+        const body = `return (${expr});`;
+        // console.log(body)
+        return { string: expr, fn: new Function(...params, body) };
     }
 }

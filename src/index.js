@@ -2,8 +2,8 @@ import SVG from "svg.js";
 import "./styles/index.scss";
 import ParametricPatterns from "./ParametricPatterns";
 
-const width = 500;
-const height = 500;
+const width = 350;
+const height = 300;
 
 const fitCanvas = (canvas, inner) => {
     const bb = inner.bbox();
@@ -30,27 +30,27 @@ const makeExample = options => {
         options
     );
     const system = new ParametricPatterns(opts);
-
     system.draw();
-    fitCanvas(parent, ctx);
+
+    node.innerHTML += `<p>${system.equations().join('<br/>')}</p>`;
+
+    // fitCanvas(parent, ctx);
 };
 
-const offsetX = 0;
-const offsetY = 0;
 const cellSizeX = width;
 const cellSizeY = height;
-const i = 0;
-const j = 0;
 
-makeExample({
-    name: 'parametric',
-    x: i * cellSizeX + offsetX,
-    y: j * cellSizeY + offsetY,
-    width: cellSizeX,
-    height: cellSizeY,
-    color: [0, 0, 0],
-    numLines: 100,
-    spacing: 0.2,
-    speed: 0.005,
-    amp: 1.2
-});
+for(let n = 0; n < 6; n++){
+    makeExample({
+        name: 'parametric-' + n,
+        x: 0,
+        y: 0,
+        width: cellSizeX,
+        height: cellSizeY,
+        color: [0, 0, 0],
+        numLines: 120,
+        spacing: 0.07,
+        speed: 0.005,
+        amp: 1.2
+    });
+}
