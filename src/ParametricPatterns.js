@@ -5,12 +5,12 @@ export default class ParametricPatterns {
         this.ctx = props.ctx;
         this.fillOpacity = 90;
         this.props = props;
-        this.padding = 10;
+        this.padding = props.padding || 30;
         this.seed = props.seed;
         this.strokeWeight = 2;
         this.strokeOpacity = 1;
-        this.width = props.width - this.padding;
-        this.height = props.height - this.padding;
+        this.width = props.width - this.padding*2;
+        this.height = props.height - this.padding*2;
         this.speed = props.speed || 0.02;
         this.t = 0;
         this.numLines = props.numLines || 80;
@@ -24,12 +24,22 @@ export default class ParametricPatterns {
         this.fillColors = [];
 
         this.reset();
+
+        this.position = {x: 0, y: 0}
+    }
+
+    setCtx(ctx){
+        this.ctx = ctx;
+    }
+
+    setPosition({x, y}){
+        this.position = {x, y};
     }
 
     reset() {
         this.t = Util.random(Math.PI * 2);
         this.randVar = Util.random(0, this.seed);
-        const xRatio = Util.random(4, 6);
+        const xRatio = Util.random(2, 4);
         this.x1 = Util.generateParametricEqn(this.width / xRatio, 4);
         this.y1 = Util.generateParametricEqn(this.height / 6 - xRatio, 3);
         this.x2 = Util.generateParametricEqn(this.width / Util.random(4, 6), 3);
@@ -47,17 +57,21 @@ export default class ParametricPatterns {
         });
     }
 
+    drawCurve(x1, y1, x2, y2, cx1, cy1) {
+        this.ctx
+            .path(`M ${x1} ${y1} C ${x1} ${y1} ${x2} ${y2} ${cx1} ${cy1}`)
+            .attr({
+                fill: "none",
+                stroke: "black",
+                "stroke-weight": 1
+            });
+    }
+
+    setPhase(phase){
+        this.t = phase;
+    }
+
     draw() {
-        // this.ctx
-        //     .rect(this.width, this.height)
-        //     .cx(0)
-        //     .cy(0)
-        //     .attr({
-        //         fill: "none",
-        //         stroke: "black",
-        //         "stroke-weight": 1
-        //     });
-        // console.log(0, 0, this.width, this.height);
         const count = this.numLines * this.spacing;
 
         for (let i = 0; i < count; i += this.spacing) {
@@ -67,9 +81,11 @@ export default class ParametricPatterns {
                 this.x1.fn(t),
                 this.y1.fn(t),
                 this.x2.fn(t + Math.PI),
-                this.y2.fn(t + Math.PI)
+                this.y2.fn(t + Math.PI),
+                this.cx1(t),
+                this.cy1(t)
             ].map(pt => pt * this.amp);
-            this.drawLine(...this.shiftPoints(...points));
+            this.drawCurve(...this.shiftPoints(points));
         }
     }
 
@@ -77,13 +93,13 @@ export default class ParametricPatterns {
         return [this.x1.string, this.y1.string, this.x2.string, this.y2.string];
     }
 
-    shiftPoints(x1, y1, x2, y2) {
-        return [
-            x1 + this.width / 2 + this.padding,
-            y1 + this.height / 2 + this.padding,
-            x2 + this.width / 2 + this.padding,
-            y2 + this.height / 2 + this.padding
-        ];
+    shiftPoints(arr) {
+        return arr.map(
+            (p, i) =>
+                i % 2 == 0
+                    ? p + this.width / 2 + this.padding + this.position.x
+                    : p + this.height / 2 + this.padding + this.position.y
+        );
     }
 
     update() {
