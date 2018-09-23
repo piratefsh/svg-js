@@ -9,8 +9,8 @@ export default class ParametricPatterns {
         this.seed = props.seed;
         this.strokeWeight = props.strokeWeight || 2;
         this.strokeOpacity = 1;
-        this.width = props.width - this.padding*2;
-        this.height = props.height - this.padding*2;
+        this.width = props.width - this.padding * 2;
+        this.height = props.height - this.padding * 2;
         this.speed = props.speed || 0.02;
         this.t = 0;
         this.numLines = props.numLines || 80;
@@ -25,28 +25,26 @@ export default class ParametricPatterns {
 
         this.reset();
 
-        this.position = {x: 0, y: 0}
+        this.position = { x: 0, y: 0 };
     }
 
-    setCtx(ctx){
+    setCtx(ctx) {
         this.ctx = ctx;
     }
 
-    setPosition({x, y}){
-        this.position = {x, y};
+    setPosition({ x, y }) {
+        this.position = { x, y };
     }
 
     reset() {
         this.t = Util.random(Math.PI * 2);
         this.randVar = Util.random(0, this.seed);
-        const xRatio = Util.random(2, 4);
+        const xRatio = Util.random(4, 8);
+        const yRatio =  Util.random(4, 8);
         this.x1 = Util.generateParametricEqn(this.width / xRatio, 4);
-        this.y1 = Util.generateParametricEqn(this.height / 6 - xRatio, 3);
-        this.x2 = Util.generateParametricEqn(this.width / Util.random(4, 6), 3);
-        this.y2 = Util.generateParametricEqn(
-            this.height / Util.random(4, 6),
-            3
-        );
+        this.y1 = Util.generateParametricEqn(this.height / 4 - xRatio, 3);
+        this.x2 = Util.generateParametricEqn(this.width / yRatio, 3);
+        this.y2 = Util.generateParametricEqn(this.height / 4 - yRatio, 3);
     }
 
     drawLine(x1, y1, x2, y2) {
@@ -59,7 +57,7 @@ export default class ParametricPatterns {
 
     drawCurve(x1, y1, x2, y2, cx1, cy1) {
         this.ctx
-            .path(`M ${x1} ${y1} C ${x1} ${y1} ${x2} ${y2} ${cx1} ${cy1}`)
+            .path(`M ${x1} ${y1} C ${x1} ${y1} ${cx1} ${cy1} ${x2} ${y2}`)
             .attr({
                 fill: "none",
                 stroke: "black",
@@ -67,7 +65,7 @@ export default class ParametricPatterns {
             });
     }
 
-    setPhase(phase){
+    setPhase(phase) {
         this.t = phase;
     }
 

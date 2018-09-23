@@ -2,8 +2,8 @@ import SVG from "svg.js";
 import "./styles/index.scss";
 import ParametricPatterns from "./ParametricPatterns";
 
-const width = 400;
-const height = 400;
+const width = 600;
+const height = 600;
 
 const fitCanvas = (canvas, inner) => {
     const bb = inner.bbox();
@@ -21,9 +21,10 @@ const saveSvg = (svgEl, name) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = svgUrl;
     downloadLink.download = name;
+    downloadLink.innerHTML="download"
     document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    // downloadLink.click();
+    // document.body.removeChild(downloadLink);
 };
 
 const makeExample = ({ parent, instance }) => {
@@ -39,7 +40,7 @@ const makeExample = ({ parent, instance }) => {
     // fitCanvas(parent, ctx);
 };
 
-const numShots = 1;
+const numShots = 4;
 const cellSizeX = width / numShots;
 const cellSizeY = height / numShots;
 const opts = {
@@ -48,13 +49,14 @@ const opts = {
     width: cellSizeX,
     height: cellSizeY,
     color: [0, 0, 0],
-    numLines: 80,
-    spacing: 0.07,
+    numLines: 18,
+    spacing: 0.25,
     speed: 0.005,
     amp: 1.2,
-    strokeWeight: 3,
+    strokeWeight: 1,
     padding: cellSizeX * 0.15
 };
+
 const instance = new ParametricPatterns(opts);
 
 // make parent element
@@ -69,7 +71,7 @@ const parent = SVG(id).size(width, height);
 for (let n = 0; n < numShots; n++) {
     for (let m = 0; m < numShots; m++) {
         const theta =
-            ((Math.PI * 2) / (numShots * numShots)) * (n * numShots + m);
+            -((Math.PI * 2) / (numShots * numShots)) * (n * numShots + m);
         instance.setPhase(theta);
         instance.setPosition({ x: m * cellSizeX, y: n * cellSizeY });
         makeExample({
