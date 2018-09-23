@@ -70,7 +70,6 @@ for (let n = 0; n < numShots; n++) {
     for (let m = 0; m < numShots; m++) {
         const theta =
             ((Math.PI * 2) / (numShots * numShots)) * (n * numShots + m);
-        console.log(theta);
         instance.setPhase(theta);
         instance.setPosition({ x: m * cellSizeX, y: n * cellSizeY });
         makeExample({
