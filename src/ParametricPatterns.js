@@ -7,7 +7,7 @@ export default class ParametricPatterns {
         this.props = props;
         this.padding = props.padding || 30;
         this.seed = props.seed;
-        this.strokeWeight = 2;
+        this.strokeWeight = props.strokeWeight || 2;
         this.strokeOpacity = 1;
         this.width = props.width - this.padding*2;
         this.height = props.height - this.padding*2;
@@ -53,7 +53,7 @@ export default class ParametricPatterns {
         this.ctx.path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`).attr({
             fill: "none",
             stroke: "black",
-            "stroke-weight": 1
+            "stroke-width": this.strokeWeight
         });
     }
 
@@ -63,7 +63,7 @@ export default class ParametricPatterns {
             .attr({
                 fill: "none",
                 stroke: "black",
-                "stroke-weight": 1
+                "stroke-width": this.strokeWeight
             });
     }
 
