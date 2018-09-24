@@ -1,16 +1,8 @@
 import SVG from "svg.js";
 import "./styles/index.scss";
-import ParametricPatterns from "./ParametricPatterns";
+import CurveStitch from "./CurveStitch";
 
-const width = 600;
-const height = 600;
-
-const fitCanvas = (canvas, inner) => {
-    const bb = inner.bbox();
-    canvas.viewbox(bb.x, bb.y, bb.width, bb.height);
-};
-
-const saveSvg = (svgEl, name) => {
+const addSaveLink = (svgEl, name) => {
     svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     const svgData = svgEl.outerHTML;
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
@@ -21,10 +13,8 @@ const saveSvg = (svgEl, name) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = svgUrl;
     downloadLink.download = name;
-    downloadLink.innerHTML="download"
+    downloadLink.innerHTML = "download";
     document.body.appendChild(downloadLink);
-    // downloadLink.click();
-    // document.body.removeChild(downloadLink);
 };
 
 const makeExample = ({ parent, instance }) => {
@@ -40,46 +30,31 @@ const makeExample = ({ parent, instance }) => {
     // fitCanvas(parent, ctx);
 };
 
-const numShots = 4;
-const cellSizeX = width / numShots;
-const cellSizeY = height / numShots;
-const opts = {
-    x: 0,
-    y: 0,
-    width: cellSizeX,
-    height: cellSizeY,
-    color: [0, 0, 0],
-    numLines: 18,
-    spacing: 0.25,
-    speed: 0.005,
-    amp: 1.2,
-    strokeWeight: 1,
-    padding: cellSizeX * 0.15
+const makeSVGContainer = (width, height, id = "drawing") => {
+    // make parent element
+    const node = document.createElement("div");
+    node.id = id;
+    document.body.appendChild(node);
+    // make svg
+    const parent = SVG(id).size(width, height);
+
+    return parent;
 };
 
-const instance = new ParametricPatterns(opts);
+const main = () => {
+    const width = 300;
+    const height = 300;
+    const parent = makeSVGContainer(width, height);
+    const options = {
+        ctx: parent,
+        width,
+        height,
+        strokeWidth: 2
+    };
+    const instance = new CurveStitch(options);
+    instance.draw20ConcentricCircles();
 
-// make parent element
-const id = "parametric";
-const node = document.createElement("div");
-node.id = id;
-document.body.appendChild(node);
+    addSaveLink(parent.node, `${new Date().toString()}`);
+};
 
-// make svg
-const parent = SVG(id).size(width, height);
-
-for (let n = 0; n < numShots; n++) {
-    for (let m = 0; m < numShots; m++) {
-        const theta =
-            -((Math.PI * 2) / (numShots * numShots)) * (n * numShots + m);
-        instance.setPhase(theta);
-        instance.setPosition({ x: m * cellSizeX, y: n * cellSizeY });
-        makeExample({
-            parent,
-            instance,
-            name: `parametric-${n}`
-        });
-    }
-}
-
-saveSvg(parent.node, `${new Date().toString()}`);
+main();
