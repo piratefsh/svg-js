@@ -7,8 +7,8 @@ export default class CurveStitch extends Drawing {
         super(options);
         this.ratio = 2;
         this.radius = this.width / 2;
-        this.numLines = 18;
-        this.radiusRatio = 0.75;
+        this.numLines = 12;
+        this.radiusRatio = 0.3;
     }
 
     // pg 65
@@ -20,9 +20,9 @@ export default class CurveStitch extends Drawing {
 
             const h = this.ratio * b;
             const x2 =
-                this.width / 2 + this.radiusRatio * this.radius * Math.sin(h);
+                this.width / 2 - this.radiusRatio * this.radius * Math.sin(h);
             const y2 =
-                this.height / 2 - this.radiusRatio * this.radius * Math.cos(h);
+                this.height / 2 + this.radiusRatio * this.radius * Math.cos(h);
             this.drawLine(x1, y1, x2, y2);
         }
     }
