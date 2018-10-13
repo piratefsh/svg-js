@@ -9,6 +9,7 @@ export default class P5Context extends ContextInterface {
         p.setup = () => {
             p.createCanvas(this.width, this.height);
             p.noLoop();
+            p.scale(1000);
         };
         /* eslint-enable no-param-reassign */
     }

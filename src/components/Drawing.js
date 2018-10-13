@@ -21,7 +21,7 @@ export default class Drawing {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
 
-            for (let i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 30; i += 1) {
                 this.ctx.ellipse(
                     i * 50 + 5,
                     i * 50 + 5,
