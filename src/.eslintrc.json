@@ -5,5 +5,8 @@
   ],
   "rules": {
       "prettier/prettier": "error"
+  },
+  "env": {
+    "browser": true
   }
 }
