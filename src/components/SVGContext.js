@@ -1,6 +1,10 @@
 import SVG from "svg.js";
 import ContextInterface from "./ContextInterface";
 
+const STYLE_NAME_MAP = {
+    strokeWidth: "stroke-width"
+};
+
 export default class SVGContext extends ContextInterface {
     instantiate(parentNode) {
         // make svg node
@@ -8,7 +12,15 @@ export default class SVGContext extends ContextInterface {
     }
 
     setStyles(s) {
-        this.styles = Object.assign(s, this.styles);
+        const normalizedStyles = Object.keys(s).reduce((acc, key) => {
+            if (key in STYLE_NAME_MAP) {
+                acc[STYLE_NAME_MAP[key]] = s[key];
+            } else {
+                acc[key] = s[key];
+            }
+            return acc;
+        }, {});
+        this.styles = Object.assign(normalizedStyles, this.styles);
     }
 
     line(x1, y1, x2, y2) {
@@ -25,7 +37,7 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
-    draw(fn){
-      fn.bind(null, this)()
+    draw(fn) {
+        fn();
     }
 }

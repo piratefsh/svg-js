@@ -14,8 +14,8 @@ const main = () => {
         ctx: new P5Context(parentP5, width, height),
         width,
         height,
-        style: {
-            strokeWidth: 2,
+        styles: {
+            strokeWidth: 4,
             stroke: 'orangered'
         }
     };
@@ -26,8 +26,8 @@ const main = () => {
         ctx: new SVGContext(parentSVG, width, height),
         width,
         height,
-        style: {
-            strokeWidth: 2,
+        styles: {
+            strokeWidth: 4,
             stroke: 'orangered'
         }
     };

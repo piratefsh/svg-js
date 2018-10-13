@@ -5,7 +5,7 @@ export default class Drawing {
             {
                 stroke: "black",
                 strokeWidth: 1,
-                fill: "none"
+                fill: "rgba(0,0,0,0)"
             },
             styles
         );
@@ -26,10 +26,13 @@ export default class Drawing {
     }
 
     draw() {
-        this.ctx.draw((ins) => {
-            ins.setStyles(this.styles);
-            ins.ellipse(100, 100, 150, 150);
-        })
+        this.ctx.draw(() => {
+            this.ctx.setStyles(this.styles);
+
+            for(let i = 0; i < 10; i++){
+                this.ctx.ellipse(100, 100, Math.random() * 150, Math.random() * 150);
+            }
+        });
     }
 
     getMetadata() {

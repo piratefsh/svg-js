@@ -2,14 +2,15 @@ import P5 from "p5";
 import ContextInterface from "./ContextInterface";
 
 export default class P5Context extends ContextInterface {
-    instantiate(parentNode) {
+    instantiate() {
     }
 
     p5Functions(currInstance) {
         /* eslint-disable no-param-reassign */
-        currInstance.draw = this.drawFn.bind(currInstance, this);
+        currInstance.draw = this.drawFn;
         currInstance.setup = () => {
             currInstance.createCanvas(this.width, this.height);
+            currInstance.noLoop();
         };
         /* eslint-enable no-param-reassign */
     }
