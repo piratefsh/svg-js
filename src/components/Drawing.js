@@ -26,8 +26,10 @@ export default class Drawing {
     }
 
     draw() {
-        this.ctx.setStyles(this.styles);
-        this.ellipse();
+        this.ctx.draw((ins) => {
+            ins.setStyles(this.styles);
+            ins.ellipse(100, 100, 150, 150);
+        })
     }
 
     getMetadata() {

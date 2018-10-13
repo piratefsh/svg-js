@@ -3,25 +3,28 @@ import ContextInterface from "./ContextInterface";
 
 export default class P5Context extends ContextInterface {
     instantiate(parentNode) {
-        this.instance = new P5(this.setup, parentNode);
     }
 
-    p5Fn(instance) {
+    p5Functions(currInstance) {
         /* eslint-disable no-param-reassign */
-        instance.draw = this.draw;
-        instance.setup = (p) => {
-            p.createCanvas(this.width, this.height);
-            p.background(220);
+        currInstance.draw = this.drawFn.bind(currInstance, this);
+        currInstance.setup = () => {
+            currInstance.createCanvas(this.width, this.height);
         };
         /* eslint-enable no-param-reassign */
+    }
+
+    draw(drawFn) {
+        this.drawFn = drawFn;
+        this.instance = new P5(this.p5Functions.bind(this), this.parentNode);
     }
 
     line(...args) {
         this.instance.line(...args);
     }
 
-    ellipse(...args) {
-        this.instance.ellipse(...args);
+    ellipse(width, height, x, y) {
+        this.instance.ellipse(x, y, width, height);
     }
 
     setStyles(styles) {

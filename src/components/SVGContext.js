@@ -24,4 +24,8 @@ export default class SVGContext extends ContextInterface {
             .cy(y)
             .attr(this.styles);
     }
+
+    draw(fn){
+      fn.bind(null, this)()
+    }
 }
