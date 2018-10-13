@@ -1,6 +1,6 @@
 import "./styles/index.scss";
 import { makeSVGContainer, addSaveLink } from "./dom-helpers";
-import Drawing from "./Drawing";
+import Drawing from "./components/Drawing";
 
 const main = () => {
     const width = 300;
