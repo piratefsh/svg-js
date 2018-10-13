@@ -4,35 +4,30 @@ import Drawing from "./components/Drawing";
 import P5Context from "./components/P5Context";
 import SVGContext from "./components/SVGContext";
 
+const makeDrawing = ({ Context, width, height }) => {
+    const parent = makeContextContainer(Context.NAME);
+    const options = {
+        ctx: new Context(parent, width, height),
+        width,
+        height,
+        styles: {
+            strokeWidth: 4,
+            stroke: "orangered"
+        }
+    };
+    const instance = new Drawing(options);
+    instance.draw();
+    const saveBtn = document.createElement("button");
+    saveBtn.innerHTML = `Save ${Context.NAME}`;
+    document.body.appendChild(saveBtn);
+    saveBtn.addEventListener("click", () => instance.save());
+};
 const main = () => {
     const width = 300;
     const height = 300;
-    const parentP5 = makeContextContainer("p5-context");
-    const parentSVG = makeContextContainer("svg-context");
 
-    const optionsP5 = {
-        ctx: new P5Context(parentP5, width, height),
-        width,
-        height,
-        styles: {
-            strokeWidth: 4,
-            stroke: 'orangered'
-        }
-    };
-    const instanceP5 = new Drawing(optionsP5);
-    instanceP5.draw();
-
-    const optionsSVG = {
-        ctx: new SVGContext(parentSVG, width, height),
-        width,
-        height,
-        styles: {
-            strokeWidth: 4,
-            stroke: 'orangered'
-        }
-    };
-    const instanceSVG = new Drawing(optionsSVG);
-    instanceSVG.draw();
+    makeDrawing({ Context: P5Context, width, height });
+    makeDrawing({ Context: SVGContext, width, height });
 };
 
 main();

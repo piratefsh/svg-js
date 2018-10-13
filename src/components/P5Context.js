@@ -2,15 +2,15 @@ import P5 from "p5";
 import ContextInterface from "./ContextInterface";
 
 export default class P5Context extends ContextInterface {
-    instantiate() {
-    }
+    instantiate() {}
 
-    p5Functions(currInstance) {
+    p5Functions(p) {
+        this.p5renderer = p;
         /* eslint-disable no-param-reassign */
-        currInstance.draw = this.drawFn;
-        currInstance.setup = () => {
-            currInstance.createCanvas(this.width, this.height);
-            currInstance.noLoop();
+        p.draw = this.drawFn;
+        p.setup = () => {
+            p.createCanvas(this.width, this.height);
+            p.noLoop();
         };
         /* eslint-enable no-param-reassign */
     }
@@ -18,6 +18,10 @@ export default class P5Context extends ContextInterface {
     draw(drawFn) {
         this.drawFn = drawFn;
         this.instance = new P5(this.p5Functions.bind(this), this.parentNode);
+    }
+
+    save() {
+        this.p5renderer.saveCanvas(this.saveFileName());
     }
 
     line(...args) {
@@ -34,3 +38,5 @@ export default class P5Context extends ContextInterface {
         this.instance.fill(styles.fill);
     }
 }
+
+P5Context.NAME = "P5Context";

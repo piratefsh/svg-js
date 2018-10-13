@@ -29,10 +29,19 @@ export default class Drawing {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
 
-            for(let i = 0; i < 10; i++){
-                this.ctx.ellipse(100, 100, Math.random() * 150, Math.random() * 150);
+            for (let i = 0; i < 10; i += 1) {
+                this.ctx.ellipse(
+                    i * 50 + 5,
+                    i * 50 + 5,
+                    Math.random() * this.ctx.width,
+                    Math.random() * this.ctx.height
+                );
             }
         });
+    }
+
+    save() {
+        this.ctx.save();
     }
 
     getMetadata() {
