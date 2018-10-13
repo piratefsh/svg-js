@@ -15,11 +15,14 @@ export default class Drawing {
 
         this.width = width;
         this.height = height;
-
-
     }
 
-    drawEllipse(sizeX = 100, sizeY = 100, x = this.width/2, y = this.height/2) {
+    drawEllipse(
+        sizeX = 100,
+        sizeY = 100,
+        x = this.width / 2,
+        y = this.height / 2
+    ) {
         this.ctx
             .ellipse(sizeX, sizeY)
             .cx(x)
