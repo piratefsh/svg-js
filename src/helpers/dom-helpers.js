@@ -26,14 +26,13 @@ const drawWithMetadata = ({ parent, instance }) => {
     instance.draw();
 };
 
-const makeSVGContainer = (width, height, id = "drawing") => {
+const makeContextContainer = (id = "drawing") => {
     // make parent element
     const node = document.createElement("div");
     node.id = id;
     document.body.appendChild(node);
 
-    // make svg node
-    return SVG(id).size(width, height);
+    return node;
 };
 
-export { addSaveLink, drawWithMetadata, makeSVGContainer };
+export { addSaveLink, drawWithMetadata, makeContextContainer };

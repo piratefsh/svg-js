@@ -3,9 +3,9 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
+                stroke: "black",
                 strokeWidth: 1,
-                fill: "none",
-                stroke: "black"
+                fill: "none"
             },
             styles
         );
@@ -17,34 +17,24 @@ export default class Drawing {
         this.height = height;
     }
 
-    drawEllipse(
-        sizeX = 100,
-        sizeY = 100,
-        x = this.width / 2,
-        y = this.height / 2
-    ) {
-        this.ctx
-            .ellipse(sizeX, sizeY)
-            .cx(x)
-            .cy(y)
-            .attr(this.styles);
+    ellipse(sizeX = 100, sizeY = 100, x = this.width / 2, y = this.height / 2) {
+        this.ctx.ellipse(sizeX, sizeY, x, y);
     }
 
-    drawLine(x1, y1, x2, y2) {
-        this.ctx
-            .path(`M ${x1} ${y1} L ${x1} ${y1} ${x2} ${y2}`)
-            .attr(this.styles);
+    line(x1, y1, x2, y2) {
+        this.ctx.line(x1, y1, x2, y2);
     }
 
     draw() {
-        this.drawEllipse();
+        this.ctx.setStyles(this.styles);
+        this.ellipse();
     }
 
     getMetadata() {
         return this.getName();
     }
 
-    getName(){
+    getName() {
         return this.constructor.name;
     }
 }
