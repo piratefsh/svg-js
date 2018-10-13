@@ -1,5 +1,5 @@
 import "./styles/index.scss";
-import { makeSVGContainer, addSaveLink } from "./dom-helpers";
+import { makeSVGContainer, addSaveLink } from "./helpers/dom-helpers";
 import Drawing from "./components/Drawing";
 
 const main = () => {
@@ -17,7 +17,7 @@ const main = () => {
     const instance = new Drawing(options);
     instance.draw();
 
-    addSaveLink(parent.node, `${new Date().toString()}`);
+    addSaveLink(parent.node, `${instance.getName()}-${new Date().toString()}`);
 };
 
 main();

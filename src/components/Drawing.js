@@ -41,6 +41,10 @@ export default class Drawing {
     }
 
     getMetadata() {
+        return this.getName();
+    }
+
+    getName(){
         return this.constructor.name;
     }
 }
