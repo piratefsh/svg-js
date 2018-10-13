@@ -60,5 +60,3 @@ export default class SVGContext extends ContextInterface {
         document.body.removeChild(downloadLink);
     }
 }
-
-SVGContext.NAME = "SVGContext";

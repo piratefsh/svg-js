@@ -38,5 +38,3 @@ export default class P5Context extends ContextInterface {
         this.instance.fill(styles.fill);
     }
 }
-
-P5Context.NAME = "P5Context";

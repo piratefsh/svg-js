@@ -23,9 +23,7 @@ export default class ContextInterface {
         return "ellipse";
     }
 
-    saveFileName(){
+    saveFileName() {
       return `${this.constructor.name}-${new Date()}`;
     }
 }
-
-ContextInterface.NAME = 'ContextInterface'
