@@ -17,14 +17,6 @@ export default class Drawing {
         this.height = height;
     }
 
-    ellipse(sizeX = 100, sizeY = 100, x = this.width / 2, y = this.height / 2) {
-        this.ctx.ellipse(sizeX, sizeY, x, y);
-    }
-
-    line(x1, y1, x2, y2) {
-        this.ctx.line(x1, y1, x2, y2);
-    }
-
     draw() {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
@@ -42,13 +34,5 @@ export default class Drawing {
 
     save() {
         this.ctx.save();
-    }
-
-    getMetadata() {
-        return this.getName();
-    }
-
-    getName() {
-        return this.constructor.name;
     }
 }
