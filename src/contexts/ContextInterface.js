@@ -24,6 +24,14 @@ export default class ContextInterface {
     }
 
     saveFileName() {
-      return `${this.constructor.name}-${new Date()}`;
+        return `${this.constructor.name}-${new Date()}`;
+    }
+
+    /**
+        Draw takes in a function that is run to draw on the context.
+        Has to be a function due to weird way that p5 is instantiate
+    */
+    draw(fn) {
+        fn();
     }
 }
