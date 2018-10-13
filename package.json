@@ -21,6 +21,11 @@
     },
     "homepage": "",
     "dependencies": {
+        "mathjs": "^5.1.1",
+        "normalize.css": "^8.0.0",
+        "svg.js": "^2.6.6"
+    },
+    "devDependencies": {
         "eslint": "^5.5.0",
         "eslint-config-airbnb": "^17.1.0",
         "eslint-config-prettier": "^3.0.1",
@@ -28,12 +33,6 @@
         "eslint-plugin-jsx-a11y": "^6.1.1",
         "eslint-plugin-prettier": "^2.6.2",
         "eslint-plugin-react": "^7.11.1",
-        "mathjs": "^5.1.1",
-        "normalize.css": "^8.0.0",
-        "p5": "^0.7.2",
-        "svg.js": "^2.6.6"
-    },
-    "devDependencies": {
         "ajv": "^6.3.0",
         "babel-core": "^6.26.0",
         "babel-loader": "^7.1.4",
