@@ -1,3 +1,25 @@
-# SVG
+# p5 + SVG
 
-setup to generate svgs using svg.js
+Simple setup to generate drawings using svg.js and p5.js
+
+## Install
+```
+yarn
+
+// or
+
+npm install
+```
+
+## Start server
+```
+yarn start
+
+//or
+
+npm run start
+```
+
+## Usage
+
+Add code to `src/components/Drawing.js` to draw! Only supports `line` and `ellipse` APIs for now.
