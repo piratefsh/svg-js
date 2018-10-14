@@ -23,6 +23,10 @@ export default class ContextInterface {
         return "ellipse";
     }
 
+    point(){
+        return "point";
+    }
+
     saveFileName() {
         return `${this.constructor.name}-${new Date()}`;
     }

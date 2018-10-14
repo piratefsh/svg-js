@@ -33,6 +33,10 @@ export default class P5Context extends ContextInterface {
         this.instance.ellipse(x, y, width, height);
     }
 
+    point(x, y) {
+        this.instance.point(x, y);
+    }
+
     setStyles(styles) {
         this.instance.stroke(styles.stroke);
         this.instance.strokeWeight(styles.strokeWidth || styles.strokeWeight);
