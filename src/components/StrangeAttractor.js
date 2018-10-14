@@ -5,6 +5,7 @@ export default class StrangeAttractor extends Drawing {
         super(options);
         this.constants = options.constants;
         this.last = { x: 0.1, y: 0.1 };
+        this.numPoints = options.numPoints || 10000;
     }
 
     xFn({ x, y }) {
@@ -21,11 +22,10 @@ export default class StrangeAttractor extends Drawing {
         const scale = this.width * 0.2;
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
-            for (let i = 0; i < 60000; i += 1) {
+            for (let i = 0; i < this.numPoints; i += 1) {
                 const x = this.xFn(this.last);
                 const y = this.yFn(this.last);
-                // console.log(x, y, this.t);
-                this.ctx.ellipse(1, 1, this.width / 2 + x * scale, this.width / 2 + y * scale);
+                this.ctx.point(this.width / 2 + x * scale, this.width / 2 + y * scale);
                 this.last = { x, y };
             }
         });

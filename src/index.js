@@ -4,7 +4,7 @@ import StrangeAttractor from "./components/StrangeAttractor";
 import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
 
-const makeDrawing = ({ Context, width, height }) => {
+const makeDrawing = ({ Context, width, height, constants }) => {
     const parent = makeContextContainer(Context.NAME);
     const options = {
         ctx: new Context(parent, width, height),
@@ -12,18 +12,10 @@ const makeDrawing = ({ Context, width, height }) => {
         height,
         styles: {
             strokeWidth: 1,
-            stroke: "rgba(0, 0, 0, 0.1)"
+            stroke: "rgba(0, 0, 0, 0.4)"
         },
-        constants: {
-            A1: 0.00001,
-            F1: Math.random() + 1,
-            A2: 0.00001,
-            F2: 1.602,
-            A3: 0.00001,
-            F3: -1.316,
-            A4: 0.0001,
-            F4: Math.random() + 1.2
-        }
+        numPoints: 30000,
+        constants
     };
 
     console.log(options.constants)
@@ -35,11 +27,21 @@ const makeDrawing = ({ Context, width, height }) => {
     });
 };
 const main = () => {
-    const width = 600;
-    const height = 600;
+    const width = 500;
+    const height = 500;
 
-    makeDrawing({ Context: P5Context, width, height });
-    // makeDrawing({ Context: SVGContext, width, height });
+    const constants = {
+        A1: 0.00001,
+        F1: Math.random() + 1,
+        A2: 0.00001,
+        F2: 1.602,
+        A3: 0.00001,
+        F3: -1.316,
+        A4: 0.0001,
+        F4: Math.random() + 1.2
+    }
+    makeDrawing({ Context: P5Context, width, height, constants });
+    makeDrawing({ Context: SVGContext, width, height, constants });
 };
 
 main();

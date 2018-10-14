@@ -37,6 +37,10 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
+    point(x, y){
+        return this.ellipse(0.5, 0.5, x, y);
+    }
+
     draw(fn) {
         fn();
     }
