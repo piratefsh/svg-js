@@ -15,14 +15,14 @@ const makeDrawing = ({ Context, width, height }) => {
             stroke: "rgba(0, 0, 0, 0.1)"
         },
         constants: {
-            A1: 0,
-            F1: Math.random(),
-            A2: 0,
-            F2: 1.902,
-            A3: 0,
-            F3: 1.316,
-            A4: 0,
-            F4: Math.random()
+            A1: 0.00001,
+            F1: Math.random() + 1,
+            A2: 0.00001,
+            F2: 1.602,
+            A3: 0.00001,
+            F3: -1.316,
+            A4: 0.0001,
+            F4: Math.random() + 1.2
         }
     };
 
