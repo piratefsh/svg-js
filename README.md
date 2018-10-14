@@ -20,6 +20,8 @@ yarn start
 npm run start
 ```
 
+and visit http://localhost:8080
+
 ## Usage
 
 Add code to `src/components/Drawing.js` to draw! Only supports `line` and `ellipse` APIs for now.
