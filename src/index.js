@@ -27,7 +27,7 @@ const main = () => {
     const width = 300;
     const height = 300;
 
-    for (let i = 100; i < 1600; i += 200) {
+    for (let i = 100; i < 1800; i += 200) {
         makeDrawing({
             Context: P5Context,
             width,
@@ -36,7 +36,7 @@ const main = () => {
                 numStrokes: i,
                 styles: {
                     strokeWidth: 2,
-                    stroke: "hsla(0, 0%, 50%, 0.1)"
+                    stroke: "hsla(0, 0%, 30%, 0.3)"
                 }
             }
         });

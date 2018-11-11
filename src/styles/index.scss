@@ -1,10 +1,11 @@
 //nothing for now
 
-#my-drawing svg{
-    border: 1px solid #ddd;
-}
-
-div{
-  display: inline-block;
-  border: 1px solid #ccc;
+#wrapper{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  div{
+    border: 1px solid #ccc;
+    display: flex;
+  }
 }
