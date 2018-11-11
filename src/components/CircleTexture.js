@@ -1,5 +1,5 @@
 export default class CircleTexture {
-    constructor({ styles, ctx, width, height }) {
+    constructor({ styles, ctx, width, height, numStrokes }) {
         // add defaults
         this.styles = Object.assign(
             {
@@ -15,16 +15,18 @@ export default class CircleTexture {
 
         this.width = width;
         this.height = height;
+
+        this.numStrokes = numStrokes || 500;
     }
 
     draw() {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
 
-            for (let i = 0; i < 1000; i += 1) {
+            for (let i = 0; i < this.numStrokes; i += 1) {
                 this.ctx.ellipse(
-                    i,
-                    i,
+                    (i / this.numStrokes) * this.width,
+                    (i / this.numStrokes) * this.height,
                     Math.random() * this.ctx.width,
                     Math.random() * this.ctx.height
                 );
