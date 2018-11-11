@@ -42,9 +42,11 @@ export default class P5Context extends ContextInterface {
     }
 
     setStyles(styles) {
-        this.instance.stroke(styles.stroke);
-        this.instance.strokeWeight(styles.strokeWidth || styles.strokeWeight);
-        this.instance.fill(styles.fill);
+        const { stroke, strokeWidth, strokeWeight, fill } = styles;
+        if (stroke) this.instance.stroke(stroke);
+        if (strokeWidth || strokeWeight)
+            this.instance.strokeWeight(strokeWidth || strokeWeight);
+        if (fill) this.instance.fill(fill);
     }
 
     getDOMElement() {
