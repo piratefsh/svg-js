@@ -72,6 +72,10 @@ export default class SVGContext extends ContextInterface {
         fn();
     }
 
+    getDOMElement() {
+        return this.instance.node;
+    }
+
     save() {
         const svgEl = this.instance.node;
         const name = this.saveFileName();

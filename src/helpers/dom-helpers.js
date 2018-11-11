@@ -1,7 +1,12 @@
-const makeSaveButton = ({ label, fn }) => {
-    const saveBtn = document.createElement("button");
-    saveBtn.innerHTML = label;
-    document.body.appendChild(saveBtn);
+const makeSaveButton = ({ label, fn, element }) => {
+    let saveBtn;
+    if (element) {
+        saveBtn = element;
+    } else {
+        saveBtn = document.createElement("button");
+        saveBtn.innerHTML = label;
+        document.body.appendChild(saveBtn);
+    }
     saveBtn.addEventListener("click", fn);
 };
 
