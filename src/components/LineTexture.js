@@ -6,6 +6,9 @@ export default class LineTexture extends Texture {
             this.ctx.setStyles(this.styles);
 
             for (let i = 0; i < this.numStrokes; i += 1) {
+                this.ctx.setStyles({
+                    strokeWidth: Math.floor(1 + Math.random() * 3)
+                })
                 const x = Math.floor(Math.random() * this.ctx.width);
                 const y1 = Math.random() > 0.5 ? 0 : this.ctx.height;
                 const y2 = Math.floor(Math.random() * this.ctx.height);
