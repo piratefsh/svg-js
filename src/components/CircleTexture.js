@@ -25,8 +25,8 @@ export default class CircleTexture {
 
             for (let i = 0; i < this.numStrokes; i += 1) {
                 this.ctx.ellipse(
-                    (i / this.numStrokes) * this.width,
-                    (i / this.numStrokes) * this.height,
+                    (i / this.numStrokes) * this.width*1.5,
+                    (i / this.numStrokes) * this.height*1.5,
                     Math.random() * this.ctx.width,
                     Math.random() * this.ctx.height
                 );

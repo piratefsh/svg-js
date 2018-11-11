@@ -25,7 +25,7 @@ const main = () => {
     const width = 300;
     const height = 300;
 
-    for (let i = 100; i < 1000; i += 200) {
+    for (let i = 100; i < 1600; i += 200) {
         makeDrawing({
             Context: P5Context,
             width,
