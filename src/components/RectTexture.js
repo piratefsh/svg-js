@@ -6,11 +6,12 @@ export default class CircleTexture extends Texture {
             this.ctx.setStyles(this.styles);
 
             for (let i = 0; i < this.numStrokes; i += 1) {
+                const size = (i / this.numStrokes) * this.width * 1.5
                 this.ctx.rect(
-                    (i / this.numStrokes) * this.width * 1.5,
-                    (i / this.numStrokes) * this.height * 1.5,
-                    Math.random() * this.ctx.width,
-                    Math.random() * this.ctx.height
+                    size,
+                    size,
+                    Math.random() * this.ctx.width - size/2,
+                    Math.random() * this.ctx.height - size/2
                 );
             }
         });
