@@ -1,6 +1,6 @@
 import "./styles/index.scss";
 import { makeContextContainer, makeSaveButton } from "./helpers/dom-helpers";
-import Drawing from "./components/Drawing";
+import CircleTexture from "./components/CircleTexture";
 import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
 
@@ -11,11 +11,12 @@ const makeDrawing = ({ Context, width, height }) => {
         width,
         height,
         styles: {
-            strokeWidth: 4,
-            stroke: "orangered"
+            strokeWidth: 2,
+            stroke: "hsl(0, 0%, 50%)",
+            opacity: 0.4
         }
     };
-    const instance = new Drawing(options);
+    const instance = new CircleTexture(options);
     instance.draw();
     makeSaveButton({
         label: `Save ${Context.name}`,

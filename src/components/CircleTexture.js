@@ -1,4 +1,4 @@
-export default class Drawing {
+export default class CircleTexture {
     constructor({ styles, ctx, width, height }) {
         // add defaults
         this.styles = Object.assign(
@@ -21,10 +21,10 @@ export default class Drawing {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);
 
-            for (let i = 0; i < 10; i += 1) {
+            for (let i = 0; i < 1000; i += 1) {
                 this.ctx.ellipse(
-                    i * 50 + 5,
-                    i * 50 + 5,
+                    i,
+                    i,
                     Math.random() * this.ctx.width,
                     Math.random() * this.ctx.height
                 );
