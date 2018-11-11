@@ -5,6 +5,37 @@ const STYLE_NAME_MAP = {
     strokeWidth: "stroke-width"
 };
 
+const QUAD_COLOR_REGEXP = /([.0-9]{1,4}%?)/g;
+const COLOR_WITH_ALPHA_REGEX = /(hsla|rgba)\(.*\)/;
+
+// turn (hsl|rgb)a colors into (hsl|rgb) and opacity
+function parseColor(key, val) {
+    const str = `${val}`;
+    const format = str.match(COLOR_WITH_ALPHA_REGEX);
+    if (format) {
+        const matches = str.match(QUAD_COLOR_REGEXP);
+        if (matches) {
+            const styles = {};
+            const [x, y, z, a] = matches;
+            const formatWithoutAlpha = format[1].substring(0, 3);
+            styles[key] = `${formatWithoutAlpha}(${x}, ${y}, ${z})`;
+            styles[`${key}-opacity`] = a;
+            return styles;
+        }
+    }
+    return {};
+}
+
+function parseStyle(key, val) {
+    const styles = {};
+    if (key in STYLE_NAME_MAP) {
+        styles[STYLE_NAME_MAP[key]] = val;
+    } else {
+        styles[key] = val;
+    }
+
+    return Object.assign(styles, parseColor(key, val));
+}
 export default class SVGContext extends ContextInterface {
     instantiate(parentNode) {
         // make svg node
@@ -12,14 +43,10 @@ export default class SVGContext extends ContextInterface {
     }
 
     setStyles(s) {
-        const normalizedStyles = Object.keys(s).reduce((acc, key) => {
-            if (key in STYLE_NAME_MAP) {
-                acc[STYLE_NAME_MAP[key]] = s[key];
-            } else {
-                acc[key] = s[key];
-            }
-            return acc;
-        }, {});
+        const normalizedStyles = Object.keys(s).reduce(
+            (acc, key) => Object.assign(acc, parseStyle(key, s[key])),
+            {}
+        );
         this.styles = Object.assign(normalizedStyles, this.styles);
     }
 
@@ -37,7 +64,7 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
-    point(x, y){
+    point(x, y) {
         return this.ellipse(0.5, 0.5, x, y);
     }
 

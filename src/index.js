@@ -12,7 +12,7 @@ const makeDrawing = ({ Context, width, height }) => {
         height,
         styles: {
             strokeWidth: 4,
-            stroke: "orangered"
+            stroke: "hsla(30, 40%, 50%, 0.6)"
         }
     };
     const instance = new Drawing(options);
