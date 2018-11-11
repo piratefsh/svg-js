@@ -1,5 +1,6 @@
 import "./styles/index.scss";
 import { makeContextContainer, makeSaveButton } from "./helpers/dom-helpers";
+import LineTexture from "./components/LineTexture";
 import CircleTexture from "./components/CircleTexture";
 import RectTexture from "./components/RectTexture";
 import P5Context from "./contexts/P5Context";
@@ -16,7 +17,8 @@ const makeDrawing = ({ Context, width, height, drawingOptions }) => {
 
     Object.assign(options, drawingOptions);
 
-    const instance = new RectTexture(options);
+    const instance = new LineTexture(options);
+    // const instance = new RectTexture(options);
     // const instance = new CircleTexture(options);
     instance.draw();
     makeSaveButton({
