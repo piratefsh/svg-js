@@ -6,8 +6,9 @@ import SVGContext from "./contexts/SVGContext";
 
 const makeDrawing = ({ Context, width, height, drawingOptions }) => {
     const parent = makeContextContainer(Context.NAME);
+    const ctx = new Context(parent, width, height);
     const options = {
-        ctx: new Context(parent, width, height),
+        ctx,
         width,
         height
     };
@@ -18,7 +19,8 @@ const makeDrawing = ({ Context, width, height, drawingOptions }) => {
     instance.draw();
     makeSaveButton({
         label: `Save ${Context.name}`,
-        fn: () => instance.save()
+        fn: () => instance.save(),
+        element: ctx.getDOMElement()
     });
 };
 const main = () => {

@@ -38,4 +38,8 @@ export default class ContextInterface {
     draw(fn) {
         fn();
     }
+
+    getDOMElement(){
+        return null;
+    }
 }
