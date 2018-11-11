@@ -64,6 +64,14 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
+    rect(sizeX, sizeY, x, y) {
+        return this.instance
+            .rect(sizeX, sizeY)
+            .cx(x)
+            .cy(y)
+            .attr(this.styles);
+    }
+
     point(x, y) {
         return this.ellipse(0.5, 0.5, x, y);
     }

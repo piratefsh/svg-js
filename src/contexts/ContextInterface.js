@@ -27,6 +27,10 @@ export default class ContextInterface {
         return "point";
     }
 
+    rect(){
+        return "rect";
+    }
+
     saveFileName() {
         return `${this.constructor.name}-${new Date()}`;
     }

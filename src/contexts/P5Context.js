@@ -33,6 +33,10 @@ export default class P5Context extends ContextInterface {
         this.instance.ellipse(x, y, width, height);
     }
 
+    rect(width, height, x, y) {
+        this.instance.rect(x, y, width, height);
+    }
+
     point(x, y) {
         this.instance.point(x, y);
     }

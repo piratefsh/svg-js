@@ -22,7 +22,7 @@ export default class Drawing {
             this.ctx.setStyles(this.styles);
 
             for (let i = 0; i < 10; i += 1) {
-                this.ctx.ellipse(
+                this.ctx.rect(
                     i * 50 + 5,
                     i * 50 + 5,
                     Math.random() * this.ctx.width,
