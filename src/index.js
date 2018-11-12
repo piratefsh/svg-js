@@ -45,7 +45,7 @@ const main = () => {
         CircleTexture
     ];
     for (let n = 0; n < textures.length; n++) {
-        for (let i = 200; i < 1200; i += 400) {
+        for (let i = 100; i < 1200; i += 400) {
             makeDrawing({
                 Context: SVGContext,
                 width,
