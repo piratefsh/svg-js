@@ -23,12 +23,16 @@ export default class ContextInterface {
         return "ellipse";
     }
 
-    point(){
+    point() {
         return "point";
     }
 
-    rect(){
+    rect() {
         return "rect";
+    }
+
+    arc() {
+        return "arc";
     }
 
     saveFileName() {
@@ -43,7 +47,7 @@ export default class ContextInterface {
         fn();
     }
 
-    getDOMElement(){
+    getDOMElement() {
         return null;
     }
 }

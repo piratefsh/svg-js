@@ -1,4 +1,5 @@
 import SVG from "svg.js";
+import { polarToCartesian } from "../helpers/math";
 import ContextInterface from "./ContextInterface";
 
 const STYLE_NAME_MAP = {
@@ -69,6 +70,19 @@ export default class SVGContext extends ContextInterface {
             .rect(sizeX, sizeY)
             .cx(x)
             .cy(y)
+            .attr(this.styles);
+    }
+
+    arc(x, y, radX, radY, startRadian, stopRadian) {
+        const rotation = 0;
+        const largeArcFlag = 0;
+        const sweepFlag = 0;
+        const start = polarToCartesian(radX, radY, stopRadian);
+        const end = polarToCartesian(radX, radY, startRadian);
+        return this.instance
+            .path(
+                `M ${start.x+x} ${start.y+y} A ${radX} ${radY} ${rotation} ${largeArcFlag} ${sweepFlag} ${end.x+x} ${end.y+y}`
+            )
             .attr(this.styles);
     }
 

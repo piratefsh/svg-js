@@ -6,4 +6,11 @@ function radians(deg) {
     return (deg / 180) * Math.PI;
 }
 
-export { random, radians };
+function polarToCartesian(rx, ry, rad) {
+    return {
+        x: rx * Math.cos(rad),
+        y: ry * Math.sin(rad)
+    };
+}
+
+export { random, radians, polarToCartesian };
