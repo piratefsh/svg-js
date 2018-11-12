@@ -68,8 +68,8 @@ export default class SVGContext extends ContextInterface {
     rect(sizeX, sizeY, x, y) {
         return this.instance
             .rect(sizeX, sizeY)
-            .cx(x)
-            .cy(y)
+            .cx(x + sizeX/2)
+            .cy(y + sizeY/2)
             .attr(this.styles);
     }
 
