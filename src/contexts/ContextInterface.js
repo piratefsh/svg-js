@@ -4,7 +4,7 @@ export default class ContextInterface {
         this.styles = {};
 
         this.parentNode = parentNode;
-        this.parentNode.id = this.constructor.name;
+        this.parentNode.id = `${this.constructor.name}-${ContextInterface.COUNTER++}`;
 
         this.width = width;
         this.height = height;
@@ -51,3 +51,5 @@ export default class ContextInterface {
         return null;
     }
 }
+
+ContextInterface.COUNTER = 0;
