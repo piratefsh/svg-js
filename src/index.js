@@ -45,7 +45,7 @@ const main = () => {
     for (let n = 0; n < textures.length; n++) {
         for (let i = 200; i < 1200; i += 400) {
             makeDrawing({
-                Context: P5Context,
+                Context: SVGContext,
                 width,
                 height,
                 texture: textures[n],
@@ -59,7 +59,6 @@ const main = () => {
             });
         }
     }
-    // makeDrawing({ Context: SVGContext, width, height });
 };
 
 main();
