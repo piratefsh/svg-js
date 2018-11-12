@@ -48,7 +48,7 @@ export default class SVGContext extends ContextInterface {
             (acc, key) => Object.assign(acc, parseStyle(key, s[key])),
             {}
         );
-        this.styles = Object.assign(normalizedStyles, this.styles);
+        this.styles = Object.assign(this.styles, normalizedStyles);
     }
 
     line(x1, y1, x2, y2) {
