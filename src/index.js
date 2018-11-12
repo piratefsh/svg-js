@@ -4,6 +4,7 @@ import VariedWidthLineTexture from "./components/VariedWidthLineTexture";
 import LineTexture from "./components/LineTexture";
 import CircleTexture from "./components/CircleTexture";
 import RectTexture from "./components/RectTexture";
+import ArcTexture from "./components/ArcTexture";
 import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
 
@@ -37,6 +38,7 @@ const main = () => {
     const height = 300;
 
     const textures = [
+        ArcTexture,
         VariedWidthLineTexture,
         LineTexture,
         RectTexture,
