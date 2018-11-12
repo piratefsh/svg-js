@@ -33,13 +33,27 @@ export default class P5Context extends ContextInterface {
         this.instance.ellipse(x, y, width, height);
     }
 
+    rect(width, height, x, y) {
+        this.instance.rect(x, y, width, height);
+    }
+
+    arc(x, y, radX, radY, start, stop) {
+        this.instance.arc(x, y, radX*2, radY*2, start, stop);
+    }
+
     point(x, y) {
         this.instance.point(x, y);
     }
 
     setStyles(styles) {
-        this.instance.stroke(styles.stroke);
-        this.instance.strokeWeight(styles.strokeWidth || styles.strokeWeight);
-        this.instance.fill(styles.fill);
+        const { stroke, strokeWidth, strokeWeight, fill } = styles;
+        if (stroke) this.instance.stroke(stroke);
+        if (strokeWidth || strokeWeight)
+            this.instance.strokeWeight(strokeWidth || strokeWeight);
+        if (fill) this.instance.fill(fill);
+    }
+
+    getDOMElement() {
+        return this.parentNode;
     }
 }

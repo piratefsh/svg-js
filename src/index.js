@@ -6,20 +6,22 @@ import SVGContext from "./contexts/SVGContext";
 
 const makeDrawing = ({ Context, width, height }) => {
     const parent = makeContextContainer(Context.NAME);
+    const ctx = new Context(parent, width, height);
     const options = {
-        ctx: new Context(parent, width, height),
+        ctx,
         width,
         height,
         styles: {
             strokeWidth: 4,
-            stroke: "orangered"
+            stroke: "hsla(30, 40%, 50%, 0.6)"
         }
     };
     const instance = new Drawing(options);
     instance.draw();
     makeSaveButton({
         label: `Save ${Context.name}`,
-        fn: () => instance.save()
+        fn: () => instance.save(),
+        element: ctx.getDOMElement()
     });
 };
 const main = () => {

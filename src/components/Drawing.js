@@ -22,11 +22,10 @@ export default class Drawing {
             this.ctx.setStyles(this.styles);
 
             for (let i = 0; i < 10; i += 1) {
-                this.ctx.ellipse(
-                    i * 50 + 5,
-                    i * 50 + 5,
-                    Math.random() * this.ctx.width,
-                    Math.random() * this.ctx.height
+                this.ctx.arc(
+                    this.width/2, this.height/2, 
+                    100, 100, 
+                    Math.PI, Math.PI*2
                 );
             }
         });

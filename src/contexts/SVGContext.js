@@ -1,10 +1,42 @@
 import SVG from "svg.js";
+import { polarToCartesian } from "../helpers/math";
 import ContextInterface from "./ContextInterface";
 
 const STYLE_NAME_MAP = {
     strokeWidth: "stroke-width"
 };
 
+const QUAD_COLOR_REGEXP = /([.0-9]{1,4}%?)/g;
+const COLOR_WITH_ALPHA_REGEX = /(hsla|rgba)\(.*\)/;
+
+// turn (hsl|rgb)a colors into (hsl|rgb) and opacity
+function parseColor(key, val) {
+    const str = `${val}`;
+    const format = str.match(COLOR_WITH_ALPHA_REGEX);
+    if (format) {
+        const matches = str.match(QUAD_COLOR_REGEXP);
+        if (matches) {
+            const styles = {};
+            const [x, y, z, a] = matches;
+            const formatWithoutAlpha = format[1].substring(0, 3);
+            styles[key] = `${formatWithoutAlpha}(${x}, ${y}, ${z})`;
+            styles[`${key}-opacity`] = a;
+            return styles;
+        }
+    }
+    return {};
+}
+
+function parseStyle(key, val) {
+    const styles = {};
+    if (key in STYLE_NAME_MAP) {
+        styles[STYLE_NAME_MAP[key]] = val;
+    } else {
+        styles[key] = val;
+    }
+
+    return Object.assign(styles, parseColor(key, val));
+}
 export default class SVGContext extends ContextInterface {
     instantiate(parentNode) {
         // make svg node
@@ -12,15 +44,11 @@ export default class SVGContext extends ContextInterface {
     }
 
     setStyles(s) {
-        const normalizedStyles = Object.keys(s).reduce((acc, key) => {
-            if (key in STYLE_NAME_MAP) {
-                acc[STYLE_NAME_MAP[key]] = s[key];
-            } else {
-                acc[key] = s[key];
-            }
-            return acc;
-        }, {});
-        this.styles = Object.assign(normalizedStyles, this.styles);
+        const normalizedStyles = Object.keys(s).reduce(
+            (acc, key) => Object.assign(acc, parseStyle(key, s[key])),
+            {}
+        );
+        this.styles = Object.assign(this.styles, normalizedStyles);
     }
 
     line(x1, y1, x2, y2) {
@@ -37,12 +65,37 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
-    point(x, y){
+    rect(sizeX, sizeY, x, y) {
+        return this.instance
+            .rect(sizeX, sizeY)
+            .cx(x + sizeX/2)
+            .cy(y + sizeY/2)
+            .attr(this.styles);
+    }
+
+    arc(x, y, radX, radY, startRadian, stopRadian) {
+        const rotation = 0;
+        const largeArcFlag = 0;
+        const sweepFlag = 0;
+        const start = polarToCartesian(radX, radY, stopRadian);
+        const end = polarToCartesian(radX, radY, startRadian);
+        return this.instance
+            .path(
+                `M ${start.x+x} ${start.y+y} A ${radX} ${radY} ${rotation} ${largeArcFlag} ${sweepFlag} ${end.x+x} ${end.y+y}`
+            )
+            .attr(this.styles);
+    }
+
+    point(x, y) {
         return this.ellipse(0.5, 0.5, x, y);
     }
 
     draw(fn) {
         fn();
+    }
+
+    getDOMElement() {
+        return this.instance.node;
     }
 
     save() {

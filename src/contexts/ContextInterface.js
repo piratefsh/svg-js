@@ -4,7 +4,7 @@ export default class ContextInterface {
         this.styles = {};
 
         this.parentNode = parentNode;
-        this.parentNode.id = this.constructor.name;
+        this.parentNode.id = `${this.constructor.name}-${ContextInterface.COUNTER++}`;
 
         this.width = width;
         this.height = height;
@@ -23,8 +23,16 @@ export default class ContextInterface {
         return "ellipse";
     }
 
-    point(){
+    point() {
         return "point";
+    }
+
+    rect() {
+        return "rect";
+    }
+
+    arc() {
+        return "arc";
     }
 
     saveFileName() {
@@ -38,4 +46,10 @@ export default class ContextInterface {
     draw(fn) {
         fn();
     }
+
+    getDOMElement() {
+        return null;
+    }
 }
+
+ContextInterface.COUNTER = 0;
