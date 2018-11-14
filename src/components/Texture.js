@@ -1,5 +1,5 @@
-export default class CircleTexture {
-    constructor({ styles, ctx, width, height, numStrokes }) {
+export default class Texture {
+    constructor({ styles, ctx, width, height, numStrokes, translate }) {
         // add defaults
         this.styles = Object.assign(
             {
@@ -11,12 +11,15 @@ export default class CircleTexture {
         );
 
         // set drawing contesxt
+
         this.ctx = ctx;
 
         this.width = width;
         this.height = height;
 
         this.numStrokes = numStrokes || 500;
+
+        this.translate = translate;
     }
 
     draw() {

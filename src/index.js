@@ -5,6 +5,7 @@ import LineTexture from "./components/LineTexture";
 import CircleTexture from "./components/CircleTexture";
 import RectTexture from "./components/RectTexture";
 import ArcTexture from "./components/ArcTexture";
+import GridTexture from "./components/GridTexture";
 import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
 
@@ -34,32 +35,33 @@ const makeDrawing = ({
     });
 };
 const main = () => {
-    const width = 300;
-    const height = 300;
+    const width = 500;
+    const height = 500;
 
     const textures = [
-        ArcTexture,
-        VariedWidthLineTexture,
-        LineTexture,
-        RectTexture,
-        CircleTexture
+        // ArcTexture,
+        // VariedWidthLineTexture,
+        LineTexture
+        // RectTexture,
+        // CircleTexture
     ];
-    for (let n = 0; n < textures.length; n++) {
-        for (let i = 100; i < 1200; i += 400) {
-            makeDrawing({
-                Context: SVGContext,
-                width,
-                height,
-                texture: textures[n],
-                drawingOptions: {
-                    numStrokes: i,
-                    styles: {
-                        strokeWidth: 2,
-                        stroke: "hsla(0, 0%, 30%, 0.3)"
-                    }
+    for (let n = 0; n < textures.length; n += 1) {
+        makeDrawing({
+            Context: SVGContext,
+            width,
+            height,
+            texture: GridTexture,
+            drawingOptions: {
+                nrows: 3,
+                ncols: 2,
+                scale: 100,
+                TextureClass: textures[n],
+                styles: {
+                    strokeWidth: 2,
+                    stroke: "hsla(0, 0%, 30%, 0.3)"
                 }
-            });
-        }
+            }
+        });
     }
 };
 
