@@ -40,8 +40,8 @@ const main = () => {
 
     const textures = [
         // ArcTexture,
-        // VariedWidthLineTexture,
-        LineTexture
+        VariedWidthLineTexture,
+        // LineTexture
         // RectTexture,
         // CircleTexture
     ];
