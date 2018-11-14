@@ -35,8 +35,8 @@ const makeDrawing = ({
     });
 };
 const main = () => {
-    const width = 500;
-    const height = 500;
+    const width = 300;
+    const height = 300;
 
     const textures = [
         // ArcTexture,
@@ -53,8 +53,8 @@ const main = () => {
             texture: GridTexture,
             drawingOptions: {
                 nrows: 3,
-                ncols: 2,
-                scale: 100,
+                ncols: 3,
+                scale: 50,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 2,
