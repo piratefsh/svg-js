@@ -4,6 +4,7 @@ import VariedWidthLineTexture from "./components/VariedWidthLineTexture";
 import LineTexture from "./components/LineTexture";
 import CircleTexture from "./components/CircleTexture";
 import RectTexture from "./components/RectTexture";
+import ArcofArcs from "./components/ArcofArcs";
 import ArcTexture from "./components/ArcTexture";
 import GridTexture from "./components/GridTexture";
 import P5Context from "./contexts/P5Context";
@@ -35,15 +36,16 @@ const makeDrawing = ({
     });
 };
 const main = () => {
-    const width = 300;
+    const width = 480;
     const height = 300;
 
     const textures = [
         // ArcTexture,
+        ArcofArcs
         // VariedWidthLineTexture,
         // LineTexture
         // RectTexture,
-        CircleTexture
+        // CircleTexture
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({
@@ -53,8 +55,8 @@ const main = () => {
             texture: GridTexture,
             drawingOptions: {
                 nrows: 3,
-                ncols: 3,
-                scale: 3,
+                ncols: 2,
+                scale: 2,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,

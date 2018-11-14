@@ -7,7 +7,7 @@ export default class ArcTexture extends Texture {
 
             for (let i = 0; i < this.numStrokes; i += 1) {
                 const sizeX = (i / this.numStrokes) * this.ctx.width;
-                const sizeY = (i / this.numStrokes) * this.ctx.height * 0.4;
+                const sizeY = (i / this.numStrokes) * this.ctx.height * Math.random()*1.6;
                 const startRadian =
                     Math.random() * Math.PI * (Math.random() > 0.5 ? -1 : 1);
                 const endRadian = Math.random() * (Math.PI * 2) + startRadian;

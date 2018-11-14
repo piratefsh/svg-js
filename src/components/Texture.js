@@ -1,5 +1,5 @@
 export default class Texture {
-    constructor({ styles, ctx, width, height, numStrokes, translate }) {
+    constructor(options) {
         // add defaults
         this.styles = Object.assign(
             {
@@ -7,19 +7,10 @@ export default class Texture {
                 strokeWidth: 1,
                 fill: "rgba(0,0,0,0)"
             },
-            styles
+            options.styles
         );
 
-        // set drawing contesxt
-
-        this.ctx = ctx;
-
-        this.width = width;
-        this.height = height;
-
-        this.numStrokes = numStrokes || 500;
-
-        this.translate = translate;
+        Object.assign(this, options);
     }
 
     draw() {

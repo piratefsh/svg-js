@@ -11,9 +11,10 @@ export default class GridTexture {
             TextureClass,
             styles,
             scale = 2,
+            fixedScale,
             padding = {
-                x: width * 0.05,
-                y: height * 0.05
+                x: 10,
+                y: 10
             }
         } = options;
         const cellWidth = (width + padding.x) / nrows;
@@ -21,7 +22,9 @@ export default class GridTexture {
         this.drawings = [];
         for (let c = 0; c < ncols; c += 1) {
             for (let r = 0; r < nrows; r += 1) {
-                const numStrokes = Math.pow(c * ncols + r + 1, scale);
+                const numStrokes =
+                    fixedScale || Math.pow(c * ncols + r + 1, scale);
+                console.log(numStrokes);
                 const texture = new TextureClass({
                     styles,
                     ctx,
@@ -31,7 +34,9 @@ export default class GridTexture {
                     translate: {
                         x: r * cellWidth,
                         y: c * cellHeight
-                    }
+                    },
+                    count: c * ncols + r,
+                    totalCount: ncols * nrows
                 });
 
                 this.drawings.push(texture);
