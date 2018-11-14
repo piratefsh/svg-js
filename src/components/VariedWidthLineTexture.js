@@ -1,19 +1,6 @@
 import Texture from "./Texture";
 
 export default class VariedWidthLineTexture extends Texture {
-    drawFrame() {
-        // start and end
-        const { x: x1, y: y1 } = vadd({ x: 0, y: 0 }, this.translate);
-        const { x: x2, y: y2 } = vadd({ x: 0, y: this.height }, this.translate);
-        const { x: x3, y: y3 } = vadd({ x: this.width, y: 0 }, this.translate);
-        const { x: x4, y: y4 } = vadd(
-            { x: this.width, y: this.height },
-            this.translate
-        );
-        this.ctx.line(x1, y1, x2, y2);
-        this.ctx.line(x3, y3, x4, y4);
-    }
-
     draw() {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);

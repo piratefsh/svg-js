@@ -31,11 +31,11 @@ export default class LineTexture extends Texture {
 
             for (let i = 0; i < this.numStrokes; i += 1) {
                 const x =
-                    Math.floor(Math.random() * this.width) + this.translate.x;
+                    (Math.random() * this.width) + this.translate.x;
                 const y1 =
                     (Math.random() > 0.5 ? 0 : this.height) + this.translate.y;
                 const y2 =
-                    Math.floor(Math.random() * this.height) + this.translate.y;
+                    (Math.random() * this.height) + this.translate.y;
 
                 this.ctx.line(x, y1, x, y2);
             }

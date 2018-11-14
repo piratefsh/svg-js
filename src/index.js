@@ -40,8 +40,8 @@ const main = () => {
 
     const textures = [
         // ArcTexture,
-        VariedWidthLineTexture,
-        // LineTexture
+        // VariedWidthLineTexture,
+        LineTexture
         // RectTexture,
         // CircleTexture
     ];
@@ -54,11 +54,11 @@ const main = () => {
             drawingOptions: {
                 nrows: 3,
                 ncols: 3,
-                scale: 50,
+                scale: 3,
                 TextureClass: textures[n],
                 styles: {
-                    strokeWidth: 2,
-                    stroke: "hsla(0, 0%, 30%, 0.3)"
+                    strokeWidth: 1,
+                    stroke: "hsla(0, 0%, 0%, 1.0)"
                 }
             }
         });
