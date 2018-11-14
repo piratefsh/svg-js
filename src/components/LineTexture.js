@@ -2,6 +2,11 @@ import Texture from "./Texture";
 import { vadd } from "../helpers/math";
 
 export default class LineTexture extends Texture {
+    constructor(options){
+        super(options);
+        this.lines = {};
+    }
+
     drawFrame() {
         // start and end
         const { x: x1, y: y1 } = vadd({ x: 0, y: 0 }, this.translate);

@@ -41,9 +41,9 @@ const main = () => {
     const textures = [
         // ArcTexture,
         // VariedWidthLineTexture,
-        LineTexture
+        // LineTexture
         // RectTexture,
-        // CircleTexture
+        CircleTexture
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({

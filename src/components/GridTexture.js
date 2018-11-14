@@ -22,7 +22,6 @@ export default class GridTexture {
         for (let c = 0; c < ncols; c += 1) {
             for (let r = 0; r < nrows; r += 1) {
                 const numStrokes = Math.pow(c * ncols + r + 1, scale);
-                console.log(numStrokes);
                 const texture = new TextureClass({
                     styles,
                     ctx,

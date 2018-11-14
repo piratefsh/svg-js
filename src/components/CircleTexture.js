@@ -9,8 +9,8 @@ export default class CircleTexture extends Texture {
                 this.ctx.ellipse(
                     (i / this.numStrokes) * this.width * 1.5,
                     (i / this.numStrokes) * this.height * 1.5,
-                    Math.random() * this.ctx.width,
-                    Math.random() * this.ctx.height
+                    Math.random() * this.ctx.width + this.translate.x,
+                    Math.random() * this.ctx.height + this.translate.y
                 );
             }
         });
