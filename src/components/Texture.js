@@ -1,5 +1,8 @@
 export default class Texture {
     constructor(options) {
+
+        Object.assign(this, options);
+
         // add defaults
         this.styles = Object.assign(
             {
@@ -9,8 +12,6 @@ export default class Texture {
             },
             options.styles
         );
-
-        Object.assign(this, options);
     }
 
     draw() {
