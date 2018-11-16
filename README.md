@@ -2,6 +2,8 @@
 
 Simple setup to generate drawings using svg.js and p5.js
 
+![screenshot of p5/js and SVG renderings of an abstract drawing](https://pbs.twimg.com/media/Dpa3KGJXgAETTzf.png:large)
+
 ## Install
 ```
 yarn

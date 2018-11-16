@@ -35,6 +35,10 @@ export default class ContextInterface {
         return "arc";
     }
 
+    cubicBezier(points){
+        return "cubicBezier";
+    }
+
     saveFileName() {
         return `${this.constructor.name}-${new Date()}`;
     }
