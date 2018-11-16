@@ -6,6 +6,7 @@ import CircleTexture from "./components/CircleTexture";
 import RectTexture from "./components/RectTexture";
 import ArcofArcs from "./components/ArcofArcs";
 import ArcTexture from "./components/ArcTexture";
+import RibbonTexture from "./components/RibbonTexture";
 import GridTexture from "./components/GridTexture";
 import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
@@ -41,7 +42,7 @@ const main = () => {
 
     const textures = [
         // ArcTexture,
-        ArcofArcs
+        RibbonTexture
         // VariedWidthLineTexture,
         // LineTexture
         // RectTexture,
@@ -54,8 +55,8 @@ const main = () => {
             height,
             texture: GridTexture,
             drawingOptions: {
-                nrows: 3,
-                ncols: 3,
+                nrows: 1,
+                ncols: 1,
                 scale: 2,
                 TextureClass: textures[n],
                 styles: {
