@@ -37,6 +37,7 @@ function parseStyle(key, val) {
 
     return Object.assign(styles, parseColor(key, val));
 }
+
 export default class SVGContext extends ContextInterface {
     instantiate(parentNode) {
         // make svg node
@@ -68,8 +69,8 @@ export default class SVGContext extends ContextInterface {
     rect(sizeX, sizeY, x, y) {
         return this.instance
             .rect(sizeX, sizeY)
-            .cx(x + sizeX/2)
-            .cy(y + sizeY/2)
+            .cx(x + sizeX / 2)
+            .cy(y + sizeY / 2)
             .attr(this.styles);
     }
 
@@ -81,7 +82,9 @@ export default class SVGContext extends ContextInterface {
         const end = polarToCartesian(radX, radY, startRadian);
         return this.instance
             .path(
-                `M ${start.x+x} ${start.y+y} A ${radX} ${radY} ${rotation} ${largeArcFlag} ${sweepFlag} ${end.x+x} ${end.y+y}`
+                `M ${start.x + x} ${start.y +
+                    y} A ${radX} ${radY} ${rotation} ${largeArcFlag} ${sweepFlag} ${end.x +
+                    x} ${end.y + y}`
             )
             .attr(this.styles);
     }
@@ -90,6 +93,23 @@ export default class SVGContext extends ContextInterface {
         return this.ellipse(0.5, 0.5, x, y);
     }
 
+    cubicBezier(start, points) {
+        const curvePoints = points
+            .map((p, i) => {
+                if (i === 0) {
+                    return `C ${p.join(" ")}`;
+                }
+
+                const [, , ...rest] = p;
+                return `S ${rest.join(" ")}`;
+            })
+            .join(",");
+        const [x, y] = start;
+        return this.instance.path(`M ${x} ${y} ${curvePoints}`)
+            .attr(this.styles);
+    }
+
+    /* eslint-disable class-methods-use-this */
     draw(fn) {
         fn();
     }

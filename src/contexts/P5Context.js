@@ -1,5 +1,6 @@
 import P5 from "p5";
 import ContextInterface from "./ContextInterface";
+import { rotate } from "../helpers/math";
 
 export default class P5Context extends ContextInterface {
     p5Functions(p) {
@@ -38,11 +39,35 @@ export default class P5Context extends ContextInterface {
     }
 
     arc(x, y, radX, radY, start, stop) {
-        this.instance.arc(x, y, radX*2, radY*2, start, stop);
+        this.instance.arc(x, y, radX * 2, radY * 2, start, stop);
     }
 
     point(x, y) {
         this.instance.point(x, y);
+    }
+
+    cubicBezier(start, points) {
+        const { instance } = this;
+
+        instance.beginShape();
+        const [x, y] = start;
+        instance.vertex(x, y);
+        points.forEach((p, i) => {
+            if (i === 0) {
+                instance.bezierVertex(...p);
+                return;
+            }
+
+            // calculate continuous control point
+            const [, , ...rest] = p;
+            const [, , c2x, c2y, endx, endy] = points[i - 1];
+            // rotate normalized c2 by the end point by 180 deg
+            const { x: cx, y: cy } = rotate(c2x - endx, c2y - endy, Math.PI);
+            debugger
+            instance.bezierVertex(cx + endx, cy + endy, ...rest);
+        });
+
+        instance.endShape();
     }
 
     setStyles(styles) {
