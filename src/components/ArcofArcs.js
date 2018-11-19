@@ -1,6 +1,6 @@
 import Texture from "./Texture";
 
-export default class ArcTexture extends Texture {
+export default class ArcsofArcs extends Texture {
     draw() {
         const { numStrokes, count, totalCount } = this;
         this.ctx.draw(() => {

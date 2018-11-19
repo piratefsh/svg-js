@@ -7,9 +7,10 @@ import RectTexture from "./components/RectTexture";
 import ArcofArcs from "./components/ArcofArcs";
 import ArcTexture from "./components/ArcTexture";
 import RibbonTexture from "./components/RibbonTexture";
+import CircleofCircles from "./components/CircleofCircles";
 import GridTexture from "./components/GridTexture";
-import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
+import P5Context from "./contexts/P5Context";
 
 const makeDrawing = ({
     Context,
@@ -37,16 +38,18 @@ const makeDrawing = ({
     });
 };
 const main = () => {
-    const width = 1200/2;
-    const height = 900/2;
+    const width = 900/3;
+    const height = 900/3;
 
     const textures = [
         // ArcTexture,
-        RibbonTexture
+        // RibbonTexture
         // VariedWidthLineTexture,
         // LineTexture
         // RectTexture,
-        // CircleTexture
+        // CircleTexture,
+        // ArcofArcs,
+        CircleofCircles
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({
@@ -57,7 +60,7 @@ const main = () => {
             drawingOptions: {
                 nrows: 1,
                 ncols: 1,
-                scale: 2,
+                fixedScale: 40,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,
