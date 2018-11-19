@@ -103,7 +103,7 @@ export default class SVGContext extends ContextInterface {
                 const [, , ...rest] = p;
                 return `S ${rest.join(" ")}`;
             })
-            .join(",");
+            .join(" ");
         const [x, y] = start;
         return this.instance.path(`M ${x} ${y} ${curvePoints}`)
             .attr(this.styles);

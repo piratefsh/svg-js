@@ -1,6 +1,6 @@
 import Texture from "./Texture";
 
-export default class CircleTexture extends Texture {
+export default class RibbonTexture extends Texture {
     draw() {
         this.ctx.draw(() => {
             this.ctx.setStyles(this.styles);

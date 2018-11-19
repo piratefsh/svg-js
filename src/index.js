@@ -7,6 +7,7 @@ import RectTexture from "./components/RectTexture";
 import ArcofArcs from "./components/ArcofArcs";
 import ArcTexture from "./components/ArcTexture";
 import RibbonTexture from "./components/RibbonTexture";
+import ThinRibbonTexture from "./components/ThinRibbonTexture";
 import CircleofCircles from "./components/CircleofCircles";
 import GridTexture from "./components/GridTexture";
 import SVGContext from "./contexts/SVGContext";
@@ -38,8 +39,8 @@ const makeDrawing = ({
     });
 };
 const main = () => {
-    const width = 900/3;
-    const height = 900/3;
+    const width = 900;
+    const height = 900;
 
     const textures = [
         // ArcTexture,
@@ -49,7 +50,8 @@ const main = () => {
         // RectTexture,
         // CircleTexture,
         // ArcofArcs,
-        CircleofCircles
+        // CircleofCircles,
+        ThinRibbonTexture
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({
@@ -60,7 +62,7 @@ const main = () => {
             drawingOptions: {
                 nrows: 1,
                 ncols: 1,
-                fixedScale: 40,
+                fixedScale: 50,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,

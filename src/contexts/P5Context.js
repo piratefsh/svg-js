@@ -63,7 +63,6 @@ export default class P5Context extends ContextInterface {
             const [, , c2x, c2y, endx, endy] = points[i - 1];
             // rotate normalized c2 by the end point by 180 deg
             const { x: cx, y: cy } = rotate(c2x - endx, c2y - endy, Math.PI);
-            debugger
             instance.bezierVertex(cx + endx, cy + endy, ...rest);
         });
 
