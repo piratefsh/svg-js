@@ -6,8 +6,6 @@ export default class CircleTexture extends Texture {
             this.ctx.setStyles(this.styles);
             const { width, height } = this;
             const [x, y] = [this.translate.x, this.translate.y];
-            console.log(width, height);
-            console.log(this.translate);
             const curve = [
                 this.translate.x + Math.random() * width,
                 this.translate.y + Math.random() * height,
