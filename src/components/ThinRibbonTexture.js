@@ -7,7 +7,7 @@ export default class ThinRibbonTexture extends Texture {
             const { width, height, numStrokes } = this;
             const [x, y] = [this.translate.x, this.translate.y];
             const curves = [];
-            const twists = 5;
+            const twists = 3;
 
             for (let i = 0; i < twists; i += 1) {
                 const c = [];

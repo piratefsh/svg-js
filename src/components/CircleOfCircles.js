@@ -10,7 +10,7 @@ export default class CircleofCircles extends Texture {
                 y: this.height / 2 + this.translate.y
             };
 
-            for (let i = numStrokes*0.1; i < numStrokes; i += 1) {
+            for (let i = 0; i < numStrokes; i += 1) {
                 const sizeX = i/numStrokes * this.width;
                 const sizeY = sizeX;
                 this.ctx.ellipse(
