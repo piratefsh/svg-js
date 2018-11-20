@@ -64,7 +64,7 @@ const main = () => {
             drawingOptions: {
                 nrows: 1,
                 ncols: 1,
-                fixedScale: 80,
+                fixedScale: 10,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,
