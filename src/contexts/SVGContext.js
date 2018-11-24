@@ -121,11 +121,19 @@ export default class SVGContext extends ContextInterface {
                     return `M ${x} ${y}`;
                 }
                 if (i === 1) {
+                    // if first control point is missing, use start point
+                    if(p.length !== 6){
+                        const [x, y] = this._bezierPoints[i-1];
+                        return `C ${x} ${y} ${p.join(" ")}`;
+                    }
                     return `C ${p.join(" ")}`;
                 }
                 return `S ${p.join(" ")}`;
             })
             .join(" ");
+
+        this._bezierPoints = null; // reset
+
         return this.instance.path(curveStr).attr(this.styles);
     }
 

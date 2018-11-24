@@ -68,7 +68,7 @@ export default class P5Context extends ContextInterface {
 
         // keep track of points to calculate
         // continuous control points
-        this._bezierPoints = [];
+        this._bezierPoints = [[x, y]];
     }
 
     endBezier() {
@@ -93,18 +93,22 @@ export default class P5Context extends ContextInterface {
             const prev = _bezierPoints[_bezierPoints.length - 1];
 
             // prev can either have 4 or 6 args, just want last 4
-            const prevcx = prev[prev.length - 4];
-            const prevcy = prev[prev.length - 3];
-            const prevx = prev[prev.length - 2];
-            const prevy = prev[prev.length - 1];
-
-            // rotate normalized c2 by the end point by 180 deg
-            const { x: cx, y: cy } = rotate(
-                prevcx - prevx,
-                prevcy - prevy,
-                Math.PI
-            );
-            instance.bezierVertex(cx + prevx, cy + prevy, c2x, c2y, x, y);
+            if (prev.length >= 4) {
+                const prevcx = prev[prev.length - 4];
+                const prevcy = prev[prev.length - 3];
+                const prevx = prev[prev.length - 2];
+                const prevy = prev[prev.length - 1];
+                // rotate normalized c2 by the end point by 180 deg
+                const { x: cx, y: cy } = rotate(
+                    prevcx - prevx,
+                    prevcy - prevy,
+                    Math.PI
+                );
+                instance.bezierVertex(cx + prevx, cy + prevy, c2x, c2y, x, y);
+            } else {
+                // if missing first control point, use start point
+                instance.bezierVertex(...prev, ...args);
+            }
         } else {
             throw Error("bezierVertex: expected 4 or 6 arguments");
         }
