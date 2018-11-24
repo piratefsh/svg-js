@@ -2,11 +2,14 @@ import P5 from "p5";
 import ContextInterface from "./ContextInterface";
 import { rotate } from "../helpers/math";
 
+/* eslint-disable no-underscore-dangle */
+
 export default class P5Context extends ContextInterface {
-    constructor(...args){
+    constructor(...args) {
         super(...args);
-        this.bezierPoints = null;
+        this._bezierPoints = null;
     }
+
     p5Functions(p) {
         this.p5renderer = p;
         /* eslint-disable no-param-reassign */
@@ -54,7 +57,7 @@ export default class P5Context extends ContextInterface {
         const { instance } = this;
 
         // throw error if starting new bezier before closing previous
-        if (this.bezierPoints !== null) {
+        if (this._bezierPoints !== null) {
             throw Error(
                 "startBezier: tried to start a new bezier curve before closing a previous one."
             );
@@ -65,23 +68,23 @@ export default class P5Context extends ContextInterface {
 
         // keep track of points to calculate
         // continuous control points
-        this.bezierPoints = [];
+        this._bezierPoints = [];
     }
 
     endBezier() {
         this.instance.endShape();
-        this.bezierPoints = null;
+        this._bezierPoints = null;
     }
 
     bezierVertex(c1x = null, c1y = null, c2x, c2y, x, y) {
-        const { instance, bezierPoints } = this;
+        const { instance, _bezierPoints } = this;
 
         if (typeof c1x === "number" && typeof c2x === "number") {
             instance.bezierVertex(c1x, c1y, c2x, c2y, x, y);
         } else {
             // calculate continuous control point
-            const [, , prevcx, prevcy, prevx, prevy] = bezierPoints[
-                bezierPoints.length - 1
+            const [, , prevcx, prevcy, prevx, prevy] = _bezierPoints[
+                _bezierPoints.length - 1
             ];
 
             // rotate normalized c2 by the end point by 180 deg
@@ -93,7 +96,7 @@ export default class P5Context extends ContextInterface {
             instance.bezierVertex(cx + prevx, cy + prevy, c2x, c2y, x, y);
         }
 
-        this.bezierPoints.push([c1x, c1y, c2x, c2y, x, y]);
+        this._bezierPoints.push([c1x, c1y, c2x, c2y, x, y]);
     }
 
     setStyles(styles) {

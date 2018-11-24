@@ -2,6 +2,8 @@ import SVG from "svg.js";
 import { polarToCartesian } from "../helpers/math";
 import ContextInterface from "./ContextInterface";
 
+/* eslint-disable no-underscore-dangle */
+
 const STYLE_NAME_MAP = {
     strokeWidth: "stroke-width"
 };
@@ -42,6 +44,7 @@ export default class SVGContext extends ContextInterface {
     instantiate(parentNode) {
         // make svg node
         this.instance = SVG(parentNode.id).size(this.width, this.height);
+        this._bezierPoints = null;
     }
 
     setStyles(s) {
@@ -93,28 +96,42 @@ export default class SVGContext extends ContextInterface {
         return this.ellipse(0.5, 0.5, x, y);
     }
 
-    startBezier(x, y){
+    startBezier(x, y) {
+        // throw error if starting new bezier before closing previous
+        if (this._bezierPoints !== null) {
+            throw Error(
+                "startBezier: tried to start a new bezier curve before closing a previous one."
+            );
+        }
 
+        this._bezierPoints = [[x, y]];
     }
 
-    endBezier(x, y){
-
-    }
-
-    cubicBezier(start, points) {
-        const curvePoints = points
+    endBezier() {
+        const curveStr = this._bezierPoints
             .map((p, i) => {
                 if (i === 0) {
+                    const [x, y] = p;
+                    return `M ${x} ${y}`;
+                }
+                if (i === 1) {
                     return `C ${p.join(" ")}`;
                 }
-
-                const [, , ...rest] = p;
-                return `S ${rest.join(" ")}`;
+                return `S ${p.join(" ")}`;
             })
             .join(" ");
-        const [x, y] = start;
-        return this.instance.path(`M ${x} ${y} ${curvePoints}`)
-            .attr(this.styles);
+        return this.instance.path(curveStr).attr(this.styles);
+    }
+
+    bezierVertex(...points) {
+        const { _bezierPoints } = this;
+        if (_bezierPoints) {
+            if (points.length === 4 || points.length === 6) {
+                _bezierPoints.push(points);
+            } else {
+                throw Error("cubicBezier: expected 4 or 6 arguments");
+            }
+        }
     }
 
     /* eslint-disable class-methods-use-this */
