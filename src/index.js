@@ -10,6 +10,8 @@ import RibbonTexture from "./components/RibbonTexture";
 import ThinRibbonTexture from "./components/ThinRibbonTexture";
 import ThinRibbonLoopTexture from "./components/ThinRibbonLoopTexture";
 import CircleofCircles from "./components/CircleofCircles";
+import BezierTexture from "./components/BezierTexture";
+import SquaresofSquares from "./components/SquaresofSquares";
 import GridTexture from "./components/GridTexture";
 import SVGContext from "./contexts/SVGContext";
 import P5Context from "./contexts/P5Context";
@@ -53,7 +55,9 @@ const main = () => {
         // CircleofCircles,
         // RibbonTexture,
         // ThinRibbonTexture,
-        ThinRibbonLoopTexture
+        // ThinRibbonLoopTexture,
+        // SquaresofSquares,
+        BezierTexture
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({
@@ -64,7 +68,7 @@ const main = () => {
             drawingOptions: {
                 nrows: 1,
                 ncols: 1,
-                fixedScale: 10,
+                fixedScale: 6,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,

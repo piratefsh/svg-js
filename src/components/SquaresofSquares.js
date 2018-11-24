@@ -1,6 +1,6 @@
 import Texture from "./Texture";
 
-export default class ArcsofArcs extends Texture {
+export default class SquaresofSquares extends Texture {
     draw() {
         const { numStrokes } = this;
         this.ctx.draw(() => {
@@ -10,18 +10,14 @@ export default class ArcsofArcs extends Texture {
                 y: this.height / 2 + this.translate.y
             };
 
-            for (let i = 1; i < numStrokes; i += 1) {
-                const sizeX = ((i / numStrokes) * this.width) / 2;
+            for (let i = 0; i < numStrokes; i += 1) {
+                const sizeX = i/numStrokes * this.width;
                 const sizeY = sizeX;
-                const startRadian = Math.PI;
-                const endRadian = Math.PI * 2;
-                this.ctx.arc(
-                    pos.x,
-                    pos.y,
+                this.ctx.rect(
                     sizeX,
                     sizeY,
-                    startRadian,
-                    endRadian
+                    0,//pos.x - sizeX/2,
+                    0//pos.y - sizeY/2
                 );
             }
         });
