@@ -24,6 +24,8 @@ export default class Drawing {
             ctx.startBezier(30, 70);
             ctx.bezierVertex(25, 25, 100, 50, 50, 100);
             ctx.bezierVertex(75, 140, 120, 120);
+            ctx.bezierVertex(134, 122, 160, 170);
+            ctx.bezierVertex(190, 120, 210, 210);
             ctx.endBezier();
         });
     }
