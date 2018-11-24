@@ -93,6 +93,14 @@ export default class SVGContext extends ContextInterface {
         return this.ellipse(0.5, 0.5, x, y);
     }
 
+    startBezier(x, y){
+
+    }
+
+    endBezier(x, y){
+
+    }
+
     cubicBezier(start, points) {
         const curvePoints = points
             .map((p, i) => {

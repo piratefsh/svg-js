@@ -3,6 +3,10 @@ import ContextInterface from "./ContextInterface";
 import { rotate } from "../helpers/math";
 
 export default class P5Context extends ContextInterface {
+    constructor(...args){
+        super(...args);
+        this.bezierPoints = null;
+    }
     p5Functions(p) {
         this.p5renderer = p;
         /* eslint-disable no-param-reassign */
@@ -46,28 +50,50 @@ export default class P5Context extends ContextInterface {
         this.instance.point(x, y);
     }
 
-    cubicBezier(start, points) {
+    startBezier(x, y) {
         const { instance } = this;
 
+        // throw error if starting new bezier before closing previous
+        if (this.bezierPoints !== null) {
+            throw Error(
+                "startBezier: tried to start a new bezier curve before closing a previous one."
+            );
+        }
+
         instance.beginShape();
-        const [x, y] = start;
         instance.vertex(x, y);
-        points.forEach((p, i) => {
-            if (i === 0) {
-                instance.bezierVertex(...p);
-                return;
-            }
 
+        // keep track of points to calculate
+        // continuous control points
+        this.bezierPoints = [];
+    }
+
+    endBezier() {
+        this.instance.endShape();
+        this.bezierPoints = null;
+    }
+
+    bezierVertex(c1x = null, c1y = null, c2x, c2y, x, y) {
+        const { instance, bezierPoints } = this;
+
+        if (typeof c1x === "number" && typeof c2x === "number") {
+            instance.bezierVertex(c1x, c1y, c2x, c2y, x, y);
+        } else {
             // calculate continuous control point
-            const [, , ...rest] = p;
-            const [, , c2x, c2y, endx, endy] = points[i - 1];
-            // rotate normalized c2 by the end point by 180 deg
-            const { x: cx, y: cy } = rotate(c2x - endx, c2y - endy, Math.PI);
-            debugger
-            instance.bezierVertex(cx + endx, cy + endy, ...rest);
-        });
+            const [, , prevcx, prevcy, prevx, prevy] = bezierPoints[
+                bezierPoints.length - 1
+            ];
 
-        instance.endShape();
+            // rotate normalized c2 by the end point by 180 deg
+            const { x: cx, y: cy } = rotate(
+                prevcx - prevx,
+                prevcy - prevy,
+                Math.PI
+            );
+            instance.bezierVertex(cx + prevx, cy + prevy, c2x, c2y, x, y);
+        }
+
+        this.bezierPoints.push([c1x, c1y, c2x, c2y, x, y]);
     }
 
     setStyles(styles) {

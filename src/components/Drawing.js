@@ -18,20 +18,13 @@ export default class Drawing {
     }
 
     draw() {
-        this.ctx.draw(() => {
-            this.ctx.setStyles(this.styles);
-
-            this.ctx.cubicBezier(
-                [30, 70],
-                [[25, 25, 100, 50, 50, 100], [50, 140, 75, 140, 120, 120]]
-            );
-            for (let i = 0; i < 10; i += 1) {
-                // this.ctx.arc(
-                //     this.width/2, this.height/2,
-                //     100, 100,
-                //     Math.PI, Math.PI*2
-                // );
-            }
+        const { ctx } = this;
+        ctx.draw(() => {
+            ctx.setStyles(this.styles);
+            ctx.startBezier(30, 70);
+            ctx.bezierVertex(25, 25, 100, 50, 50, 100);
+            ctx.bezierVertex(null, null, 75, 140, 120, 120);
+            ctx.endBezier();
         });
     }
 
