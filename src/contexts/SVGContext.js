@@ -108,6 +108,12 @@ export default class SVGContext extends ContextInterface {
     }
 
     endBezier() {
+        if (this._bezierPoints === null) {
+            throw Error(
+                "endBezier: tried to end a bezier curve before starting one."
+            );
+        }
+
         const curveStr = this._bezierPoints
             .map((p, i) => {
                 if (i === 0) {
@@ -129,7 +135,7 @@ export default class SVGContext extends ContextInterface {
             if (points.length === 4 || points.length === 6) {
                 _bezierPoints.push(points);
             } else {
-                throw Error("cubicBezier: expected 4 or 6 arguments");
+                throw Error("bezierVertex: expected 4 or 6 arguments");
             }
         }
     }

@@ -72,20 +72,31 @@ export default class P5Context extends ContextInterface {
     }
 
     endBezier() {
+        if (this._bezierPoints === null) {
+            throw Error(
+                "endBezier: tried to end a bezier curve before starting one."
+            );
+        }
+
         this.instance.endShape();
         this._bezierPoints = null;
     }
 
-    bezierVertex(c1x = null, c1y = null, c2x, c2y, x, y) {
+    bezierVertex(...args) {
         const { instance, _bezierPoints } = this;
 
-        if (typeof c1x === "number" && typeof c2x === "number") {
-            instance.bezierVertex(c1x, c1y, c2x, c2y, x, y);
-        } else {
+        if (args.length === 6) {
+            instance.bezierVertex(...args);
+        } else if (args.length === 4) {
+            const [c2x, c2y, x, y] = args;
             // calculate continuous control point
-            const [, , prevcx, prevcy, prevx, prevy] = _bezierPoints[
-                _bezierPoints.length - 1
-            ];
+            const prev = _bezierPoints[_bezierPoints.length - 1];
+
+            // prev can either have 4 or 6 args, just want last 4
+            const prevcx = prev[prev.length - 4];
+            const prevcy = prev[prev.length - 3];
+            const prevx = prev[prev.length - 2];
+            const prevy = prev[prev.length - 1];
 
             // rotate normalized c2 by the end point by 180 deg
             const { x: cx, y: cy } = rotate(
@@ -94,9 +105,11 @@ export default class P5Context extends ContextInterface {
                 Math.PI
             );
             instance.bezierVertex(cx + prevx, cy + prevy, c2x, c2y, x, y);
+        } else {
+            throw Error("bezierVertex: expected 4 or 6 arguments");
         }
 
-        this._bezierPoints.push([c1x, c1y, c2x, c2y, x, y]);
+        this._bezierPoints.push(args);
     }
 
     setStyles(styles) {

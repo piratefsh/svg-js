@@ -23,7 +23,7 @@ export default class Drawing {
             ctx.setStyles(this.styles);
             ctx.startBezier(30, 70);
             ctx.bezierVertex(25, 25, 100, 50, 50, 100);
-            ctx.bezierVertex(null, null, 75, 140, 120, 120);
+            ctx.bezierVertex(75, 140, 120, 120);
             ctx.endBezier();
         });
     }
