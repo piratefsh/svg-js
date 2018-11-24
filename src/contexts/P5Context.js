@@ -117,7 +117,7 @@ export default class P5Context extends ContextInterface {
         if (stroke) this.instance.stroke(stroke);
         if (strokeWidth || strokeWeight)
             this.instance.strokeWeight(strokeWidth || strokeWeight);
-        if (fill) this.instance.fill(fill);
+        if (fill) this.instance.fill(fill); 
     }
 
     getDOMElement() {

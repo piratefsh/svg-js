@@ -126,6 +126,9 @@ export default class SVGContext extends ContextInterface {
                 return `S ${p.join(" ")}`;
             })
             .join(" ");
+
+        this._bezierPoints = null; // reset
+
         return this.instance.path(curveStr).attr(this.styles);
     }
 
