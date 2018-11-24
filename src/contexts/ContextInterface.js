@@ -4,12 +4,18 @@ export default class ContextInterface {
         this.styles = {};
 
         this.parentNode = parentNode;
-        this.parentNode.id = `${this.constructor.name}-${ContextInterface.COUNTER++}`;
+
+        /* eslint-disable no-plusplus */
+        this.parentNode.id = `${
+            this.constructor.name
+        }-${ContextInterface.COUNTER++}`;
 
         this.width = width;
         this.height = height;
         this.instantiate(parentNode);
     }
+
+    /* eslint-disable class-methods-use-this */
 
     instantiate(options) {
         return `instantiate ${options}`;
@@ -35,8 +41,16 @@ export default class ContextInterface {
         return "arc";
     }
 
-    cubicBezier(points){
-        return "cubicBezier";
+    startBezier(x, y) {
+        return `startBezier ${x}, ${y}`;
+    }
+
+    endBezier() {
+        return `endBezier`;
+    }
+
+    bezierVertex(x, y) {
+        return `bezierVertex ${x}, ${y}`;
     }
 
     saveFileName() {

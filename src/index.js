@@ -53,11 +53,11 @@ const main = () => {
         // VariedWidthLineTexture,
         // ArcofArcs,
         // CircleofCircles,
-        // RibbonTexture,
+        RibbonTexture,
         // ThinRibbonTexture,
         // ThinRibbonLoopTexture,
         // SquaresofSquares,
-        BezierTexture
+        // BezierTexture
     ];
     for (let n = 0; n < textures.length; n += 1) {
         makeDrawing({
