@@ -11,7 +11,6 @@ export default class ThinRibbonTexture extends Texture {
             this.ctx.setStyles(this.styles);
             const { width, height, numStrokes } = this;
 
-            const [x, y] = [this.translate.x, this.translate.y];
             const curves = [];
             const twists = 10;
             const rx = width / 2;
@@ -25,8 +24,6 @@ export default class ThinRibbonTexture extends Texture {
                     ((i + 1) / twists) * Math.PI * 2
                 );
                 curves.push([
-                    s.x,
-                    s.y,
                     this.translate.x + Math.random() * s.x,
                     this.translate.y + Math.random() * s.y,
                     e.x,
@@ -37,11 +34,15 @@ export default class ThinRibbonTexture extends Texture {
             const start = pointOnCircle(rx, ry, 0);
 
             for (let off = 0; off < numStrokes; off += 3) {
-                const currCurves = curves.map((c, i) =>
+                const currCurves = curves.map((c) =>
                     c.map((n, i) => (i !== c.length - 1 ? n + off : n))
                 );
                 this.ctx.setStyles({ opacity: 1 - off / numStrokes });
-                this.ctx.cubicBezier([start.x, start.y], currCurves);
+                this.ctx.startBezier(start.x, start.y);
+                currCurves.forEach(c => {
+                    this.ctx.bezierVertex(...c);
+                });
+                this.ctx.endBezier();
             }
         });
     }

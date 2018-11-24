@@ -54,8 +54,8 @@ const main = () => {
         // ArcofArcs,
         // CircleofCircles,
         RibbonTexture,
-        // ThinRibbonTexture,
-        // ThinRibbonLoopTexture,
+        ThinRibbonTexture,
+        ThinRibbonLoopTexture,
         // SquaresofSquares,
         // BezierTexture
     ];
@@ -68,7 +68,7 @@ const main = () => {
             drawingOptions: {
                 nrows: 1,
                 ncols: 1,
-                fixedScale: 6,
+                fixedScale: 100,
                 TextureClass: textures[n],
                 styles: {
                     strokeWidth: 1,
