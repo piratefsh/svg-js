@@ -45,6 +45,7 @@ export default class SVGContext extends ContextInterface {
         // make svg node
         this.instance = SVG(parentNode.id).size(this.width, this.height);
         this._bezierPoints = null;
+        this._linePoints = null;
     }
 
     setStyles(s) {
@@ -104,6 +105,36 @@ export default class SVGContext extends ContextInterface {
         return this.ellipse(0.5, 0.5, x, y);
     }
 
+    startLine() {
+        if (this._bezierPoints !== null) {
+            throw Error(
+                "startLine: tried to start a new line before closing a previous one."
+            );
+        }
+
+        this._linePoints = [];
+    }
+
+    endLine() {
+        if (this._linePoints === null) {
+            throw Error("endLine: tried to end a line before starting one.");
+        }
+        const [start, ...points] = this._linePoints;
+        const { x: x1, y: y1 } = start;
+        this.instance
+            .path(
+                `M ${x1} ${y1} L ${points
+                    .map(({ x, y }) => `${x} ${y}`)
+                    .join(" ")}`
+            )
+            .attr(this.styles);
+        this._linePoints = null;
+    }
+
+    lineVertex(x, y) {
+        this._linePoints.push({ x, y });
+    }
+
     startBezier(x, y) {
         // throw error if starting new bezier before closing previous
         if (this._bezierPoints !== null) {
@@ -130,8 +161,8 @@ export default class SVGContext extends ContextInterface {
                 }
                 if (i === 1) {
                     // if first control point is missing, use start point
-                    if(p.length !== 6){
-                        const [x, y] = this._bezierPoints[i-1];
+                    if (p.length !== 6) {
+                        const [x, y] = this._bezierPoints[i - 1];
                         return `C ${x} ${y} ${p.join(" ")}`;
                     }
                     return `C ${p.join(" ")}`;
