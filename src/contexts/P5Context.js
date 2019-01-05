@@ -45,6 +45,10 @@ export default class P5Context extends ContextInterface {
         this.instance.rect(x, y, width, height);
     }
 
+    crect(width, height, x, y) {
+        this.instance.rect(x - width / 2, y - height / 2, width, height);
+    }
+
     arc(x, y, radX, radY, start, stop) {
         this.instance.arc(x, y, radX * 2, radY * 2, start, stop);
     }

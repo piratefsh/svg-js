@@ -37,6 +37,11 @@ export default class ContextInterface {
         return "rect";
     }
 
+    crect() {
+        // same as rect, but position passed in is used as center
+        return "crect";
+    }
+
     arc() {
         return "arc";
     }

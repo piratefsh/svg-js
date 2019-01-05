@@ -18,22 +18,28 @@ export default class Drawing {
     }
 
     draw() {
-        const { ctx } = this;
+        const { ctx, width, height, styles } = this;
         ctx.draw(() => {
-            ctx.setStyles({ fill: "#eee" });
-            ctx.rect(this.width, this.height, 0, 0);
-
-            ctx.setStyles(this.styles);
-            ctx.startBezier(30, 70);
-            ctx.bezierVertex(25, 25, 100, 50, 50, 100);
-            ctx.bezierVertex(75, 140, 120, 120);
-            ctx.endBezier();
-
-            ctx.startBezier(30, 70);
-            ctx.bezierVertex(50, 50, 134, 122, 160, 170);
-            ctx.bezierVertex(190, 120, 210, 210);
-            ctx.endBezier();
+            // ctx.setStyles({ fill: "#eee" });
+            ctx.setStyles(styles);
+            ctx.rect(width, height, 0, 0);
+            this.sqFractal(width / 2, height / 2, width-(width/4));
         });
+    }
+
+    sqFractal(x, y, size) {
+        const { ctx } = this;
+        ctx.crect(size, size, x, y);
+        if (size < 10) {
+            return
+        }
+        // draw sq for each corner
+        const s = size / 2;
+        const shift = size / 2;
+        this.sqFractal(x + shift, y + shift, s);
+        this.sqFractal(x - shift, y + shift, s);
+        this.sqFractal(x + shift, y - shift, s);
+        this.sqFractal(x - shift, y - shift, s);
     }
 
     save() {

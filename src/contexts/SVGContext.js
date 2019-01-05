@@ -77,6 +77,14 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
+    crect(sizeX, sizeY, x, y) {
+        return this.instance
+            .rect(sizeX, sizeY)
+            .cx(x)
+            .cy(y)
+            .attr(this.styles);
+    }
+
     arc(x, y, radX, radY, startRadian, stopRadian) {
         const rotation = 0;
         const largeArcFlag = 0;
