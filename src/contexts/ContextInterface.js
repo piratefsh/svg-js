@@ -41,8 +41,16 @@ export default class ContextInterface {
         return "arc";
     }
 
-    startBezier(x, y) {
-        return `startBezier ${x}, ${y}`;
+    startLine() {
+        return `startLine`;
+    }
+
+    endLine() {
+        return `endLine`;
+    }
+
+    endBezier() {
+        return `endBezier`;
     }
 
     endBezier() {
