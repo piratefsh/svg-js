@@ -13,11 +13,18 @@ function polarToCartesian(rx, ry, rad) {
     };
 }
 
-function rotate(x, y, theta = 0) {
+function rotate({ x, y }, theta = 0) {
     return {
         x: x * Math.cos(theta) - y * Math.sin(theta),
         y: y * Math.cos(theta) + x * Math.sin(theta)
     };
 }
 
-export { random, radians, polarToCartesian, rotate };
+function translate({ x, y }, { x: xt, y: yt }) {
+    return {
+        x: x + xt,
+        y: y + yt
+    };
+}
+
+export { random, radians, polarToCartesian, rotate, translate };
