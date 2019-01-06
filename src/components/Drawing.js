@@ -86,14 +86,14 @@ export default class Drawing {
                     y: y - s / 2 + s / 2
                 },
                 {
-                    x: x - s / 2 - s/2,
+                    x: x - s / 2 - s / 2,
                     y: y - s / 2 + s
                 }
             ],
             [
                 {
-                    x: x - s/2,
-                    y: y + s/2 + s/2,
+                    x: x - s / 2,
+                    y: y + s / 2 + s / 2
                 },
                 {
                     x: x - s / 2 + s / 2,
@@ -132,30 +132,30 @@ export default class Drawing {
         );
     }
 
-    sqFractal(x, y, size, rot = 0, depth=0) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false) {
         const { ctx } = this;
 
         // ctx.crect(size, size, x, y);
 
-        if (size < 20) {
+        if (size < 25) {
             return;
         }
         // draw sq for each corner
         const s = size / 2;
-        ctx.setStyles({ stroke: "blue", strokeWidth: 5-depth, fill: "none" });
+        ctx.setStyles({ stroke: "blue", strokeWidth: 5 - depth, fill: "none" });
 
         for (let i = 1; i <= 4; i += 1) {
-            // const t = rot + (Math.PI / 2) * i;
-            if (i === 4 && depth != 0) {
+            if ((i === 4 && depth != 0) || (i === 2 && tube)) {
                 const theta = rot + (Math.PI / 2) * i;
-                const sets = Drawing.sqCornerPointsCorner(x, y, size / 2)
+                const sets = Drawing.sqCornerPointsCorner(x, y, size / 2);
 
-                sets.forEach((s) => {
+                sets.forEach(s => {
                     ctx.startLine();
-                        s.map(pos => this.trRot(pos, { x, y }, theta))
-                        .forEach(p => ctx.lineVertex(p.x, p.y));
+                    s.map(pos => this.trRot(pos, { x, y }, theta)).forEach(p =>
+                        ctx.lineVertex(p.x, p.y)
+                    );
                     ctx.endLine();
-                })
+                });
             } else {
                 ctx.startLine();
                 const theta = rot + (Math.PI / 2) * i;
@@ -165,16 +165,26 @@ export default class Drawing {
                 ctx.endLine();
             }
         }
-        // ctx.setStyles({ stroke: "green", strokeWidth: 3, fill: "none" });
-        // const { x: ex, y: ey } = translate(rotate(translate({ x, y: y + s }, {x: -x, y: -y}), rot), {x, y});
-        // ctx.line(x, y, ex, ey);
 
         ctx.setStyles(this.styles);
         const shift = size / 2;
-        this.sqFractal(x + shift, y - shift, s, (Math.PI / 2) * 0, depth + 1);
-        this.sqFractal(x + shift, y + shift, s, (Math.PI / 2) * 1, depth + 1);
-        this.sqFractal(x - shift, y + shift, s, (Math.PI / 2) * 2, depth + 1);
-        this.sqFractal(x - shift, y - shift, s, (Math.PI / 2) * 3, depth + 1);
+
+        [
+            { x: x - shift, y: y - shift },
+            { x: x + shift, y: y - shift },
+            { x: x + shift, y: y + shift },
+            { x: x - shift, y: y + shift }
+        ].forEach((pos, i) => {
+            const { x: sx, y: sy } = this.trRot(pos, { x, y }, rot);
+            this.sqFractal(
+                sx,
+                sy,
+                s,
+                rot + (Math.PI / 2) * (i + 3),
+                depth + 1,
+                i == 3
+            );
+        });
     }
 
     save() {
