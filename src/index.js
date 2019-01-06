@@ -1,8 +1,8 @@
 import "./styles/index.scss";
 import { makeContextContainer, makeSaveButton } from "./helpers/dom-helpers";
 import Drawing from "./components/Drawing";
-import P5Context from "./contexts/P5Context";
 import SVGContext from "./contexts/SVGContext";
+// import P5Context from "./contexts/P5Context";
 
 const makeDrawing = ({ Context, width, height }) => {
     const parent = makeContextContainer(Context.NAME);
