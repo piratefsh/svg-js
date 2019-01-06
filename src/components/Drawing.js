@@ -17,14 +17,20 @@ export default class Drawing {
 
         this.width = width;
         this.height = height;
+
+        this.fillStyle = {
+            fill: "hsla(200, 50%, 80%, 0.3)",
+            strokeWidth: 0
+        };
     }
 
     draw() {
         const { ctx, width, height, styles } = this;
         ctx.draw(() => {
             // ctx.setStyles({ fill: "#eee" });
+            ctx.setStyles(this.fillStyle);
+            ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
-            // ctx.rect(width, height, 0, 0);
             this.sqFractal(width / 2, height / 2, width - width / 2);
         });
     }
@@ -33,7 +39,7 @@ export default class Drawing {
         const s = size;
         const x = ix - size;
         const y = iy + size;
-        const hyp = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(s / 4, 2));
+        const hyp = Math.sqrt((size / 2) ** 2 + (s / 4) ** 2);
         return [
             {
                 x,
@@ -70,7 +76,7 @@ export default class Drawing {
         const s = size;
         const x = ix - size;
         const y = iy + size;
-        const hyp = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(s / 4, 2));
+        const hyp = Math.sqrt((size / 2) ** 2 + (s / 4) ** 2);
         return [
             {
                 x,
@@ -116,9 +122,12 @@ export default class Drawing {
         ];
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 3) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 4) {
         const { ctx } = this;
-        // ctx.crect(size, size, x, y);
+
+        ctx.setStyles(this.fillStyle);
+        ctx.crect(size, size, x, y);
+        ctx.setStyles(this.styles);
 
         if (depth === rounds) {
             return;
@@ -149,7 +158,6 @@ export default class Drawing {
             ctx.endLine();
         }
 
-        ctx.setStyles(this.styles);
         const shift = size / 2;
 
         [
