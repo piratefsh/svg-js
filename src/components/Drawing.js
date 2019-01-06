@@ -132,17 +132,17 @@ export default class Drawing {
         );
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 3) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 5) {
         const { ctx } = this;
-
         // ctx.crect(size, size, x, y);
 
         if (depth === rounds) {
             return;
         }
+
         // draw sq for each corner
         const s = size / 2;
-        ctx.setStyles({ stroke: "blue", strokeWidth: 5 - depth, fill: "none" });
+        ctx.setStyles({ strokeWidth: rounds - depth });
 
         for (let i = 1; i <= 4; i += 1) {
             if ((i === 4 && depth !== 0) || (i === 2 && tube)) {
@@ -182,7 +182,7 @@ export default class Drawing {
                 s,
                 rot + (Math.PI / 2) * (i + 3),
                 depth + 1,
-                i === 3 && depth > 0,
+                (i === 3 || i == 1 && tube) && depth > 0,
                 rounds
             );
         });
