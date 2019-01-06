@@ -72,50 +72,47 @@ export default class Drawing {
         const y = iy + size;
         const hyp = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(s / 4, 2));
         return [
-            [
-                {
-                    x,
-                    y: y - s / 2
-                },
-                {
-                    x: x - s / 2,
-                    y: y - s / 2
-                },
-                {
-                    x: x - s / 2,
-                    y: y - s / 2 + s / 2
-                },
-                {
-                    x: x - s / 2 - s / 2,
-                    y: y - s / 2 + s
-                }
-            ],
-            [
-                {
-                    x: x - s / 2,
-                    y: y + s / 2 + s / 2
-                },
-                {
-                    x: x - s / 2 + s / 2,
-                    y: y - s / 2 + s
-                },
-                {
-                    x: x - s / 2 + s,
-                    y: y - s / 2 + s
-                },
-                {
-                    x: x - s / 2 + s,
-                    y: y - s / 2 + s - s / 2
-                },
-                {
-                    x: x - s / 2 + s + s / 2,
-                    y: y - s / 2 + s - s / 2 - hyp
-                },
-                {
-                    x: x - s / 2 + s + s,
-                    y: y - s / 2 + s - s / 2
-                }
-            ]
+            {
+                x,
+                y: y - s / 2
+            },
+            {
+                x: x - s / 2,
+                y: y - s / 2
+            },
+            {
+                x: x - s / 2,
+                y: y - s / 2 + s / 2
+            },
+            {
+                x: x - s / 2 - s / 2,
+                y: y - s / 2 + s
+            },
+            {
+                x: x - s / 2,
+                y: y + s / 2 + s / 2,
+                move: true
+            },
+            {
+                x: x - s / 2 + s / 2,
+                y: y - s / 2 + s
+            },
+            {
+                x: x - s / 2 + s,
+                y: y - s / 2 + s
+            },
+            {
+                x: x - s / 2 + s,
+                y: y - s / 2 + s - s / 2
+            },
+            {
+                x: x - s / 2 + s + s / 2,
+                y: y - s / 2 + s - s / 2 - hyp
+            },
+            {
+                x: x - s / 2 + s + s,
+                y: y - s / 2 + s - s / 2
+            }
         ];
     }
 
@@ -132,7 +129,7 @@ export default class Drawing {
         );
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 5) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 2) {
         const { ctx } = this;
         // ctx.crect(size, size, x, y);
 
@@ -146,23 +143,23 @@ export default class Drawing {
 
         for (let i = 0; i < 4; i += 1) {
             const theta = rot + (Math.PI / 2) * (i + 1);
+            let line;
             if ((i === 3 && depth > 0) || (i === 1 && tube)) {
-                const sets = Drawing.sqCornerPointsCorner(x, y, size / 2);
-
-                sets.forEach(set => {
-                    ctx.startLine();
-                    set.map(pos => this.trRot(pos, { x, y }, theta)).forEach(
-                        p => ctx.lineVertex(p.x, p.y)
-                    );
-                    ctx.endLine();
-                });
+                line = Drawing.sqCornerPointsCorner(x, y, size / 2);
             } else {
-                ctx.startLine();
-                Drawing.sqCornerPoints(x, y, size / 2)
-                    .map(pos => this.trRot(pos, { x, y }, theta))
-                    .forEach(p => ctx.lineVertex(p.x, p.y));
-                ctx.endLine();
+                line = Drawing.sqCornerPoints(x, y, size / 2);
             }
+
+            ctx.startLine();
+            line.forEach(pos => {
+                const p = this.trRot(pos, { x, y }, theta);
+                if (pos.move) {
+                    ctx.lineMove(p.x, p.y);
+                } else {
+                    ctx.lineVertex(p.x, p.y);
+                }
+            });
+            ctx.endLine();
         }
 
         ctx.setStyles(this.styles);
@@ -181,7 +178,7 @@ export default class Drawing {
                 s,
                 rot + (Math.PI / 2) * (i + 3),
                 depth + 1,
-                (i === 3 || i == 1 && tube) && depth > 0,
+                (i === 3 || (i === 1 && tube)) && depth > 0,
                 rounds
             );
         });
