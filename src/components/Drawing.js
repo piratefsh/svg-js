@@ -132,12 +132,12 @@ export default class Drawing {
         );
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 3) {
         const { ctx } = this;
 
         // ctx.crect(size, size, x, y);
 
-        if (size < 25) {
+        if (depth === rounds) {
             return;
         }
         // draw sq for each corner
@@ -145,14 +145,14 @@ export default class Drawing {
         ctx.setStyles({ stroke: "blue", strokeWidth: 5 - depth, fill: "none" });
 
         for (let i = 1; i <= 4; i += 1) {
-            if ((i === 4 && depth != 0) || (i === 2 && tube)) {
+            if ((i === 4 && depth !== 0) || (i === 2 && tube)) {
                 const theta = rot + (Math.PI / 2) * i;
                 const sets = Drawing.sqCornerPointsCorner(x, y, size / 2);
 
-                sets.forEach(s => {
+                sets.forEach(set => {
                     ctx.startLine();
-                    s.map(pos => this.trRot(pos, { x, y }, theta)).forEach(p =>
-                        ctx.lineVertex(p.x, p.y)
+                    set.map(pos => this.trRot(pos, { x, y }, theta)).forEach(
+                        p => ctx.lineVertex(p.x, p.y)
                     );
                     ctx.endLine();
                 });
@@ -182,7 +182,8 @@ export default class Drawing {
                 s,
                 rot + (Math.PI / 2) * (i + 3),
                 depth + 1,
-                i == 3
+                i === 3 && depth > 0,
+                rounds
             );
         });
     }
