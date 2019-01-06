@@ -13,17 +13,31 @@ function polarToCartesian(rx, ry, rad) {
     };
 }
 
-function rotate({ x, y }, theta = 0) {
-    return {
-        x: x * Math.cos(theta) - y * Math.sin(theta),
-        y: y * Math.cos(theta) + x * Math.sin(theta)
-    };
-}
-
 function translate({ x, y }, { x: xt, y: yt }) {
     return {
         x: x + xt,
         y: y + yt
+    };
+}
+
+function rotate({ x, y }, theta = 0, origin) {
+    if (origin) {
+        return translate(
+            rotate(
+                translate(
+                    { x, y },
+                    {
+                        x: -origin.x,
+                        y: -origin.y
+                    }
+                ),
+                theta
+            )
+        , origin);
+    }
+    return {
+        x: x * Math.cos(theta) - y * Math.sin(theta),
+        y: y * Math.cos(theta) + x * Math.sin(theta)
     };
 }
 
