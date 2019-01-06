@@ -116,20 +116,7 @@ export default class Drawing {
         ];
     }
 
-    trRot(pos, center, rot) {
-        return translate(
-            rotate(
-                translate(pos, {
-                    x: -center.x,
-                    y: -center.y
-                }),
-                rot
-            ),
-            center
-        );
-    }
-
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 2) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 3) {
         const { ctx } = this;
         // ctx.crect(size, size, x, y);
 
@@ -152,7 +139,7 @@ export default class Drawing {
 
             ctx.startLine();
             line.forEach(pos => {
-                const p = this.trRot(pos, { x, y }, theta);
+                const p = rotate(pos, theta, { x, y });
                 if (pos.move) {
                     ctx.lineMove(p.x, p.y);
                 } else {
@@ -171,7 +158,7 @@ export default class Drawing {
             { x: x + shift, y: y + shift },
             { x: x - shift, y: y + shift }
         ].forEach((pos, i) => {
-            const { x: sx, y: sy } = this.trRot(pos, { x, y }, rot);
+            const { x: sx, y: sy } = rotate(pos, rot, { x, y });
             this.sqFractal(
                 sx,
                 sy,
