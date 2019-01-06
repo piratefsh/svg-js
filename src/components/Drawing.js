@@ -144,9 +144,9 @@ export default class Drawing {
         const s = size / 2;
         ctx.setStyles({ strokeWidth: rounds - depth });
 
-        for (let i = 1; i <= 4; i += 1) {
-            if ((i === 4 && depth !== 0) || (i === 2 && tube)) {
-                const theta = rot + (Math.PI / 2) * i;
+        for (let i = 0; i < 4; i += 1) {
+            const theta = rot + (Math.PI / 2) * (i + 1);
+            if ((i === 3 && depth > 0) || (i === 1 && tube)) {
                 const sets = Drawing.sqCornerPointsCorner(x, y, size / 2);
 
                 sets.forEach(set => {
@@ -158,7 +158,6 @@ export default class Drawing {
                 });
             } else {
                 ctx.startLine();
-                const theta = rot + (Math.PI / 2) * i;
                 Drawing.sqCornerPoints(x, y, size / 2)
                     .map(pos => this.trRot(pos, { x, y }, theta))
                     .forEach(p => ctx.lineVertex(p.x, p.y));
