@@ -127,6 +127,12 @@ export default class SVGContext extends ContextInterface {
         this._linePoints.push({ x, y });
     }
 
+    polygon(points) {
+        this.instance
+            .polygon(points.map(({ x, y }) => `${x},${y}`).join(" "))
+            .attr(this.styles);
+    }
+
     startBezier(x, y) {
         // throw error if starting new bezier before closing previous
         if (this._bezierPoints !== null) {
