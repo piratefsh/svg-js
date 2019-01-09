@@ -21,7 +21,9 @@
     },
     "homepage": "",
     "dependencies": {
+        "gaussian-noise": "^1.0.1",
         "mathjs": "^5.1.1",
+        "noisejs": "^2.1.0",
         "normalize.css": "^8.0.0",
         "p5": "^0.7.2",
         "svg.js": "^2.6.6"
