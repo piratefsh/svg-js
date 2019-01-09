@@ -19,7 +19,7 @@ function mult(a, b) {
 }
 
 function eq(a, b){
-    return a.x == b.x && a.y == b.y;
+    return Math.trunc(a.x) === Math.trunc(b.x) && Math.trunc(a.y) === Math.trunc(b.y);
 }
 
 // Find intersection of two line segments
@@ -31,12 +31,11 @@ function intersection(s1, e1, s2, e2) {
     const s = sub(e2, s2);
 
     const t = cross(sub(q, p), s) / cross(r, s);
-    const u = cross(sub(p, q), r) / cross(s, r);
+    const u = cross(sub(q, p), r) / cross(r, s);
 
     const left = add(p, mult(r, t));
     const right = add(q, mult(s, u));
-
-    if (cross(r, s) !== 0 && (t <= 1 && t >= 0) && (u <= 1 && u >= 0)) {
+    if (eq(left, right) &&  cross(r, s) !== 0 && (t <= 1 && t >= 0) && (u <= 1 && u >= 0)) {
         // has intersection
         return add(p, mult(r, t));
     }
