@@ -32,13 +32,15 @@ function rotate({ x, y }, theta = 0, origin) {
                     }
                 ),
                 theta
-            )
-        , origin);
+            ),
+            origin
+        );
     }
     return {
         x: x * Math.cos(theta) - y * Math.sin(theta),
         y: y * Math.cos(theta) + x * Math.sin(theta)
     };
 }
+
 
 export { random, radians, polarToCartesian, rotate, translate };
