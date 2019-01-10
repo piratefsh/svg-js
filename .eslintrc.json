@@ -4,7 +4,8 @@
       "prettier"
   ],
   "rules": {
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "no-plusplus": "off"
   },
   "env": {
     "browser": true
