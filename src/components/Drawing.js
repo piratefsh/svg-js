@@ -6,7 +6,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(300, 80%, 50%, 0.7)",
+                stroke: "hsla(340, 80%, 50%, 0.7)",
                 strokeWidth: 1,
                 fill: "hsla(100, 100%, 100%, 0)"
             },
@@ -18,14 +18,18 @@ export default class Drawing {
 
         this.width = width;
         this.height = height;
-        this.lineStep = 20;
+        this.lineStep = 5;
+        this.radiusStep = 0.08;
         this.numLines = this.height / this.lineStep;
         this.seed = seed;
         this.time = time;
     }
 
     vertical() {
-        const fn = (x, y, t) => {
+        const { ctx, width, height, numLines, lineStep } = this;
+        const noise = new Noise(this.seed);
+
+        const fn = (x, y) => {
             const shift = noise.simplex2(x / 150, y / 150);
             return {
                 x: x + Math.sin(x / width) * shift * 50,
@@ -40,93 +44,97 @@ export default class Drawing {
 
                 const { x, y } = fn(a, b, a * width + b);
                 points.push({ x: x + width / 2, y: y + height / 2 });
-                // ctx.ellipse(2, 2, x, y)
             }
             ctx.polyline(points);
         }
     }
 
-    draw() {
+    radial() {
         const noise = new Noise(this.seed);
-        const { ctx, width, height } = this;
 
         const fn = (r, theta, t) => {
-            const shift = noise.simplex3(r / 90, Math.sin(theta), t);
+            const shift = noise.perlin3(r / 50, Math.sin(theta), t);
             return {
-                radius: r + Math.sin(shift) * 26,
-                theta: theta + shift - Math.PI / 4
+                radius: r + Math.sin(shift) * 20,
+                theta: theta + shift * 1.2 - Math.PI / 4
             };
         };
-        ctx.draw(() => {
-            // background
-            // ctx.setStyles({ fill: "hsla(300, 80%, 90%, 0.7)" });
-            // ctx.rect(width, height, 0, 0);
+        const { ctx, width, height } = this;
 
-            ctx.setStyles(this.styles);
+        ctx.setStyles(this.styles);
 
-            for (let r = 10; r < width / 2 + 90; r += this.lineStep) {
-                // this.lineStep += 0.02
-                const points = [];
-                const offset = (r / width) * Math.PI;
-                const rstep = 0.05;
-                for (
-                    let t = offset;
-                    t < Math.PI * 2 + offset + rstep;
-                    t += rstep
-                ) {
-                    const { x, y, radius, theta } = fn(r, t, this.time);
-                    const cx = radius * Math.sin(theta);
-                    const cy = radius * Math.cos(theta);
-                    points.push({ x: cx + width / 2, y: cy + height / 2 });
-                }
+            const rstep = this.radiusStep;
+            const offset = 0;
+            for (let t = offset; t < Math.PI * 2 + offset; t += rstep) {
+            const points = [];
+        for (let r = 10; r < width * 0.9; r += this.lineStep) {
+                const { radius, theta } = fn(r, t, this.time);
+                const cx = radius * Math.sin(theta);
+                const cy = radius * Math.cos(theta);
+                points.push({ x: cx + width / 2, y: cy + height / 2 });
+            }
+            points.push({ x: points[0].x, y: points[0].y });
 
-                let segment = [];
-                for (let i = 0; i < points.length; i++) {
-                    const { x, y } = points[i];
-                    if (x >= 0 && x <= width && y >= 0 && y <= height) {
-                        segment.push({ x, y });
+            let segment = [];
+
+            // clip points to not draw beyond borders of canvas
+            for (let i = 0; i < points.length; i++) {
+                const { x, y } = points[i];
+                if (x >= 0 && x <= width && y >= 0 && y <= height) {
+                    segment.push({ x, y });
+                } else {
+                    // find any segment before or after point that will intersect border
+                    const ss =
+                        i > 0 ? points[i - 1] : points[points.length - 1];
+                    const se = { x, y };
+                    const sa =
+                        i < points.length - 1 ? points[i + 1] : points[0];
+
+                    this.findIntersections(segment, ss, se, sa);
+
+                    if (segment.length === 1) {
+                        // found after intersection, to be used as start of next segment
+                        segment = [];
+                    } else if (segment.length > 0) {
+                        ctx.polyline(segment);
+                        segment = [];
                     } else {
-                        // find any segment before or after point that will intersect border
-                        const ss =
-                            i > 0 ? points[i - 1] : points[points.length - 1];
-                        const se = { x, y };
-                        const sa =
-                            i < points.length - 1 ? points[i + 1] : points[0];
-                        [
-                            [{ x: 0, y: 0 }, { x: width, y: 0 }],
-                            [{ x: width, y: 0 }, { x: width, y: height }],
-                            [{ x: width, y: height }, { x: 0, y: height }],
-                            [{ x: 0, y: height }, { x: 0, y: 0 }]
-                        ].forEach(ln => {
-                            const [ls, le] = ln;
-
-                            // before segment
-                            const insb = intersection(ls, le, ss, se);
-                            if (insb) {
-                                segment.push(insb);
-                                ctx.ellipse(5, 5, insb.x, insb.y);
-                            }
-
-                            // after segment
-                            const insa = intersection(ls, le, se, sa);
-                            if (insa) {
-                                console.log(insa)
-                                segment.push(insa);
-                                ctx.ellipse(5, 5, insa.x, insa.y);
-                            }
-                        });
-
-                        if (segment.length > 0) {
-                            ctx.polyline(segment);
-                            segment = [];
-                        } else if (segment.length === 1) {
-                            console.log(segment[0])
-                        } else{
-                            segment = [];
-                        }
+                        segment = [];
                     }
                 }
-                ctx.polyline(segment);
+            }
+            ctx.polyline(segment);
+        }
+    }
+
+    draw() {
+        const { ctx } = this;
+
+        ctx.draw(() => {
+            this.radial();
+        });
+    }
+
+    findIntersections(segment, bef, curr, aft) {
+        const { width, height, ctx } = this;
+        [
+            [{ x: 0, y: 0 }, { x: width, y: 0 }],
+            [{ x: width, y: 0 }, { x: width, y: height }],
+            [{ x: width, y: height }, { x: 0, y: height }],
+            [{ x: 0, y: height }, { x: 0, y: 0 }]
+        ].forEach(ln => {
+            const [ls, le] = ln;
+
+            // before segment
+            const insb = intersection(ls, le, bef, curr);
+            if (insb) {
+                segment.push(insb);
+            }
+
+            // after segment
+            const insa = intersection(ls, le, curr, aft);
+            if (insa) {
+                segment.push(insa);
             }
         });
     }

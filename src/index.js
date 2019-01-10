@@ -29,14 +29,14 @@ const makeDrawing = ({ Context, width, height }) => {
     });
 };
 const main = () => {
-    const width = 400;
-    const height = 400;
+    const width = 500;
+    const height = 500;
 
-    // const frame = () => {
-    //     makeDrawing({ Context: SVGContext, width, height });
-    //     requestAnimationFrame(frame);
-    // };
-    // requestAnimationFrame(frame);
+    const frame = () => {
+        makeDrawing({ Context: SVGContext, width, height });
+        requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
     makeDrawing({ Context: SVGContext, width, height });
 };
 
