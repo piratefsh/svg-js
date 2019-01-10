@@ -6,6 +6,8 @@ import SVGContext from "./contexts/SVGContext";
 
 let counter = 0;
 
+const seed = Math.random();
+
 const makeDrawing = ({ Context, width, height }) => {
     const parent = document.body;
     parent.innerHTML = '';
@@ -14,8 +16,10 @@ const makeDrawing = ({ Context, width, height }) => {
         ctx,
         width,
         height,
-        seed: counter++
+        seed: seed,
+        time: counter,
     };
+    counter += 0.1
     const instance = new Drawing(options);
     instance.draw();
     makeSaveButton({
@@ -28,14 +32,12 @@ const main = () => {
     const width = 400;
     const height = 400;
 
-    const frame = () => {
-        makeDrawing({ Context: SVGContext, width, height });
-        
-        setTimeout(() => requestAnimationFrame(frame), 1000);
-
-    };
-    requestAnimationFrame(frame);
-    // makeDrawing({ Context: P5Context, width, height });
+    // const frame = () => {
+    //     makeDrawing({ Context: SVGContext, width, height });
+    //     requestAnimationFrame(frame);
+    // };
+    // requestAnimationFrame(frame);
+    makeDrawing({ Context: SVGContext, width, height });
 };
 
 main();
