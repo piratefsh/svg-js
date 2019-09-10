@@ -8,6 +8,7 @@ export default class P5Context extends ContextInterface {
     constructor(...args) {
         super(...args);
         this._bezierPoints = null;
+        this._loop = false;
     }
 
     p5Functions(p) {
@@ -16,7 +17,9 @@ export default class P5Context extends ContextInterface {
         p.draw = this.drawFn;
         p.setup = () => {
             p.createCanvas(this.width, this.height);
-            p.noLoop();
+            if(!this._loop){
+                p.noLoop();
+            }
         };
         /* eslint-enable no-param-reassign */
     }
@@ -31,6 +34,10 @@ export default class P5Context extends ContextInterface {
 
     save() {
         this.p5renderer.saveCanvas(this.saveFileName());
+    }
+
+    animate(flag){
+        this._loop = flag;
     }
 
     line(...args) {

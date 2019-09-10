@@ -15,10 +15,14 @@ export default class ContextInterface {
         this.instantiate(parentNode);
     }
 
-    /* eslint-disable class-methods-use-this */
 
+    /* eslint-disable class-methods-use-this */
     instantiate(options) {
         return `instantiate ${options}`;
+    }
+
+    animate(){
+        return "animate";
     }
 
     line() {

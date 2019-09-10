@@ -2,7 +2,7 @@ import "./styles/index.scss";
 import { makeContextContainer, makeSaveButton } from "./helpers/dom-helpers";
 import Drawing from "./components/Drawing";
 import SVGContext from "./contexts/SVGContext";
-// import P5Context from "./contexts/P5Context";
+import P5Context from "./contexts/P5Context";
 
 const makeDrawing = ({ Context, width, height }) => {
     const parent = makeContextContainer(Context.NAME);
@@ -26,11 +26,11 @@ const makeDrawing = ({ Context, width, height }) => {
     });
 };
 const main = () => {
-    const width = 700;
-    const height = 700;
+    const width = 200;
+    const height = 200;
 
-    // makeDrawing({ Context: P5Context, width, height });
-    makeDrawing({ Context: SVGContext, width, height });
+    makeDrawing({ Context: P5Context, width, height });
+    // makeDrawing({ Context: SVGContext, width, height });
 };
 
 main();
