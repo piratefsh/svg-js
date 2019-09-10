@@ -71,23 +71,34 @@ function numNeibs(canvas, idx, dirs, target){
   const pos = (x, y) => coordToIdx(width, height, [x, y])
 
   return dirs.reduce((acc, d) => {
+    let nx, ny;
     if(d === 'A'){
-      return acc + (canvas[pos(x, y - 1)] in target) ? 1 : 0
+      nx = x;
+      ny = y - 1;
     } else if (d === 'N') {
-      return acc + (canvas[pos(x + 1, y - 1)] in target) ? 1 : 0
+      nx = x + 1;
+      ny = y - 1;
     } else if (d === 'R') {
-      return acc + (canvas[pos(x + 1, y)] in target) ? 1 : 0
+      nx = x + 1;
+      ny = y;
     } else if (d === 'E') {
-      return acc + (canvas[pos(x + 1, y + 1)] in target) ? 1 : 0
+      nx = x + 1;
+      ny = y + 1;
     } else if (d === 'B') {
-      return acc + (canvas[pos(x, y + 1)] in target) ? 1 : 0
+      nx = x;
+      ny = y + 1;
     } else if (d === 'S') {
-      return acc + (canvas[pos(x - 1, y + 1)] in target) ? 1 : 0
+      nx = x - 1;
+      ny = y + 1;
     } else if (d === 'L') {
-      return acc + (canvas[pos(x - 1, y)] in target) ? 1 : 0
+      nx = x - 1;
+      ny = y;
     } else if (d === 'W') {
-      return acc + (canvas[pos(x - 1, y - 1)] in target) ? 1 : 0
+      nx = x - 1;
+      ny = y - 1;
     }
+    const neib = pos(nx, ny);
+    return acc + (target.indexOf(canvas[neib]) > -1 ? 1 : 0 )
   }, 0)
 }
 export {
