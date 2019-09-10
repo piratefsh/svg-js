@@ -32,12 +32,14 @@ export default class Drawing {
         canvas.fill("0".charCodeAt(0))
         ctx.animate(true);
         const wbtOptions = ['3459ABFGHLMNRSTXYZ', '012678CDEIJKOPQUVW6789ABIJKLMNUVWXYZ', '012345CDEFGHOPQRST']
+        const pr = 3;
 
         ctx.draw(() => {
-            const pr = 3;
-            xl(canvas, [1, 1], 3000, "0Y1Y2Y3Y4Y5Y6Y7Y8Y9YAYBYCYDYEYFYHYIYJYKYLYMYNY");
+            xl(canvas, [1, 1], 20, "0Y1Y2Y3Y4Y5Y6Y7Y8Y9YAYBYCYDYEYFYHYIYJYKYLYMYNY");
             axl(canvas, [1, 1], [1, 2, 3, 4], "ABRL", "UVWXY", pr, "0Z1Z2Z3Z4Z5Z6Z7Z8Z9ZAZBZCZDZEZFZHZIZJZKZLZMZNZ")
             xl(canvas, [1, 1], 1, "00123456789ABCDEFGHIJKLMNOPQRSTUVWXY");
+
+            console.log(canvas)
 
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {

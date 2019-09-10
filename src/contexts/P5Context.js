@@ -18,6 +18,7 @@ export default class P5Context extends ContextInterface {
         p.draw = this.drawFn;
         p.setup = () => {
             p.createCanvas(this.width, this.height);
+            p.frameRate(24);
             if(!this._loop){
                 p.noLoop();
             }
