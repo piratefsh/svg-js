@@ -44,6 +44,26 @@ function axl(canvas, prob, nums, dirs, target, freq, lookup){
   }
 }
 
+/**
+  WBT  (n,p)(whites,blacks,twinkles)goto
+  e.g.
+  WBT  (1,1)(01234,56789,ABCXYZ)
+
+  specifies which characters are output as white, which as black and
+  which ones twinkle (i.e. are independently chosen spot-by-spot,
+  frame-by-frame, to be black or white with 50/50 probability.)
+  In the example, 0 to 4 are white, 5 to 9 black and letters
+  A, B, C, X, Y, and Z twinkle; other letters retain their
+  previous significance.
+
+  Printed output - i.e. from TST mode - is unaffected by WBT:
+  here zeros come out as blanks and all other characters appear
+  as themselves.
+**/
+function wbt(){
+
+}
+
 function idxToCoord(width, height, idx){
   return [idx % width, Math.floor(idx/width)];
 }
@@ -89,9 +109,25 @@ function numNeibs(canvas, idx, dirs, target){
 
   const pos = ([x, y]) => coordToIdx(width, height, [x, y])
 
-  return dirs.reduce((acc, d) => {
-    let nx, ny;
-    if(d === 'A'){
+  let acc = 0;
+  for(let i = 0; i < dirs.length; i++){
+    const neibCoord = getNeibPos(dirs[i], [x, y])
+
+    if(!neibCoord) {
+      continue
+    }
+    const neib = pos(normalizeCoords(neibCoord, width, height));
+
+    acc += (target.indexOf(canvas[neib]) > -1 ? 1 : 0 )
+  }
+
+  return acc;
+}
+
+function getNeibPos(d, coord){
+  const [x, y] = coord;
+  let nx, ny;
+  if(d === 'A'){
       nx = x;
       ny = y - 1;
     } else if (d === 'N') {
@@ -116,12 +152,11 @@ function numNeibs(canvas, idx, dirs, target){
       nx = x - 1;
       ny = y - 1;
     } else {
-      return acc
+      return false
     }
-    const neib = pos(normalizeCoords([nx, ny], width, height));
-    return acc + (target.indexOf(canvas[neib]) > -1 ? 1 : 0 )
-  }, 0)
+    return [nx, ny]
 }
+
 export {
   xl,
   axl,
