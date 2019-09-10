@@ -1,4 +1,4 @@
-import { axl, xl } from "./explor";
+import { axl, xl, wbt, get } from "./explor";
 
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
@@ -29,11 +29,12 @@ export default class Drawing {
         const canvas = new Uint8Array(width * height);
         canvas.width = width;
         canvas.height = height;
-        canvas.fill(0);
+        canvas.fill("0".charCodeAt(0))
         ctx.animate(true);
+        const wbtOptions = ['ABCD', '0123', 'WXYZ']
 
         ctx.draw(() => {
-            xl(canvas, [1, 1], 3, "09");
+            xl(canvas, [1, 1], 1, "0W");
             axl(
                 canvas,
                 [1, 1],
@@ -41,13 +42,13 @@ export default class Drawing {
                 "RNEAB",
                 "ABCD",
                 5,
-                "05"
+                "WA"
             );
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
-                    const hue = canvas[y * width + x];
+                    const px = get(canvas, y * width + x);
                     ctx.setStyles({
-                        stroke: `hsla(${hue}, 80%, 50%, 1.0)`
+                        stroke: wbt(px, ...wbtOptions)
                     });
                     ctx.point(x, y);
                 }

@@ -1,26 +1,34 @@
-function run(prob){
-  const [n, p] = prob;
-  return n * Math.random() <= p;
+function run(prob) {
+    const [n, p] = prob;
+    return n * Math.random() <= p;
 }
 
-function transliterate(canvas, idx, freq, lookup){
-  const px = canvas[idx];
-  const currIdx = lookup.indexOf(px);
-
-  if(run([freq, 1]) && currIdx > -1){
-    // replace px with new one
-    if (currIdx + 1 < lookup.length){
-        canvas[idx] = lookup.charAt(currIdx + 1)
-    }
-  }
+function set(canvas, idx, val){
+    return canvas[idx] = `${val}`.charCodeAt(0);
 }
 
-function xl(canvas, prob, freq, lookup){
-  if(run(prob)){
-    for(let i = 0; i < canvas.length; i++){
-      transliterate(canvas, i, freq, lookup)
+function get(canvas, idx){
+    return String.fromCodePoint(canvas[idx])
+}
+
+function transliterate(canvas, idx, freq, lookup) {
+    const px = get(canvas, idx);
+    const currIdx = lookup.indexOf(px);
+
+    if (run([freq, 1]) && currIdx > -1) {
+        // replace px with new one
+        if ((currIdx + 1) < lookup.length) {
+            set(canvas, idx, lookup.charAt(currIdx + 1));
+        }
     }
-  }
+}
+
+function xl(canvas, prob, freq, lookup) {
+    if (run(prob)) {
+        for (let i = 0; i < canvas.length; i++) {
+            transliterate(canvas, i, freq, lookup);
+        }
+    }
 }
 
 /**
@@ -37,15 +45,15 @@ function xl(canvas, prob, freq, lookup){
   to the right, north, east, south or west are A's or B's
   or C's or D's, then about one-fifth of the digits 0-9
   thus situated are changed to X's.
-  **/
-function axl(canvas, prob, nums, dirs, target, freq, lookup){
-  if(run(prob)){
-    for(let i = 0; i < canvas.length; i++){
-      if(numNeibs(canvas, i, dirs, target) in nums){
-        transliterate(canvas, i, freq, lookup);
-      }
+  * */
+function axl(canvas, prob, nums, dirs, target, freq, lookup) {
+    if (run(prob)) {
+        for (let i = 0; i < canvas.length; i++) {
+            if (numNeibs(canvas, i, dirs, target) in nums) {
+                transliterate(canvas, i, freq, lookup);
+            }
+        }
     }
-  }
 }
 
 /**
@@ -63,37 +71,49 @@ function axl(canvas, prob, nums, dirs, target, freq, lookup){
   Printed output - i.e. from TST mode - is unaffected by WBT:
   here zeros come out as blanks and all other characters appear
   as themselves.
-**/
-function wbt(){
+* */
+function wbt(pixel, whites, blacks, twinkles) {
+    const WHITE = "rgb(255, 255, 255)";
+    const BLACK = "rgb(0, 0, 0)";
+    if (whites.indexOf(pixel) > -1) {
+        return WHITE;
+    }
 
+    if (blacks.indexOf(pixel) > -1) {
+        return BLACK;
+    }
+
+    if (twinkles.indexOf(pixel) > -1) {
+        return run([2, 1]) ? WHITE : BLACK;
+    }
 }
 
-function idxToCoord(width, height, idx){
-  return [idx % width, Math.floor(idx/width)];
+function idxToCoord(width, height, idx) {
+    return [idx % width, Math.floor(idx / width)];
 }
 
-function coordToIdx(width, height, coord){
-  const [x, y] = coord;
-  return y * width + x
+function coordToIdx(width, height, coord) {
+    const [x, y] = coord;
+    return y * width + x;
 }
 
-function normalizeCoords(coords, width, height){
-  const [ x, y ] = coords;
-  let nx = x;
-  let ny = y;
-  if ( x < 0 ){
-    nx = width - 1
-  } else if (x > width - 1) {
-    nx = 0
-  }
+function normalizeCoords(coords, width, height) {
+    const [x, y] = coords;
+    let nx = x;
+    let ny = y;
+    if (x < 0) {
+        nx = width - 1;
+    } else if (x > width - 1) {
+        nx = 0;
+    }
 
-  if ( y < 0 ){
-    ny = height - 1
-  } else if (y > height - 1) {
-    ny = 0
-  }
+    if (y < 0) {
+        ny = height - 1;
+    } else if (y > height - 1) {
+        ny = 0;
+    }
 
-  return [nx, ny]
+    return [nx, ny];
 }
 
 /**
@@ -105,68 +125,71 @@ directions:
      /|\
     S B E
 
-**/
-function numNeibs(canvas, idx, dirs, target){
-  const { width, height } = canvas;
-  const [x, y] = idxToCoord(width, height, idx);
-  const px = canvas[idx];
+* */
+function numNeibs(canvas, idx, dirs, target) {
+    const { width, height } = canvas;
+    const [x, y] = idxToCoord(width, height, idx);
+    const px = get(canvas, idx);
 
-  const pos = ([x, y]) => coordToIdx(width, height, [x, y])
+    const pos = ([x, y]) => coordToIdx(width, height, [x, y]);
 
-  let acc = 0;
-  for(let i = 0; i < dirs.length; i++){
-    const neibCoord = getNeibPos(dirs[i], [x, y])
+    let acc = 0;
+    for (let i = 0; i < dirs.length; i++) {
+        const neibCoord = getNeibPos(dirs[i], [x, y]);
 
-    if(!neibCoord) {
-      continue
+        if (!neibCoord) {
+            continue;
+        }
+        const neib = pos(normalizeCoords(neibCoord, width, height));
+
+        acc += target.indexOf(get(canvas,neib)) > -1 ? 1 : 0;
     }
-    const neib = pos(normalizeCoords(neibCoord, width, height));
 
-    acc += (target.indexOf(canvas[neib]) > -1 ? 1 : 0 )
-  }
-
-  return acc;
+    return acc;
 }
 
-function getNeibPos(d, coord){
-  const [x, y] = coord;
-  let nx, ny;
-  if(d === 'A'){
-      nx = x;
-      ny = y - 1;
-    } else if (d === 'N') {
-      nx = x + 1;
-      ny = y - 1;
-    } else if (d === 'R') {
-      nx = x + 1;
-      ny = y;
-    } else if (d === 'E') {
-      nx = x + 1;
-      ny = y + 1;
-    } else if (d === 'B') {
-      nx = x;
-      ny = y + 1;
-    } else if (d === 'S') {
-      nx = x - 1;
-      ny = y + 1;
-    } else if (d === 'L') {
-      nx = x - 1;
-      ny = y;
-    } else if (d === 'W') {
-      nx = x - 1;
-      ny = y - 1;
+function getNeibPos(d, coord) {
+    const [x, y] = coord;
+    let nx, ny;
+    if (d === "A") {
+        nx = x;
+        ny = y - 1;
+    } else if (d === "N") {
+        nx = x + 1;
+        ny = y - 1;
+    } else if (d === "R") {
+        nx = x + 1;
+        ny = y;
+    } else if (d === "E") {
+        nx = x + 1;
+        ny = y + 1;
+    } else if (d === "B") {
+        nx = x;
+        ny = y + 1;
+    } else if (d === "S") {
+        nx = x - 1;
+        ny = y + 1;
+    } else if (d === "L") {
+        nx = x - 1;
+        ny = y;
+    } else if (d === "W") {
+        nx = x - 1;
+        ny = y - 1;
     } else {
-      return false
+        return false;
     }
-    return [nx, ny]
+    return [nx, ny];
 }
 
 export {
-  xl,
-  axl,
-  transliterate,
-  numNeibs,
-  idxToCoord,
-  coordToIdx,
-  normalizeCoords
-}
+    set,
+    get,
+    xl,
+    axl,
+    wbt,
+    transliterate,
+    numNeibs,
+    idxToCoord,
+    coordToIdx,
+    normalizeCoords
+};
