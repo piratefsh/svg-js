@@ -1,0 +1,55 @@
+import { numNeibs, transliterate, idxToCoord, coordToIdx} from "./explor";
+
+describe("explor", () => {
+    describe("transliterate", () => {
+        it("should transliterate single element", () => {
+            const canvas = ["a"];
+            transliterate(canvas, 0, 1, { a: "b" });
+            expect(canvas[0]).toBe("b");
+        });
+    });
+
+    describe("numNeibs", () => {
+        it("should detect neighbour above", () => {
+            const canvas = [
+                0, 1, 0,
+                0, 'a', 0,
+                0, 0, 0
+            ]
+            expect(numNeibs(canvas, 4, ['A'], 1)).toBe(1)
+
+        })
+    })
+
+    describe('idxToCoord', () => {
+        it('should return correct coord', () => {
+            const canvas = [
+                0, 1, 2,
+                3, 4, 5,
+                6, 7, 8
+            ];
+
+            expect(idxToCoord(3, 3, 0)).toEqual([0, 0])
+            expect(idxToCoord(3, 3, 2)).toEqual([2, 0])
+            expect(idxToCoord(3, 3, 3)).toEqual([0, 1])
+            expect(idxToCoord(3, 3, 4)).toEqual([1, 1])
+            expect(idxToCoord(3, 3, 8)).toEqual([2, 2])
+        })
+    })
+
+    describe('coordToIdx', () => {
+        it('should return correct coord', () => {
+            const canvas = [
+                0, 1, 2,
+                3, 4, 5,
+                6, 7, 8
+            ];
+
+            expect(coordToIdx(3, 3, [0, 0])).toEqual(0)
+            expect(coordToIdx(3, 3, [2, 0])).toEqual(2)
+            expect(coordToIdx(3, 3, [0, 1])).toEqual(3)
+            expect(coordToIdx(3, 3, [1, 1])).toEqual(4)
+            expect(coordToIdx(3, 3, [2, 2])).toEqual(8)
+        })
+    })
+});

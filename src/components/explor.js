@@ -3,7 +3,7 @@ function run(prob){
   return Math.random() <= (p/n);
 }
 
-function trans(canvas, idx, freq, lookup){
+function transliterate(canvas, idx, freq, lookup){
   const px = canvas[idx];
   if(run([freq, 1]) && px in lookup){
     // replace px with new one
@@ -14,7 +14,7 @@ function trans(canvas, idx, freq, lookup){
 function xl(canvas, prob, freq, lookup){
   if(run(prob)){
     canvas.forEach((px, idx) => {
-      trans(canvas, idx, freq, lookup)
+      transliterate(canvas, idx, freq, lookup)
     })
   }
 }
@@ -38,17 +38,17 @@ function axl(canvas, prob, nums, dirs, target, freq, lookup){
   if(run(prob)){
     canvas.forEach((px, idx) => {
       if(numNeibs(canvas, idx, dirs, target) in nums){
-        trans(canvas, idx, freq, lookup);
+        transliterate(canvas, idx, freq, lookup);
       }
     })
   }
 }
 
 function idxToCoord(width, height, idx){
-  return [idx % width, Math.trunc(idx/width) * height];
+  return [idx % width, Math.floor(idx/width)];
 }
 
-function coordToIdx(coord, width, height){
+function coordToIdx(width, height, coord){
   const [x, y] = coord;
   return y * width + x
 }
@@ -68,7 +68,7 @@ function numNeibs(canvas, idx, dirs, target){
   const [x, y] = idxToCoord(width, height, idx);
   const px = canvas[idx];
 
-  const pos = (x, y) => coordToIdx([x, y], width, height)
+  const pos = (x, y) => coordToIdx(width, height, [x, y])
 
   return dirs.reduce((acc, d) => {
     if(d === 'A'){
@@ -92,5 +92,9 @@ function numNeibs(canvas, idx, dirs, target){
 }
 export {
   xl,
-  axl
+  axl,
+  transliterate,
+  numNeibs,
+  idxToCoord,
+  coordToIdx,
 }
