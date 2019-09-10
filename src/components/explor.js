@@ -5,9 +5,13 @@ function run(prob){
 
 function transliterate(canvas, idx, freq, lookup){
   const px = canvas[idx];
-  if(run([freq, 1]) && px in lookup){
+  const currIdx = lookup.indexOf(px);
+
+  if(run([freq, 1]) && currIdx > -1){
     // replace px with new one
-    canvas[idx] = lookup[px]
+    if (currIdx + 1 < lookup.length){
+        canvas[idx] = lookup.charAt(currIdx + 1)
+    }
   }
 }
 

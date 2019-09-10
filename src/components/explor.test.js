@@ -7,6 +7,12 @@ describe("explor", () => {
             transliterate(canvas, 0, 1, "ab");
             expect(canvas[0]).toBe("b");
         });
+
+        it("should not transliterate nonexistent element", () => {
+            const canvas = ["a"];
+            transliterate(canvas, 0, 1, "cd");
+            expect(canvas[0]).toBe("a");
+        });
     });
 
     describe("normalizeCoords", () => {
