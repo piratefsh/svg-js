@@ -4,7 +4,7 @@ describe("explor", () => {
     describe("transliterate", () => {
         it("should transliterate single element", () => {
             const canvas = ["a"];
-            transliterate(canvas, 0, 1, { a: "b" });
+            transliterate(canvas, 0, 1, "ab");
             expect(canvas[0]).toBe("b");
         });
     });
@@ -25,14 +25,14 @@ describe("explor", () => {
 
             canvas.width = 3;
             canvas.height = 3;
-            expect(numNeibs(canvas, 4, ['A'], [2])).toBe(1)
-            expect(numNeibs(canvas, 4, ['N'], [3])).toBe(1)
-            expect(numNeibs(canvas, 4, ['R'], [5])).toBe(1)
-            expect(numNeibs(canvas, 4, ['E'], [8])).toBe(1)
-            expect(numNeibs(canvas, 4, ['B'], [7])).toBe(1)
-            expect(numNeibs(canvas, 4, ['S'], [6])).toBe(1)
-            expect(numNeibs(canvas, 4, ['L'], [4])).toBe(1)
-            expect(numNeibs(canvas, 4, ['W'], [1])).toBe(1)
+            expect(numNeibs(canvas, 4, 'A', '2')).toBe(1)
+            expect(numNeibs(canvas, 4, 'N', '3')).toBe(1)
+            expect(numNeibs(canvas, 4, 'R', '5')).toBe(1)
+            expect(numNeibs(canvas, 4, 'E', '8')).toBe(1)
+            expect(numNeibs(canvas, 4, 'B', '7')).toBe(1)
+            expect(numNeibs(canvas, 4, 'S', '6')).toBe(1)
+            expect(numNeibs(canvas, 4, 'L', '4')).toBe(1)
+            expect(numNeibs(canvas, 4, 'W', '1')).toBe(1)
 
         })
 
@@ -45,10 +45,10 @@ describe("explor", () => {
 
             canvas.width = 3;
             canvas.height = 3;
-            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 0]), ['A'], [7])).toBe(1)
-            expect(numNeibs(canvas, coordToIdx(3, 3, [2, 1]), ['R'], [4])).toBe(1)
-            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 2]), ['B'], [2])).toBe(1)
-            expect(numNeibs(canvas, coordToIdx(3, 3, [0, 1]), ['L'], [5])).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 0]), 'A', '7')).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [2, 1]), 'R', '4')).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 2]), 'B', '2')).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [0, 1]), 'L', '5')).toBe(1)
         })
     })
 
