@@ -1,6 +1,6 @@
 function run(prob){
   const [n, p] = prob;
-  return Math.random() <= (p/n);
+  return n * Math.random() <= p;
 }
 
 function transliterate(canvas, idx, freq, lookup){
@@ -13,9 +13,9 @@ function transliterate(canvas, idx, freq, lookup){
 
 function xl(canvas, prob, freq, lookup){
   if(run(prob)){
-    canvas.forEach((px, idx) => {
-      transliterate(canvas, idx, freq, lookup)
-    })
+    for(let i = 0; i < canvas.length; i++){
+      transliterate(canvas, i, freq, lookup)
+    }
   }
 }
 
@@ -36,11 +36,11 @@ function xl(canvas, prob, freq, lookup){
   **/
 function axl(canvas, prob, nums, dirs, target, freq, lookup){
   if(run(prob)){
-    canvas.forEach((px, idx) => {
-      if(numNeibs(canvas, idx, dirs, target) in nums){
-        transliterate(canvas, idx, freq, lookup);
+    for(let i = 0; i < canvas.length; i++){
+      if(numNeibs(canvas, i, dirs, target) in nums){
+        transliterate(canvas, i, freq, lookup);
       }
-    })
+    }
   }
 }
 
