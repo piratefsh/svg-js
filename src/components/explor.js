@@ -53,6 +53,25 @@ function coordToIdx(width, height, coord){
   return y * width + x
 }
 
+function normalizeCoords(coords, width, height){
+  const [ x, y ] = coords;
+  let nx = x;
+  let ny = y;
+  if ( x < 0 ){
+    nx = width - 1
+  } else if (x > width - 1) {
+    nx = 0
+  }
+
+  if ( y < 0 ){
+    ny = height - 1
+  } else if (y > height - 1) {
+    ny = 0
+  }
+
+  return [nx, ny]
+}
+
 /**
 directions:
 
@@ -68,7 +87,7 @@ function numNeibs(canvas, idx, dirs, target){
   const [x, y] = idxToCoord(width, height, idx);
   const px = canvas[idx];
 
-  const pos = (x, y) => coordToIdx(width, height, [x, y])
+  const pos = ([x, y]) => coordToIdx(width, height, [x, y])
 
   return dirs.reduce((acc, d) => {
     let nx, ny;
@@ -96,8 +115,10 @@ function numNeibs(canvas, idx, dirs, target){
     } else if (d === 'W') {
       nx = x - 1;
       ny = y - 1;
+    } else {
+      return acc
     }
-    const neib = pos(nx, ny);
+    const neib = pos(normalizeCoords([nx, ny], width, height));
     return acc + (target.indexOf(canvas[neib]) > -1 ? 1 : 0 )
   }, 0)
 }
@@ -108,4 +129,5 @@ export {
   numNeibs,
   idxToCoord,
   coordToIdx,
+  normalizeCoords
 }

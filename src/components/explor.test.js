@@ -1,4 +1,4 @@
-import { numNeibs, transliterate, idxToCoord, coordToIdx} from "./explor";
+import { numNeibs, transliterate, idxToCoord, coordToIdx, normalizeCoords} from "./explor";
 
 describe("explor", () => {
     describe("transliterate", () => {
@@ -7,6 +7,12 @@ describe("explor", () => {
             transliterate(canvas, 0, 1, { a: "b" });
             expect(canvas[0]).toBe("b");
         });
+    });
+
+    describe("normalizeCoords", () => {
+        it("should wrap around", () => {
+            expect(normalizeCoords([1, 3], 3, 3)).toEqual([1, 0])
+        })
     });
 
     describe("numNeibs", () => {
@@ -28,6 +34,21 @@ describe("explor", () => {
             expect(numNeibs(canvas, 4, ['L'], [4])).toBe(1)
             expect(numNeibs(canvas, 4, ['W'], [1])).toBe(1)
 
+        })
+
+        it("should wrap around", () => {
+            const canvas = [
+                1, 2, 3,
+                4, 'a', 5,
+                6, 7, 8
+            ]
+
+            canvas.width = 3;
+            canvas.height = 3;
+            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 0]), ['A'], [7])).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [2, 1]), ['R'], [4])).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [1, 2]), ['B'], [2])).toBe(1)
+            expect(numNeibs(canvas, coordToIdx(3, 3, [0, 1]), ['L'], [5])).toBe(1)
         })
     })
 
