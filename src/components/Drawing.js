@@ -27,11 +27,13 @@ export default class Drawing {
     draw() {
         const { ctx, width, height, styles } = this;
         const canvas = new Uint8Array(width * height);
-        canvas.fill(1)
+        canvas.width = width;
+        canvas.height = height;
+        canvas.fill(30)
         ctx.animate(true);
 
         ctx.draw(() => {
-            xl(canvas, [2, 1], 3, {1: 255});
+            xl(canvas, [2, 1], 3, {30: 255});
             for(let y = 0; y < height; y++){
                 for(let x = 0; x < width; x++){
                     const hue = canvas[y * width + x];
