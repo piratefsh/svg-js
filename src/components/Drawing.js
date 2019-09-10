@@ -19,7 +19,7 @@ export default class Drawing {
         this.height = height;
 
         this.fillStyle = {
-            fill: "hsla(200, 50%, 80%, 0.3)",
+            fill: "hsla(200, 50%, 10%, 1)",
             strokeWidth: 0
         };
     }
@@ -122,12 +122,12 @@ export default class Drawing {
         ];
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 4) {
+    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 5) {
         const { ctx } = this;
 
-        ctx.setStyles(this.fillStyle);
-        ctx.crect(size, size, x, y);
-        ctx.setStyles(this.styles);
+        // ctx.setStyles(this.fillStyle);
+        // ctx.crect(size, size, x, y);
+        // ctx.setStyles(this.styles);
 
         if (depth === rounds) {
             return;
