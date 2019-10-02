@@ -2,6 +2,10 @@ function random(start, end) {
     return Math.random() * (end - start) + start;
 }
 
+function randomSelect(arr){
+    return arr[Math.floor(random(0, arr.length))]
+}
+
 function radians(deg) {
     return (deg / 180) * Math.PI;
 }
@@ -41,4 +45,4 @@ function rotate({ x, y }, theta = 0, origin) {
     };
 }
 
-export { random, radians, polarToCartesian, rotate, translate };
+export { random, radians, polarToCartesian, rotate, translate, randomSelect };
