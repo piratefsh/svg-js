@@ -1,4 +1,5 @@
-import {random, translate, rotate} from '../helpers/math';
+import { random, translate, rotate } from "../helpers/math";
+
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
@@ -18,44 +19,67 @@ export default class Drawing {
         this.height = height;
     }
 
-    drawRings(offset, angleStep, radius, rings){
-        const points = []
+    drawWalk(offset, angleStep, radius, steps) {
+        const nextStep = (p, offset, n, steps) => {
+            const x = (p.x - offset.x) * -((n / steps) * Math.PI) + offset.x;
+            const y = (p.y - offset.y) * -((n / steps) * Math.PI) + offset.y;
+            return { x, y };
+        };
+        const points = [];
         const { ctx } = this;
 
-        for(let theta = 0; theta < Math.PI*2; theta += random(0.05, 0.2)){
-            const x = radius.x * Math.sin(theta) * Math.cos(theta/5)
-            const y = radius.y * Math.cos(theta)
-            points.push(translate(rotate({x, y}, Math.PI/4), offset))
+        for (
+            let theta = 0;
+            theta < Math.PI * 2;
+            theta += random(0.05, angleStep)
+        ) {
+            const x = radius.x * Math.sin(theta);
+            const y = radius.y * Math.cos(theta);
+            points.push(translate(rotate({ x, y }, Math.PI / 4), offset));
         }
-        points.push(points[0])
-        for(let n = 0; n < rings/2; n++){
-            ctx.startLine();
-            points.forEach((p) => {
-                const x = (p.x - offset.x) * (4*Math.sin(n/rings * Math.PI)) + offset.x
-                const y = (p.y - offset.y) * (4*Math.sin(n/rings * Math.PI)) + offset.y
-                ctx.lineVertex(x, y)
-            })
-            ctx.endLine();
+        points.push(points[0]);
+        let currPoints = points.map(p => offset);
+
+        for (let n = 1; n <= steps; n++) {
+            const newPoints = [];
+            // ctx.startLine();
+
+            points.forEach((p, i) => {
+                const { x, y } = nextStep(p, offset, n, steps);
+                // ctx.lineVertex(x, y)
+
+                const prev = currPoints[i + Math.floor(random(0, 2))];
+                if (prev && random(0, 1) > 0.9) {
+                    ctx.line(x, y, prev.x, prev.y);
+
+                    const neib = nextStep(points[i + 1] || points[0], offset, n, steps);
+                    ctx.line(x, y, neib.x, neib.y);
+                }
+                newPoints.push({ x, y });
+            });
+
+            currPoints = newPoints;
+
+            // ctx.endLine();
         }
     }
 
     draw() {
         const { ctx } = this;
         ctx.draw(() => {
-
             ctx.setStyles(this.styles);
             const offset = {
-                x: this.width/2,
-                y: this.height/2
-            }
+                x: this.width / 2,
+                y: this.height / 2
+            };
             const angleStep = 0.1;
             const radius = {
                 x: 40,
-                y: 35
+                y: 40
             };
-            const rings = 31;
+            const rings = 10;
 
-            this.drawRings(offset, angleStep, radius, rings)
+            this.drawWalk(offset, angleStep, radius, rings);
         });
     }
 
