@@ -5,7 +5,7 @@ export default class Drawing {
             {
                 stroke: "black",
                 strokeWidth: 1,
-                fill: "rgba(0, 0, 0, 0.1)"
+                fill: "rgba(0, 0, 0, 0)"
             },
             styles
         );
@@ -20,22 +20,18 @@ export default class Drawing {
     draw() {
         const { ctx } = this;
         ctx.draw(() => {
-            ctx.setStyles({ fill: "#eee" });
-            ctx.rect(this.width, this.height, 0, 0);
 
             ctx.setStyles(this.styles);
 
-            ctx.startBezier(30, 70);
-            ctx.bezierVertex(50, 50, 134, 122, 160, 170);
-            ctx.bezierVertex(190, 120, 210, 210);
-            ctx.endBezier();
 
             ctx.startLine();
-            ctx.lineVertex(200, 0);
-            ctx.lineVertex(100, 50);
-            ctx.lineVertex(250, 100);
-            ctx.lineVertex(100, 200);
-            ctx.lineVertex(400, 400);
+            const angleStep = 0.01;
+            const radius = 10;
+            for(let theta = 0; theta < Math.PI*2; theta += angleStep){
+                const x = radius * Math.sin(theta);
+                const y = radius * Math.cos(theta);
+                ctx.lineVertex(x, y)
+            }
             ctx.endLine();
         });
     }
