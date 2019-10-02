@@ -6,7 +6,7 @@ export default class Drawing {
         this.styles = Object.assign(
             {
                 stroke: "black",
-                strokeWidth: 1,
+                strokeWidth: 2,
                 fill: "rgba(0, 0, 0, 0)"
             },
             styles
@@ -24,19 +24,37 @@ export default class Drawing {
         const { ctx, styles } = this;
         ctx.setStyles(styles)
         ctx.draw(() => {
-            const start = {x: this.width/2, y: this.height/2};
-            let pos = { x: start.x, y: start.y }
-            let stepsLeft = 30;
-            ctx.startLine()
-            while(stepsLeft > 0){
-                const newPos = rotate(translate(pos, {x: random(5, 20), y: 0}), randomSelect([0, Math.PI/2, Math.PI, Math.PI * 0.75]), pos)
-                ctx.lineVertex(newPos.x, newPos.y);
-                ctx.ellipse(5, 5, newPos.x, newPos.y);
-                console.log(stepsLeft, newPos.x, newPos.y);
-                stepsLeft--;
-                pos = newPos;
+            // const start = {x: this.width/2, y: this.height/2};
+            // const start = {x: 0, y: 0};
+
+            for(let i = 0; i < 3; i++){
+                const start = {x: 0, y: i * 10};
+                let pos = { x: start.x, y: start.y }
+                ctx.startLine()
+                while(pos.x < this.width && pos.y < this.height){
+                    const newPos = rotate(translate(pos, {x: randomSelect([10, -10]), y: 0}), randomSelect([0, Math.PI/2]), pos)
+                    ctx.lineVertex(newPos.x, newPos.y);
+                    // ctx.ellipse(5, 5, newPos.x, newPos.y);
+                    pos = newPos;
+                }
+                ctx.endLine()
+
             }
-            ctx.endLine()
+
+            // for(let i = 0; i < 80; i++)
+            // {
+            //     const start = {y: 0, x: i * 10};
+            //     let pos = { x: start.x, y: start.y }
+            //     ctx.startLine()
+            //     while(pos.x < this.width && pos.y < this.height){
+            //         const newPos = rotate(translate(pos, {x: 10, y: 0}), randomSelect([0, Math.PI/2]), pos)
+            //         ctx.lineVertex(newPos.x, newPos.y);
+            //         // ctx.ellipse(5, 5, newPos.x, newPos.y);
+            //         pos = newPos;
+            //     }
+            //     ctx.endLine()
+
+            // }
         });
     }
 

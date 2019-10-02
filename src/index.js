@@ -12,7 +12,7 @@ const makeDrawing = ({ Context, width, height }) => {
         width,
         height,
         styles: {
-            strokeWidth: 1,
+            strokeWidth: 2,
             stroke: "hsla(0, 100%, 0%, 0.5)"
         }
     };
