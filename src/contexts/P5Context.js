@@ -8,6 +8,8 @@ export default class P5Context extends ContextInterface {
     constructor(...args) {
         super(...args);
         this._bezierPoints = null;
+        this._loop = false;
+        this._cache = {};
     }
 
     p5Functions(p) {
@@ -16,7 +18,9 @@ export default class P5Context extends ContextInterface {
         p.draw = this.drawFn;
         p.setup = () => {
             p.createCanvas(this.width, this.height);
-            p.noLoop();
+            if(!this._loop){
+                p.noLoop();
+            }
         };
         /* eslint-enable no-param-reassign */
     }
@@ -33,6 +37,10 @@ export default class P5Context extends ContextInterface {
         this.p5renderer.saveCanvas(this.saveFileName());
     }
 
+    animate(flag){
+        this._loop = flag;
+    }
+
     line(...args) {
         this.instance.line(...args);
     }
@@ -43,6 +51,10 @@ export default class P5Context extends ContextInterface {
 
     rect(width, height, x, y) {
         this.instance.rect(x, y, width, height);
+    }
+
+    crect(width, height, x, y) {
+        this.instance.rect(x - width / 2, y - height / 2, width, height);
     }
 
     arc(x, y, radX, radY, start, stop) {
@@ -67,6 +79,7 @@ export default class P5Context extends ContextInterface {
         const { instance } = this;
         instance.vertex(x, y);
     }
+
 
     startBezier(x, y) {
         const { instance } = this;
@@ -114,10 +127,9 @@ export default class P5Context extends ContextInterface {
                 const prevx = prev[prev.length - 2];
                 const prevy = prev[prev.length - 1];
                 // rotate normalized c2 by the end point by 180 deg
-                const { x: cx, y: cy } = rotate(
-                    {
-                        x: prevcx - prevx,
-                        y: prevcy - prevy
+                const { x: cx, y: cy } = rotate({
+                    x: prevcx - prevx,
+                    y: prevcy - prevy,
                     },
                     Math.PI
                 );
@@ -135,10 +147,21 @@ export default class P5Context extends ContextInterface {
 
     setStyles(styles) {
         const { stroke, strokeWidth, strokeWeight, fill } = styles;
-        if (stroke) this.instance.stroke(stroke);
+        if (stroke) this.instance.stroke(this._fetchColor(stroke));
         if (strokeWidth || strokeWeight)
             this.instance.strokeWeight(strokeWidth || strokeWeight);
-        if (fill) this.instance.fill(fill);
+        if (fill) this.instance.fill(this._fetchColor(fill));
+    }
+
+    _fetchColor(color){
+        if(color){
+            if(color in this._cache){
+                return this._cache[color]
+            }
+            this._cache[color] = this.instance.color(color)
+            return this._cache[color];
+        }
+        return;
     }
 
     getDOMElement() {

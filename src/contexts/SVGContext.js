@@ -78,6 +78,14 @@ export default class SVGContext extends ContextInterface {
             .attr(this.styles);
     }
 
+    crect(sizeX, sizeY, x, y) {
+        return this.instance
+            .rect(sizeX, sizeY)
+            .cx(x)
+            .cy(y)
+            .attr(this.styles);
+    }
+
     arc(x, y, radX, radY, startRadian, stopRadian) {
         const rotation = 0;
         const largeArcFlag = 0;
@@ -116,7 +124,7 @@ export default class SVGContext extends ContextInterface {
         this.instance
             .path(
                 `M ${x1} ${y1} L ${points
-                    .map(({ x, y }) => `${x} ${y}`)
+                    .map(({ x, y, type }) => `${type} ${x} ${y}`)
                     .join(" ")}`
             )
             .attr(this.styles);
@@ -124,7 +132,11 @@ export default class SVGContext extends ContextInterface {
     }
 
     lineVertex(x, y) {
-        this._linePoints.push({ x, y });
+        this._linePoints.push({ x, y, type: "" });
+    }
+
+    lineMove(x, y) {
+        this._linePoints.push({ x, y, type: "M" });
     }
 
     startBezier(x, y) {
