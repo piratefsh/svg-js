@@ -12,8 +12,8 @@ const makeDrawing = ({ Context, width, height }) => {
         width,
         height,
         styles: {
-            strokeWidth: 4,
-            stroke: "hsla(30, 40%, 50%, 0.6)"
+            strokeWidth: 1,
+            stroke: "hsla(0, 100%, 0%, 0.5)"
         }
     };
     const instance = new Drawing(options);
