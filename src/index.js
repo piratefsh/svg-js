@@ -19,14 +19,14 @@ const makeDrawing = ({ Context, width, height }) => {
     const instance = new Drawing(options);
     instance.draw();
     makeSaveButton({
-        label: `Save ${Context.name}`,
+        label: `Save ${Context.name}.svg`,
         fn: () => instance.save(),
         element: ctx.getDOMElement()
     });
 };
 const main = () => {
     const width = 300;
-    const height = 300;
+    const height = 500;
 
     // makeDrawing({ Context: P5Context, width, height });
     makeDrawing({ Context: SVGContext, width, height });
