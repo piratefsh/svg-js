@@ -24,6 +24,10 @@ function translate({ x, y }, { x: xt, y: yt }) {
     };
 }
 
+function dist(a, b){
+    return  Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2))
+}
+
 function rotate({ x, y }, theta = 0, origin) {
     if (origin) {
         return translate(
@@ -45,4 +49,4 @@ function rotate({ x, y }, theta = 0, origin) {
     };
 }
 
-export { random, radians, polarToCartesian, rotate, translate, randomSelect };
+export { dist, random, radians, polarToCartesian, rotate, translate, randomSelect };
