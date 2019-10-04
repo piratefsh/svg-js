@@ -28,6 +28,7 @@ export default class Drawing {
             const TWO_PI =  Math.PI*2
             const r = 100;
             for(let t = 0; t < TWO_PI ; t+= TWO_PI/5){
+                ctx.setStyles({stroke: randomSelect(['orangered', 'teal', 'deeppink'])})
                 const start = translate({x: r * Math.sin(t), y: r * Math.cos(t)}, center);
                 // const start = center
                 let pos = { x: start.x, y: start.y }
