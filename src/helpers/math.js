@@ -24,6 +24,11 @@ function translate({ x, y }, { x: xt, y: yt }) {
     };
 }
 
+function normalize({x, y}){
+    const mag = dist({x: 0, y: 0}, {x, y})
+    return {x: x/mag, y: y/mag}
+}
+
 function dist(a, b){
     return  Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2))
 }
@@ -49,4 +54,4 @@ function rotate({ x, y }, theta = 0, origin) {
     };
 }
 
-export { dist, random, radians, polarToCartesian, rotate, translate, randomSelect };
+export { normalize, dist, random, radians, polarToCartesian, rotate, translate, randomSelect };
