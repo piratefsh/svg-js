@@ -1,4 +1,4 @@
-import { random, randomSelect, translate, rotate } from "../helpers/math";
+import { dist, random, randomSelect, translate, rotate } from "../helpers/math";
 
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
@@ -26,21 +26,24 @@ export default class Drawing {
         ctx.draw(() => {
             const center = {x: this.width/2, y: this.height/2}
             const TWO_PI =  Math.PI*2
-            const r = 100;
-            for(let t = 0; t < TWO_PI ; t+= TWO_PI/5){
+            const r = 140;
+
+            for(let t = 0; t < TWO_PI ; t+= TWO_PI/9){
                 ctx.setStyles({stroke: randomSelect(['orangered', 'teal', 'deeppink'])})
                 const start = translate({x: r * Math.sin(t), y: r * Math.cos(t)}, center);
                 // const start = center
                 let pos = { x: start.x, y: start.y }
                 ctx.startLine()
-                let steps = 2000;
+                let steps = 1000;
                 // while(pos.x < this.width && pos.y < this.height){
                 while(steps && pos.x < this.width && pos.y < this.height && pos.x > 0 && pos.y > 0){
                     const newPos = rotate(translate(pos, {x: randomSelect([4, -4]), y: 0}), randomSelect([0, Math.PI/2]), pos)
-                    ctx.lineVertex(newPos.x, newPos.y);
-                    // ctx.ellipse(5, 5, newPos.x, newPos.y);
-                    pos = newPos;
-                    steps--;
+                    if(dist(newPos, center) < r){
+                        ctx.lineVertex(newPos.x, newPos.y);
+                        // ctx.ellipse(5, 5, newPos.x, newPos.y);
+                        pos = newPos;
+                        steps--;
+                    }
                 }
                 ctx.endLine()
 
