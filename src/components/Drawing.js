@@ -33,7 +33,10 @@ export default class Drawing {
         ctx.draw(() => {
             const gx = this.width
             const gy = this.height
-            grid2d(gx, gy, 4, 7, (x, y, cx, cy, i, j) => {
+            const nr = 5
+            const nc = 7
+
+            grid2d(gx, gy, nr, nc, (x, y, cx, cy, i, j) => {
                 let offset = 0;
                 if (j % 2 == 0) {
                     offset = -cx / 2;
@@ -41,7 +44,7 @@ export default class Drawing {
                         ctx.setStyles({fill: 'red'})
                         cx /= 2;
                         offset = 0
-                    } else if (i == 3) {
+                    } else if (i == (nr-1)) {
                         cx /= 2;
                         // offset = -cx/2;
                         ctx.setStyles({fill: 'green'})
@@ -50,7 +53,7 @@ export default class Drawing {
                         ctx.setStyles({fill: 'blue'})
                     }
                 } else {
-                    if (i == 3) {
+                    if (i == (nr-1)) {
                         return
                     }
                 }
