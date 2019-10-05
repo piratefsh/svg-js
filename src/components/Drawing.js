@@ -6,6 +6,7 @@ import {
     dist,
     normalize
 } from "../helpers/math";
+import { grid2d } from "../helpers/grids";
 
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
@@ -14,7 +15,7 @@ export default class Drawing {
             {
                 stroke: "black",
                 strokeWidth: 2,
-                fill: "rgba(0, 0, 0, 0)"
+                fill: "rgba(0, 0, 0, 0.0)"
             },
             styles
         );
@@ -30,87 +31,47 @@ export default class Drawing {
         const { ctx, styles } = this;
         ctx.setStyles(styles);
         ctx.draw(() => {
-            const grid = { x: 4, y: 4 };
-            const center = { x: this.width / 2, y: this.height / 2 };
-            const cell = { x: this.width / grid.x, y: this.height / grid.y };
-            const bugs = [];
-            const baits = [];
-            const numbugs = 18;
-
-            for (let i = 0; i < numbugs; i++) {
-                const theta = (i / numbugs) * Math.PI * 2;
-                bugs.push({
-                    x: center.x + 200 * Math.sin(theta),
-                    y: center.y + 200 * Math.cos(theta)
-                });
-            }
-            // draw bugs
-            bugs.forEach(bt => {
-                // ctx.ellipse(20, 20, bt.x, bt.y);
-            });
-
-            for (let i = 0; i <= grid.x; i++) {
-                const offsetY = i % 2 == 0 ? 0 : cell.y / 2;
-                for (let j = 0; j <= grid.y; j++) {
-                    const bait = {
-                        x: i * cell.x,
-                        y: 0 + j * cell.y
-                    };
-
-                    const vel = normalize({
-                        x: center.x - bait.x,
-                        y: center.y - bait.y
-                    });
-
-                    bait.velocity = {
-                        x: vel.x * 2,
-                        y: vel.y * 2
-                    };
-
-                    if (dist(bait, center) < 200)
-                     {
-                        baits.push(bait);
-                        // ctx.ellipse(10, 10, bait.x, bait.y);
+            const gx = this.width
+            const gy = this.height
+            grid2d(gx, gy, 4, 7, (x, y, cx, cy, i, j) => {
+                let offset = 0;
+                if (j % 2 == 0) {
+                    offset = -cx / 2;
+                    if (i == 0) {
+                        ctx.setStyles({fill: 'red'})
+                        cx /= 2;
+                        offset = 0
+                    } else if (i == 3) {
+                        cx /= 2;
+                        // offset = -cx/2;
+                        ctx.setStyles({fill: 'green'})
+                    }
+                    else {
+                        ctx.setStyles({fill: 'blue'})
+                    }
+                } else {
+                    if (i == 3) {
+                        return
                     }
                 }
-            }
-
-            const uncaught = baits.length;
-            let maxSteps = 70;
-
-            while (maxSteps) {
-                maxSteps--;
-
-                baits.forEach(bt => {
-                    bt.x += bt.velocity.x;
-                    bt.y += bt.velocity.y;
-                });
-
-                ctx.startLine();
-                bugs.forEach((b, i) => {
-                    // find nearest bait
-                    const bait = baits.reduce((nearest, bt) => {
-                        if (!nearest || dist(b, bt) < dist(b, nearest)) {
-                            return bt;
-                        }
-                        return nearest;
-                    }, null);
-
-                    if (
-                        maxSteps &&
-                        (Math.abs(b.x - bait.x) > 3 ||
-                            Math.abs(b.y - bait.y) > 3)
-                    ) {
-                        b.x += (bait.x - b.x) / 10;
-                        b.y += (bait.y - b.y) / 10;
-                    }
-                    ctx.lineVertex(b.x, b.y);
-                });
-
-                ctx.lineVertex(bugs[0].x, bugs[0].y);
-
-                ctx.endLine();
-            }
+                // ctx.ellipse(3, 3, offset + x, y);
+                // ctx.rect(cx, cy, x + offset, y);
+                const numLines =
+                    10 + 30 *
+                    (dist({ x: x + offset, y }, { x: 0, y: 0 }) /
+                        dist(
+                            { x: gx, y: gy },
+                            { x: 0, y: 0 }
+                        ));
+                console.log(numLines);
+                for (let i = 0; i < numLines; i++) {
+                    const step = (cy / numLines) * i;
+                    const gutter = 10;
+                    const lx = offset + x ;
+                    const ly = y + step;
+                    ctx.line(lx + gutter, ly + gutter, lx + cx - gutter, ly - gutter);
+                }
+            });
         });
     }
 
