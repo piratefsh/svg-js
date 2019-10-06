@@ -11,9 +11,6 @@ const makeDrawing = ({ Context, width, height }) => {
         ctx,
         width,
         height,
-        styles: {
-            stroke: "hsla(0, 100%, 0%, 0.5)"
-        }
     };
     const instance = new Drawing(options);
     instance.draw();
