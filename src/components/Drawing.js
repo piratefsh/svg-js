@@ -16,7 +16,7 @@ export default class Drawing {
         this.styles = Object.assign(
             {
                 stroke: "hsla(195, 60%, 50%, 0.5)",
-                strokeWidth: 2,
+                strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
             styles
@@ -31,7 +31,7 @@ export default class Drawing {
 
     kernel(x, y, rx, ry, cx, cy){
         const { ctx } = this;
-        ctx.ellipse(2, 2, x, y)
+        // ctx.ellipse(2, 2, x, y)
         ctx.arc(x, y, rx, ry, 0 + Math.PI/2, Math.PI + Math.PI/2)
         ctx.arc(x + cx/2, y, rx, ry, Math.PI + Math.PI/2, 0 + Math.PI/2)
         ctx.line(x, y - ry, x + cx/2, y - ry)
@@ -43,8 +43,8 @@ export default class Drawing {
         ctx.draw(() => {
             const gx = width
             const gy = height
-            const nr = 5; //Math.floor(random(4, 6))
-            const nc = 10; //Math.floor(random(4, 6))
+            const nr = 8; //Math.floor(random(4, 6))
+            const nc = nr * 2; //Math.floor(random(4, 6))
             const amp = random(0, 2)
             const margin = {x: 50, y: 50}
 
@@ -56,9 +56,14 @@ export default class Drawing {
             ctx.setStyles(styles);
             grid2d(gx, gy, nr, nc, (x, y, cx, cy, i, j) => {
                 const rx = cx/4;
-                x+=rx
                 const ry = cy/2;
-                this.kernel(x, y, rx, ry, cx, cy)
+                x+=rx
+                y+=ry
+                const rings = random(1, cy/2)
+                for(let i = 0; i < rings/2; i++){
+                    const step = i
+                    this.kernel(x + 0.5*step, y, rx - 2*step, ry - 2*step, cx - 2*step, cy - 2*step)
+                }
             });
         });
     }
