@@ -43,14 +43,14 @@ export default class Drawing {
             ctx.setStyles(styles);
             const steps = 10;
             const branches = [];
-            const depth = 8;
+            const depth = 7;
             const lineWidth = depth/2;
-            this.branch({ x: width/2, y: height }, { y: -100, x: 0 }, lineWidth, depth);
+            this.branch({ x: width*0.5, y: height }, { y: -160, x: 0 }, lineWidth, depth);
         });
     }
 
     thiccLine(start, end, lineWidth){
-        for(let i = 0; i < lineWidth; i++){
+        for(let i = -lineWidth/2; i < lineWidth/2; i++){
             this.ctx.line(start.x + i, start.y + i, end.x + i, end.y + i);
         }
     }
@@ -63,6 +63,15 @@ export default class Drawing {
             x < 0 ||
             y < 0
         ) {
+            // ctx.ellipse(2, 2, x, y)
+            if(random(0, 1) > 1){
+                const size = 3;
+                ctx.ellipse(size, size, x, y-size)
+                ctx.ellipse(size, size, x-size, y)
+                ctx.ellipse(size, size, x+size, y)
+                ctx.ellipse(size, size, x, y-size)
+                ctx.ellipse(size, size, x, y+size)
+            }
             return;
         }
 
@@ -78,13 +87,13 @@ export default class Drawing {
 
         this.branch(
             translate(pos, mult(velocity, 0.5)),
-            rotate(mult(velocity, 0.7), Math.PI*0.2),
+            rotate(mult(velocity, 0.7), Math.PI*random(-0.1, 0.2)),
             lineWidth - 1,
             maxSteps - 1
         );
         this.branch(
             translate(pos, mult(velocity, 1)),
-            rotate(mult(velocity, 0.7), Math.PI*0.02),
+            rotate(mult(velocity, 0.63), Math.PI*random(-0.025, 0.025)),
             lineWidth - 1,
             maxSteps - 1
         );
