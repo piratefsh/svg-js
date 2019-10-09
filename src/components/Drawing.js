@@ -4,6 +4,7 @@ import {
     translate,
     rotate,
     dist,
+    mult,
     normalize
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
@@ -39,84 +40,54 @@ export default class Drawing {
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
-            const gx = width;
-            const gy = height;
-            const nr = 7;
-            const nc = nr;
-            const amp = random(0, 2);
-            const margin = { x: 50, y: 50 };
-
-            ctx.setStyles({
-                fill: "hsl(10, 10%, 90%) ",
-                stroke: "none"
-            });
-
             ctx.setStyles(styles);
-            grid2d(gx, gy, nr, nc, (x, y, cx, cy, i, j) => {
-                const pos = { x, y };
-                // ctx.rect(cx, cy, pos.x, pos.y);
-                const prob = random(0, 1);
-                if (i % 3 == 1) {
-                    if (prob < (i == nr ? 0.3 : 0.8)) {
-                        ctx.arc(x, y, cx, cy, Math.PI, 0);
-
-                        if (prob < 0.7) {
-                            const len = 1.2;
-                            const offset = random(
-                                -Math.PI / 2 + 0.3,
-                                Math.PI / 2 - 0.5
-                            );
-                            const segment = {
-                                start: Math.PI + len + offset,
-                                end: -len + offset
-                            };
-                            for (let i = 0; i < 6; i++) {
-                                ctx.arc(
-                                    x,
-                                    y,
-                                    cx - 1 * i,
-                                    cy - 1 * i,
-                                    segment.start,
-                                    segment.end
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    let angles = { start: 0, end: Math.PI }
-                    let anglesInner = { start: 0.4, end: Math.PI - 0.4 }
-                    if (prob < (i == nr || i == 0 ? 0.3 : 0.8)) {
-                        if(i == 0){
-                            angles = { start: 0, end: Math.PI/2 }
-                        }
-                        if(i == nc){
-                            angles = { start: Math.PI, end: Math.PI/2 }
-                        }
-                        ctx.arc(x, y, cx, cy, angles.start, angles.end);
-                        ctx.arc(x, y, cx - 1, cy - 1, angles.start, angles.end);
-                        if(prob < 0.2){
-                            ctx.arc(x, y, cx - 2, cy - 2, angles.start, angles.end);
-                        }
-                    }
-                    // rings
-                    if (prob < 0.4) {
-                        if(i == 0){
-                            anglesInner = { start: 0.4, end: Math.PI/2 }
-                        }
-                        for (let j = 0; j < 5; j++) {
-                            ctx.arc(
-                                x,
-                                y,
-                                cx - 4 * j,
-                                cy - 4 * j,
-                                anglesInner.start,
-                                anglesInner.end
-                            );
-                        }
-                    }
-                }
-            });
+            const steps = 10;
+            const branches = [];
+            const depth = 8;
+            const lineWidth = depth/2;
+            this.branch({ x: width/2, y: height }, { y: -100, x: 0 }, lineWidth, depth);
         });
+    }
+
+    thiccLine(start, end, lineWidth){
+        for(let i = 0; i < lineWidth; i++){
+            this.ctx.line(start.x + i, start.y + i, end.x + i, end.y + i);
+        }
+    }
+
+    branch(pos, velocity, width, maxSteps) {
+        const { ctx } = this;
+        const { x, y } = pos;
+        if (
+            maxSteps <= 0 ||
+            x < 0 ||
+            y < 0
+        ) {
+            return;
+        }
+
+        let lineWidth = width > 1 ? width : 1;
+
+        this.thiccLine(pos, translate(pos, velocity), lineWidth);
+        this.branch(
+            translate(pos, mult(velocity, 0.5)),
+            rotate(mult(velocity, 0.6), -1 * Math.PI * random(0.08, 0.12)),
+            lineWidth - 1,
+            maxSteps - 1
+        );
+
+        this.branch(
+            translate(pos, mult(velocity, 0.5)),
+            rotate(mult(velocity, 0.7), Math.PI*0.2),
+            lineWidth - 1,
+            maxSteps - 1
+        );
+        this.branch(
+            translate(pos, mult(velocity, 1)),
+            rotate(mult(velocity, 0.7), Math.PI*0.02),
+            lineWidth - 1,
+            maxSteps - 1
+        );
     }
 
     save() {

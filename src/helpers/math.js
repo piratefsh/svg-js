@@ -54,4 +54,7 @@ function rotate({ x, y }, theta = 0, origin) {
     };
 }
 
-export { normalize, dist, random, radians, polarToCartesian, rotate, translate, randomSelect };
+function mult({x, y}, n){
+    return {x: x * n, y: y*n}
+}
+export { mult, normalize, dist, random, radians, polarToCartesian, rotate, translate, randomSelect };
