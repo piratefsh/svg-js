@@ -30,15 +30,6 @@ export default class Drawing {
         this.height = height;
     }
 
-    kernel(x, y, rx, ry, cx, cy) {
-        const { ctx } = this;
-        // ctx.ellipse(2, 2, x, y)
-        ctx.arc(x, y, rx, ry, 0 + Math.PI / 2, Math.PI + Math.PI / 2);
-        ctx.arc(x + cx / 2, y, rx, ry, Math.PI + Math.PI / 2, 0 + Math.PI / 2);
-        ctx.line(x, y - ry, x + cx / 2, y - ry);
-        ctx.line(x, y + ry, x + cx / 2, y + ry);
-    }
-
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
@@ -47,75 +38,27 @@ export default class Drawing {
             const branches = [];
             const depth = 6;
             const lineWidth = depth;
-            this.branch({ y: 0, x: height/2 - 30}, { y: 150, x: 0 }, lineWidth, depth);
-            this.branch({ y: width, x: height/2 + 30}, { y: -150, x: 0 }, lineWidth, depth);
+
+            for(let i = 0; i < 10; i++){
+                this.thiccLine(i * 20, random(30, height-3), random(i*20, width), height-30, i);
+                this.thiccDot(i * 20, 30, i*2);
+            }
         });
     }
 
-    thiccLine(start, end, lineWidth){
+    thiccLine(sx, sy, ex, ey, lineWidth=1){
+        const vec = normalize(rotate({x: sx-ex, y: sy-ey}, Math.PI/2));
         for(let i = -lineWidth/2; i < lineWidth/2; i++){
-            this.ctx.line(start.x + i, start.y + i, end.x + i, end.y + i);
+            const st = translate({x: sx, y: sy}, mult(vec, i))
+            const en = translate({x: ex, y: ey}, mult(vec, i))
+            this.ctx.line(st.x, st.y, en.x, en.y);
         }
     }
 
-    thiccDot(pos, size){
+    thiccDot(x, y, size){
         for(let i = 0; i < size; i++){
-            this.ctx.ellipse(i, i, pos.x, pos.y)
+            this.ctx.ellipse(i, i, x, y)
         }
-    }
-
-    branch(pos, velocity, width, maxSteps) {
-        const size = 4;
-        const { ctx } = this;
-        const { x, y } = pos;
-        if (
-            maxSteps <= 0 ||
-            x < 0 ||
-            y < 0
-        ) {
-            // ctx.ellipse(2, 2, x, y)
-            if(random(0, 1) > 0){
-                // this.thiccDot({x, y}, 6)
-                // ctx.ellipse(size, size, x, y-size)
-                // ctx.ellipse(size, size, x-size, y)
-                // ctx.ellipse(size, size, x+size, y)
-                // ctx.ellipse(size, size, x, y-size)
-                // ctx.ellipse(size, size, x, y+size)
-            }
-            return;
-        }
-
-        let lineWidth = width > 1 ? width : 1;
-
-        // this.thiccDot({x, y}, 2)
-
-        this.thiccLine(pos, translate(pos, velocity), lineWidth);
-        this.branch(
-            translate(pos, mult(velocity, 0.45)),
-            rotate(mult(velocity, 0.5), -1 * Math.PI * 0.3),
-            lineWidth - 1,
-            maxSteps - 1
-        );
-
-        this.branch(
-            translate(pos, mult(velocity, 0.5)),
-            rotate(mult(velocity, -0.66), Math.PI * perm),
-            lineWidth - 1,
-            maxSteps - 1
-        );
-        this.branch(
-            translate(pos, mult(velocity, 1)),
-            rotate(mult(velocity, 0.5), Math.PI*0.25),
-            lineWidth - 1,
-            maxSteps - 1
-        );
-
-        // this.branch(
-        //     translate(pos, mult(velocity, 1)),
-        //     rotate(mult(velocity, 0.3), Math.PI*1),
-        //     lineWidth - 1,
-        //     maxSteps - 1
-        // );
     }
 
     save() {
