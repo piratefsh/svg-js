@@ -32,25 +32,40 @@ export default class Drawing {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(styles);
+            const radius = width/3
+            const parentLen = radius*  Math.sqrt(3)/2
+            const tileArea = (Math.sqrt(3) / 4) * Math.pow(parentLen, 2);
+            const childTileArea = tileArea/3;
+            const len = Math.sqrt((4*childTileArea)/Math.sqrt(3));
 
-            const points = [];
-            const num = 3;
-            for (let i = 0; i < num; i++) {
-                const theta = (-i / num) * Math.PI * 2;
-                points.push({
-                    x: (width / 2) * Math.sin(theta) + width / 2,
-                    y: (height / 2) * Math.cos(theta) + height / 2
-                });
+            for(let i = 0; i < 6; i++){
+                const theta = Math.PI/6 + (i / 6) * Math.PI * 2;
+                console.log(len, theta)
+                this.kochSnowflake({
+                    x: width/2 + radius * Math.sin(theta),
+                    y: width/2 + radius * Math.cos(theta)},
+                    len,  Math.PI/6)
             }
+        });
+    }
 
-            points.forEach((start, i) => {
-                const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
+    kochSnowflake(center, radius, offsetRot=0){
+        const points = [];
+        const num = 3;
+        for (let i = 0; i < num; i++) {
+            const theta = offsetRot + (-i / num) * Math.PI * 2;
+            points.push(translate({
+                x: radius * Math.sin(theta),
+                y: radius * Math.cos(theta)
+            }, center));
+        }
 
-                this.kochCurve(start, end, 4, 3);
-                this.kochCurve(end, start, 4, 3);
-                // this.kochCurve(start, end, 2, 3);
-                // this.kochCurve(start, end, 1, 4);
-            });
+        points.forEach((start, i) => {
+            const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
+
+            this.kochCurve(start, end, 3, 1);
+            // this.kochCurve(start, end, 2, 3);
+            // this.kochCurve(start, end, 1, 4);
         });
     }
 
