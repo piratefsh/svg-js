@@ -9,6 +9,10 @@ import {
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
 
+const PI = Math.PI;
+const TWO_PI = 2 * PI;
+const THIRD_TWO_PI = TWO_PI / 3;
+
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
@@ -32,45 +36,57 @@ export default class Drawing {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(styles);
-            this.kochTessel({x: width/2, y: height/2}, width/3 - 40, 1, 1);
+            this.kochTessel(
+                { x: width / 2, y: height / 2 },
+                width / 3 - 40,
+                1,
+                2
+            );
         });
     }
 
-    kochTessel(center, radius, depth = 1, levels=1) {
-        const TWO_PI = 2 * Math.PI;
-        const PI = Math.PI;
-        const THIRD_TWO_PI = TWO_PI/3;
+    radToLen(radius) {
+        return (radius / Math.sin(PI / 6)) * Math.sin(THIRD_TWO_PI);
+    }
 
-        const parentLen = radius/Math.sin(PI/3/2) * Math.sin(THIRD_TWO_PI);
-        
+    lenToRad(len){
+        return (len / Math.sin(THIRD_TWO_PI)) * Math.sin(PI / 6);
+
+    }
+
+    kochTessel(center, radius, depth = 1, levels = 1, i = 0) {
+        this.ctx.ellipse(radius * 2, radius * 2, center.x, center.y);
+
+        const parentLen = this.radToLen(radius);
+
         const tileArea = (Math.sqrt(3) / 4) * Math.pow(parentLen, 2);
         const childTileArea = tileArea / 3;
-        const len = Math.sqrt((4 * childTileArea) / Math.sqrt(3));
+        const childLen = Math.sqrt((4 * childTileArea) / Math.sqrt(3));
 
         if (depth == 0) {
-            this.kochSnowflake(
+            this.kochSnowflake({
                 center,
                 radius,
-                Math.PI / 6,
+                offsetRot: Math.PI / 6,
                 levels
-            );
+            });
         } else {
             for (let i = 0; i < 6; i++) {
                 const theta = Math.PI / 6 + (i / 6) * Math.PI * 2;
-                const lenToRad = len/Math.sin(THIRD_TWO_PI) * Math.sin(PI/3 / 2)
-                this.kochTessel(
-                    translate({
+                const rad = this.lenToRad(childLen);
+                const pos = translate(
+                    {
                         x: radius * Math.sin(theta),
                         y: radius * Math.cos(theta)
-                    }, center),
-                    lenToRad,
-                    depth - 1
+                    },
+                    center
                 );
+                this.kochTessel(pos, rad, depth - 1, levels, i);
             }
         }
     }
 
-    kochSnowflake(center, radius, offsetRot = 0, levels=1) {
+    kochSnowflake({ center, radius, offsetRot, levels }) {
         const points = [];
         const num = 3;
         for (let i = 0; i < num; i++) {
