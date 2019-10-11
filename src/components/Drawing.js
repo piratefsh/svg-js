@@ -46,8 +46,8 @@ export default class Drawing {
             points.forEach((start, i) => {
                 const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
 
-                this.kochCurve(start, end, 4, 3);
-                this.kochCurve(end, start, 4, 3);
+                this.kochCurve(start, end, 3, 3);
+                this.kochCurve(end, start, 3, 1);
                 // this.kochCurve(start, end, 2, 3);
                 // this.kochCurve(start, end, 1, 4);
             });
