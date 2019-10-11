@@ -9,8 +9,6 @@ import {
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
 
-const perm = random(2, 3);
-console.log(perm);
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
@@ -34,44 +32,60 @@ export default class Drawing {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(styles);
-            const numLines = 10;
-            const step = width / numLines;
-            const offsetX = step/2;
-            const maxThickness = 16;
-            const minThickness = 1;
-            const rows = 10;
-            for (let i = 0; i < numLines; i++) {
-                for(let j = 0; j < rows; j++){
-                    const s1 = translate({
-                        x: i * step,
-                        y: 0,
-                    }, {x: 0, y: height/rows*j})
-                    const e1 = translate({
-                        x: i * step,
-                        y: height/rows,
-                    }, {x: 0, y: height/rows*j})
-                    this.thiccLine(
-                        s1.x + step*(j/rows), s1.y, e1.x + step*(j/rows), e1.y, minThickness + maxThickness - Math.sin(1.3*j/rows * i/numLines*Math.PI)* (maxThickness-minThickness)
-                    );
-                }
 
+            const points = [];
+            const num = 3;
+            for (let i = 0; i < num; i++) {
+                const theta = (-i / num) * Math.PI * 2;
+                points.push({
+                    x: (width / 2) * Math.sin(theta) + width / 2,
+                    y: (height / 2) * Math.cos(theta) + height / 2
+                });
             }
+
+            points.forEach((start, i) => {
+                const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
+
+                this.kochCurve(start, end, 1, 1);
+                // this.kochCurve(start, end, 2, 3);
+                // this.kochCurve(start, end, 1, 4);
+            });
         });
     }
 
+    kochCurve(start, end, iters = 3, lineWidth=1) {
+        const len = {
+            x: (end.x - start.x) / 3,
+            y: (end.y - start.y) / 3
+        };
+
+        const { ctx } = this;
+        if (iters == 0) {
+            this.thiccLine(start.x, start.y, end.x, end.y, lineWidth);
+        } else {
+            this.kochCurve(start, translate(start, len), iters - 1, lineWidth);
+            this.kochCurve(
+                translate(start, len),
+                translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                iters - 1, lineWidth
+            );
+
+            this.kochCurve(
+                translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                translate(start, mult(len, 2)),
+                iters - 1, lineWidth
+            );
+            this.kochCurve(translate(start, mult(len, 2)), end, iters - 1, lineWidth);
+        }
+    }
+
     thiccLine(sx, sy, ex, ey, lineWidth = 1) {
-        lineWidth = Math.trunc(lineWidth)
+        lineWidth = Math.trunc(lineWidth);
         const vec = normalize(rotate({ x: sx - ex, y: sy - ey }, Math.PI / 2));
         for (let i = 0; i < lineWidth; i++) {
-            const offset = mult(vec, i - Math.floor(lineWidth / 2))
-            const st = translate(
-                { x: sx, y: sy },
-                offset
-            );
-            const en = translate(
-                { x: ex, y: ey },
-                offset
-            );
+            const offset = mult(vec, i - Math.floor(lineWidth / 2));
+            const st = translate({ x: sx, y: sy }, offset);
+            const en = translate({ x: ex, y: ey }, offset);
             this.ctx.line(st.x, st.y, en.x, en.y);
         }
     }
