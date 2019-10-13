@@ -38,9 +38,9 @@ export default class Drawing {
             ctx.setStyles(styles);
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
-                this.chordToRad(width/3),
-                1,
-                1
+                this.chordToRad(width/2),
+                3,
+                2
             );
         });
     }
@@ -63,16 +63,11 @@ export default class Drawing {
     }
 
     kochTessel(center, radius, depth = 1, iters = 1, i = 2) {
-        this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
-        
-        if(depth==1)this.kochSnowflake({center, radius, offsetRot: 0, iters})
+        // this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
+        // this.kochSnowflake({center, radius, offsetRot: Math.PI / 6 * (depth-1), iters})
 
         const parentLen = this.radToChord(radius);
-        // from http://larryriddle.agnesscott.org/ifs/ksnow/area.htm
-        const tileArea = (2 * Math.sqrt(3)) / 5 * (parentLen * parentLen);
-        const childTileArea = tileArea / 3;
-        const childLen = Math.sqrt(childTileArea * (5/(2*Math.sqrt(3))));
-        const childRad = this.chordToRad(childLen)
+        const childRad = radius/2
         if (depth == 0) {
             this.kochSnowflake({
                 center,
@@ -82,9 +77,8 @@ export default class Drawing {
             });
         } else {
             for (let i = 0; i < 6; i++) {
-                const theta = Math.PI / 6 + (i / 6) * Math.PI * 2;
-                const rad = this.chordToRad(childLen);
-                const spoke = radius + childRad //-  this.equiTriangleHeight(parentLen/3)
+                const theta = Math.PI/6 + (i / 6) * Math.PI * 2;
+                const spoke = radius
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
