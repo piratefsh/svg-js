@@ -19,7 +19,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.3)",
+                stroke: "hsla(340, 100%, 50%, 1)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -42,7 +42,7 @@ export default class Drawing {
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
                 this.chordToRad(width / 3),
-                3,
+                2,
                 3
             );
         });
@@ -77,16 +77,6 @@ export default class Drawing {
             this.ctx.ellipse(radius * 2, radius * 2, center.x, center.y);
         }
 
-        const childRad = radius * (2 - ROOT_2);
-        if (depth != 0) {
-            this.kochSnowflake({
-                center,
-                radius: this.equiTriangleHeight(radius) - 1,
-                offsetRot: offsetRot + Math.PI / 6,
-                iters,
-                lineWidth: depth
-            });
-        }
         if (depth == 0) {
             if (debug) {
                 return;
@@ -98,6 +88,7 @@ export default class Drawing {
                 iters
             });
         } else {
+            const childRad = radius * (2 - ROOT_2);
             for (let i = 0; i < 6; i++) {
                 const theta = offsetRot + (i * Math.PI) / 3;
                 // unsure why minus 1 here, might be something to do with line calcs
@@ -123,7 +114,7 @@ export default class Drawing {
         }
     }
 
-    kochSnowflake({ center, radius, offsetRot, iters, lineWidth=1}) {
+    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
         const points = [];
         const num = 3;
         // this.ctx.ellipse(radius*2, radius*2, center.x, center.y)
@@ -143,11 +134,11 @@ export default class Drawing {
         points.forEach((start, i) => {
             const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
 
-            this.kochCurve(start, end, iters, lineWidth);
+            this.kochCurve({ start, end, iters, lineWidth });
         });
     }
 
-    kochCurve(start, end, iters = 3, lineWidth = 1) {
+    kochCurve({ start, end, iters = 3, lineWidth = 1 }) {
         const len = {
             x: (end.x - start.x) / 3,
             y: (end.y - start.y) / 3
@@ -157,26 +148,31 @@ export default class Drawing {
         if (iters == 0) {
             this.thiccLine(start.x, start.y, end.x, end.y, lineWidth);
         } else {
-            this.kochCurve(start, translate(start, len), iters - 1, lineWidth);
-            this.kochCurve(
-                translate(start, len),
-                translate(rotate(len, -Math.PI / 3), translate(start, len)),
-                iters - 1,
+            this.kochCurve({
+                start,
+                end: translate(start, len),
+                iters: iters - 1,
                 lineWidth
-            );
+            });
+            this.kochCurve({
+                start: translate(start, len),
+                end: translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                iters: iters - 1,
+                lineWidth
+            });
 
-            this.kochCurve(
-                translate(rotate(len, -Math.PI / 3), translate(start, len)),
-                translate(start, mult(len, 2)),
-                iters - 1,
+            this.kochCurve({
+                start: translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                end: translate(start, mult(len, 2)),
+                iters: iters - 1,
                 lineWidth
-            );
-            this.kochCurve(
-                translate(start, mult(len, 2)),
-                end,
-                iters - 1,
+            });
+            this.kochCurve({
+                start: translate(start, mult(len, 2)),
+                end: end,
+                iters: iters - 1,
                 lineWidth
-            );
+            });
         }
     }
 
