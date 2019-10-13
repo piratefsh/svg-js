@@ -19,7 +19,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 1)",
+                stroke: "hsla(340, 100%, 50%, 0.3)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -37,7 +37,7 @@ export default class Drawing {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
-            // ctx.rect(width, height, 0, 0);
+            ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
