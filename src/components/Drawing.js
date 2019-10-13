@@ -54,18 +54,29 @@ export default class Drawing {
 
     }
 
-    kochTessel(center, radius, depth = 1, iters = 1, i = 0) {
+    equiTriangleHeight(len){
+        return Math.sqrt(len*len - Math.pow(len/2, 2));
+    }
+
+    arcHeight(r, c){
+        return r - w * math.sin()
+    }
+
+    kochTessel(center, radius, depth = 1, iters = 1, i = 2) {
         this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
+        
+        if(depth==1)this.kochSnowflake({center, radius, offsetRot: 0, iters})
 
         const parentLen = this.radToChord(radius);
-        const tileArea = (Math.sqrt(3) / 4) * parentLen * parentLen;
+        // from http://larryriddle.agnesscott.org/ifs/ksnow/area.htm
+        const tileArea = (2 * Math.sqrt(3)) / 5 * (parentLen * parentLen);
         const childTileArea = tileArea / 3;
-        const childLen = Math.sqrt((4 * childTileArea) / Math.sqrt(3));
+        const childLen = Math.sqrt(childTileArea * (5/(2*Math.sqrt(3))));
         const childRad = this.chordToRad(childLen)
         if (depth == 0) {
             this.kochSnowflake({
                 center,
-                radius: radius * Math.sqrt(2),
+                radius: radius,
                 offsetRot: Math.PI / 6,
                 iters
             });
@@ -73,7 +84,7 @@ export default class Drawing {
             for (let i = 0; i < 6; i++) {
                 const theta = Math.PI / 6 + (i / 6) * Math.PI * 2;
                 const rad = this.chordToRad(childLen);
-                const spoke = radius + childRad
+                const spoke = radius + childRad //-  this.equiTriangleHeight(parentLen/3)
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
@@ -81,7 +92,7 @@ export default class Drawing {
                     },
                     center
                 );
-                this.kochTessel(pos, rad, depth - 1, iters, i);
+                this.kochTessel(pos, childRad, depth - 1, iters, i);
             }
         }
     }
@@ -89,6 +100,7 @@ export default class Drawing {
     kochSnowflake({ center, radius, offsetRot, iters }) {
         const points = [];
         const num = 3;
+        // this.ctx.ellipse(radius*2, radius*2, center.x, center.y)
         for (let i = 0; i < num; i++) {
             const theta = offsetRot + (-i / num) * Math.PI * 2;
             points.push(
