@@ -8,18 +8,18 @@ import {
     normalize
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
-
+const debug = false;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
-
+const ROOT_2 = 1.414
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
         this.styles = Object.assign(
             {
                 stroke: "rgba(200, 0, 0, 0.5)",
-                strokeWidth: 2,
+                strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
             styles
@@ -38,8 +38,8 @@ export default class Drawing {
             ctx.setStyles(styles);
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
-                this.chordToRad(width/2),
-                3,
+                this.chordToRad(width/3),
+                2,
                 2
             );
         });
@@ -62,23 +62,25 @@ export default class Drawing {
         return r - w * math.sin()
     }
 
-    kochTessel(center, radius, depth = 1, iters = 1, i = 2) {
-        // this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
-        // this.kochSnowflake({center, radius, offsetRot: Math.PI / 6 * (depth-1), iters})
+    kochTessel(center, radius, depth = 1, iters = 1, i = 2, offsetRot=Math.PI/6) {
+        if(debug){
+            this.ctx.ellipse(2, 2, center.x, center.y);
+            this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
+        }
 
-        const parentLen = this.radToChord(radius);
-        const childRad = radius/2
+        const childRad = radius * (2-ROOT_2)
         if (depth == 0) {
+            if(debug) { return }
             this.kochSnowflake({
                 center,
-                radius: radius,
-                offsetRot: Math.PI / 6,
+                radius: this.equiTriangleHeight(radius),
+                offsetRot: offsetRot + Math.PI/6,
                 iters
             });
         } else {
             for (let i = 0; i < 6; i++) {
-                const theta = Math.PI/6 + (i / 6) * Math.PI * 2;
-                const spoke = radius
+                const theta = offsetRot + (i * Math.PI/3);
+                const spoke = radius-1
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
@@ -86,7 +88,9 @@ export default class Drawing {
                     },
                     center
                 );
-                this.kochTessel(pos, childRad, depth - 1, iters, i);
+
+                // this.ctx.line(pos.x, pos.y, center.x, center.y)
+                this.kochTessel(pos, childRad, depth - 1, iters, i, offsetRot + Math.PI/6);
             }
         }
     }
