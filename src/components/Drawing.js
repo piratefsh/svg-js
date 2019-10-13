@@ -8,17 +8,18 @@ import {
     normalize
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
+
 const debug = false;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
-const ROOT_2 = 1.414
+const ROOT_2 = 1.414;
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.1)",
+                stroke: "hsla(340, 100%, 50%, 0.3)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -35,55 +36,72 @@ export default class Drawing {
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
-            ctx.setStyles({strokeWidth: 0, fill: 'hsla(350, 50%, 10%, 1)'});
-            ctx.rect(width, height, 0, 0);
+            ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
+            // ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
-                this.chordToRad(width/3),
+                this.chordToRad(width / 3),
                 3,
-                4
+                3
             );
         });
     }
 
-    radToChord(radius, theta=THIRD_TWO_PI) {
-        return 2 * radius * Math.sin(theta/2)
+    radToChord(radius, theta = THIRD_TWO_PI) {
+        return 2 * radius * Math.sin(theta / 2);
     }
 
-    chordToRad(len, theta=THIRD_TWO_PI){
-        return len / (2 * Math.sin(theta/2))
-
+    chordToRad(len, theta = THIRD_TWO_PI) {
+        return len / (2 * Math.sin(theta / 2));
     }
 
-    equiTriangleHeight(len){
-        return Math.sqrt(len*len - Math.pow(len/2, 2));
+    equiTriangleHeight(len) {
+        return Math.sqrt(len * len - Math.pow(len / 2, 2));
     }
 
-    arcHeight(r, c){
-        return r - w * math.sin()
+    arcHeight(r, c) {
+        return r - w * math.sin();
     }
 
-    kochTessel(center, radius, depth = 1, iters = 1, i = 2, offsetRot=Math.PI/6) {
-        if(debug){
+    kochTessel(
+        center,
+        radius,
+        depth = 1,
+        iters = 1,
+        i = 2,
+        offsetRot = Math.PI / 6
+    ) {
+        if (debug) {
             this.ctx.ellipse(2, 2, center.x, center.y);
-            this.ctx.ellipse(radius*2, radius*2, center.x, center.y);
+            this.ctx.ellipse(radius * 2, radius * 2, center.x, center.y);
         }
 
-        const childRad = radius * (2-ROOT_2)
+        const childRad = radius * (2 - ROOT_2);
+        if (depth != 0) {
+            this.kochSnowflake({
+                center,
+                radius: this.equiTriangleHeight(radius) - 1,
+                offsetRot: offsetRot + Math.PI / 6,
+                iters,
+                lineWidth: depth
+            });
+        }
         if (depth == 0) {
-            if(debug) { return }
+            if (debug) {
+                return;
+            }
             this.kochSnowflake({
                 center,
                 radius: this.equiTriangleHeight(radius),
-                offsetRot: offsetRot + Math.PI/6,
+                offsetRot: offsetRot + Math.PI / 6,
                 iters
             });
         } else {
             for (let i = 0; i < 6; i++) {
-                const theta = offsetRot + (i * Math.PI/3);
+                const theta = offsetRot + (i * Math.PI) / 3;
                 // unsure why minus 1 here, might be something to do with line calcs
-                const spoke = radius-1;
+                const spoke = radius - 1;
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
@@ -93,12 +111,19 @@ export default class Drawing {
                 );
 
                 // this.ctx.line(pos.x, pos.y, center.x, center.y)
-                this.kochTessel(pos, childRad, depth - 1, iters, i, offsetRot + Math.PI/6);
+                this.kochTessel(
+                    pos,
+                    childRad,
+                    depth - 1,
+                    iters,
+                    i,
+                    offsetRot + Math.PI / 6
+                );
             }
         }
     }
 
-    kochSnowflake({ center, radius, offsetRot, iters }) {
+    kochSnowflake({ center, radius, offsetRot, iters, lineWidth=1}) {
         const points = [];
         const num = 3;
         // this.ctx.ellipse(radius*2, radius*2, center.x, center.y)
@@ -118,7 +143,7 @@ export default class Drawing {
         points.forEach((start, i) => {
             const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
 
-            this.kochCurve(start, end, iters, 1);
+            this.kochCurve(start, end, iters, lineWidth);
         });
     }
 
