@@ -18,7 +18,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "rgba(200, 0, 0, 0.5)",
+                stroke: "hsla(10, 100%, 50%, 0.5)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -35,12 +35,14 @@ export default class Drawing {
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
+            ctx.setStyles({strokeWidth: 0, fill: 'hsla(0, 80%, 10%, 1)'});
+            ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
             this.kochTessel(
                 { x: width / 2, y: height / 2 },
                 this.chordToRad(width/3),
-                2,
-                2
+                3,
+                3
             );
         });
     }
@@ -80,7 +82,8 @@ export default class Drawing {
         } else {
             for (let i = 0; i < 6; i++) {
                 const theta = offsetRot + (i * Math.PI/3);
-                const spoke = radius-1
+                // unsure why minus 1 here, might be something to do with line calcs
+                const spoke = radius-1;
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),

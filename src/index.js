@@ -25,7 +25,7 @@ const main = () => {
     const height = 400;
 
     makeDrawing({ Context: P5Context, width, height });
-    makeDrawing({ Context: SVGContext, width, height });
+    // makeDrawing({ Context: SVGContext, width, height });
 };
 
 main();
