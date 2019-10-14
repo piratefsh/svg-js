@@ -10,6 +10,8 @@ import {
 import { grid2d } from "../helpers/grids";
 
 const debug = false;
+
+const DRAW_BG = false;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
@@ -20,7 +22,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.3)",
+                stroke: "hsla(340, 100%, 50%, 0.8)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -39,13 +41,15 @@ export default class Drawing {
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
-            ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
-            ctx.rect(width, height, 0, 0);
+            if(DRAW_BG){
+                ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
+                ctx.rect(width, height, 0, 0);
+            }
             ctx.setStyles(styles);
             this.kochTessel2(
                 { x: width / 2, y: height / 2 },
                 this.chordToRad(width / 3),
-                2,
+                3,
                 3
             );
         });
@@ -63,10 +67,6 @@ export default class Drawing {
 
     equiTriangleHeight(len) {
         return Math.sqrt(len * len - Math.pow(len / 2, 2));
-    }
-
-    arcHeight(r, c) {
-        return r - w * math.sin();
     }
 
     kochTessel3(center, radius, depth = 1, iters = 1, i = 2) {
@@ -113,7 +113,7 @@ export default class Drawing {
             }
             this.kochSnowflake({
                 center,
-                radius: this.equiTriangleHeight(radius)-1,
+                radius: this.equiTriangleHeight(radius),
                 offsetRot: offsetRot + Math.PI / 6,
                 iters
             });
@@ -122,7 +122,7 @@ export default class Drawing {
             for (let i = 0; i < 6; i++) {
                 const theta = offsetRot + (i * Math.PI) / 3;
                 // unsure why minus 1 here, might be something to do with line calcs
-                const spoke = radius - 1;
+                const spoke = radius - 1.4;
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
@@ -142,17 +142,17 @@ export default class Drawing {
         }
     }
 
-    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
+    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1, err=1 }) {
         const id = `${Math.round(center.x)},${Math.round(center.y)}`;
         if(this.cache.has(id) ||
-            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y)}`) ||
-            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y)}`) ||
-            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) + 1}`) ||
-            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) - 1}`) ||
-            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y) + 1}`) ||
-            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y) + 1}`) ||
-            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y) - 1}`) ||
-            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y) - 1}`)
+            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y)}`) ||
+            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y)}`) ||
+            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) + err}`) ||
+            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) - err}`) ||
+            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y) + err}`) ||
+            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y) + err}`) ||
+            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y) - err}`) ||
+            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y) - err}`)
             ){
             return
         } else {
