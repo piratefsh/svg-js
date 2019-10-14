@@ -32,6 +32,8 @@ export default class Drawing {
 
         this.width = width;
         this.height = height;
+
+        this.cache = new Set();
     }
 
     draw() {
@@ -47,6 +49,8 @@ export default class Drawing {
                 3
             );
         });
+
+        console.log(Array.from(this.cache).sort())
     }
 
     radToChord(radius, theta = THIRD_TWO_PI) {
@@ -109,7 +113,7 @@ export default class Drawing {
             }
             this.kochSnowflake({
                 center,
-                radius: this.equiTriangleHeight(radius),
+                radius: this.equiTriangleHeight(radius)-1,
                 offsetRot: offsetRot + Math.PI / 6,
                 iters
             });
@@ -139,9 +143,23 @@ export default class Drawing {
     }
 
     kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
+        const id = `${Math.round(center.x)},${Math.round(center.y)}`;
+        if(this.cache.has(id) ||
+            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y)}`) ||
+            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y)}`) ||
+            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) + 1}`) ||
+            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) - 1}`) ||
+            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y) + 1}`) ||
+            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y) + 1}`) ||
+            this.cache.has(`${Math.round(center.x) + 1},${Math.round(center.y) - 1}`) ||
+            this.cache.has(`${Math.round(center.x) - 1},${Math.round(center.y) - 1}`)
+            ){
+            return
+        } else {
+            this.cache.add(id)
+        }
         const points = [];
         const num = 3;
-        // this.ctx.ellipse(radius*2, radius*2, center.x, center.y)
         for (let i = 0; i < num; i++) {
             const theta = offsetRot + (-i / num) * TWO_PI;
             points.push(
