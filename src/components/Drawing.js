@@ -5,7 +5,9 @@ import {
     rotate,
     dist,
     mult,
-    normalize
+    normalize,
+    equiTriangleHeight,
+    chordToRad
 } from "../helpers/math";
 import { grid2d } from "../helpers/grids";
 
@@ -48,29 +50,14 @@ export default class Drawing {
             ctx.setStyles(styles);
             this.kochTessel2(
                 { x: width / 2, y: height / 2 },
-                this.chordToRad(width / 3),
+                chordToRad(width/3, THIRD_TWO_PI),
                 3,
                 3
             );
         });
-
-        console.log(Array.from(this.cache).sort())
-    }
-
-    radToChord(radius, theta = THIRD_TWO_PI) {
-        return 2 * radius * Math.sin(theta / 2);
-    }
-
-    chordToRad(len, theta = THIRD_TWO_PI) {
-        return len / (2 * Math.sin(theta / 2));
-    }
-
-    equiTriangleHeight(len) {
-        return Math.sqrt(len * len - Math.pow(len / 2, 2));
     }
 
     kochTessel3(center, radius, depth = 1, iters = 1, i = 2) {
-        const parentLen = this.radToChord(radius);
         const childRad = radius / 2;
         if (depth == 0) {
             this.kochSnowflake({
@@ -113,7 +100,7 @@ export default class Drawing {
             }
             this.kochSnowflake({
                 center,
-                radius: this.equiTriangleHeight(radius),
+                radius: equiTriangleHeight(radius),
                 offsetRot: offsetRot + Math.PI / 6,
                 iters
             });
