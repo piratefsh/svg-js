@@ -13,7 +13,8 @@ const debug = false;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
-const ROOT_2 = 1.414;
+const ROOT_2 = Math.sqrt(2);
+
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
@@ -76,7 +77,7 @@ export default class Drawing {
             });
         } else {
             for (let i = 0; i < 6; i++) {
-                const theta = Math.PI / 6 + (i / 6) * Math.PI * 2;
+                const theta = Math.PI / 6 + (i / 6) * TWO_PI;
                 const spoke = radius;
                 const pos = translate(
                     {
@@ -95,7 +96,6 @@ export default class Drawing {
         radius,
         depth = 1,
         iters = 1,
-        i = 2,
         offsetRot = Math.PI / 6
     ) {
         if (debug) {
@@ -127,13 +127,11 @@ export default class Drawing {
                     center
                 );
 
-                // this.ctx.line(pos.x, pos.y, center.x, center.y)
                 this.kochTessel2(
                     pos,
                     childRad,
                     depth - 1,
                     iters,
-                    i,
                     offsetRot + Math.PI / 6
                 );
             }
@@ -145,7 +143,7 @@ export default class Drawing {
         const num = 3;
         // this.ctx.ellipse(radius*2, radius*2, center.x, center.y)
         for (let i = 0; i < num; i++) {
-            const theta = offsetRot + (-i / num) * Math.PI * 2;
+            const theta = offsetRot + (-i / num) * TWO_PI;
             points.push(
                 translate(
                     {
