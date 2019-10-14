@@ -39,7 +39,7 @@ export default class Drawing {
             ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
             ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
-            this.kochTessel(
+            this.kochTessel2(
                 { x: width / 2, y: height / 2 },
                 this.chordToRad(width / 3),
                 2,
@@ -64,7 +64,33 @@ export default class Drawing {
         return r - w * math.sin();
     }
 
-    kochTessel(
+    kochTessel3(center, radius, depth = 1, iters = 1, i = 2) {
+        const parentLen = this.radToChord(radius);
+        const childRad = radius / 2;
+        if (depth == 0) {
+            this.kochSnowflake({
+                center,
+                radius,
+                offsetRot: Math.PI / 6,
+                iters
+            });
+        } else {
+            for (let i = 0; i < 6; i++) {
+                const theta = Math.PI / 6 + (i / 6) * Math.PI * 2;
+                const spoke = radius;
+                const pos = translate(
+                    {
+                        x: spoke * Math.sin(theta),
+                        y: spoke * Math.cos(theta)
+                    },
+                    center
+                );
+                this.kochTessel3(pos, childRad, depth - 1, iters, i);
+            }
+        }
+    }
+
+    kochTessel2(
         center,
         radius,
         depth = 1,
@@ -102,7 +128,7 @@ export default class Drawing {
                 );
 
                 // this.ctx.line(pos.x, pos.y, center.x, center.y)
-                this.kochTessel(
+                this.kochTessel2(
                     pos,
                     childRad,
                     depth - 1,
@@ -156,20 +182,26 @@ export default class Drawing {
             });
             this.kochCurve({
                 start: translate(start, len),
-                end: translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                end: translate(
+                    rotate(len, -Math.PI / 3),
+                    translate(start, len)
+                ),
                 iters: iters - 1,
                 lineWidth
             });
 
             this.kochCurve({
-                start: translate(rotate(len, -Math.PI / 3), translate(start, len)),
+                start: translate(
+                    rotate(len, -Math.PI / 3),
+                    translate(start, len)
+                ),
                 end: translate(start, mult(len, 2)),
                 iters: iters - 1,
                 lineWidth
             });
             this.kochCurve({
                 start: translate(start, mult(len, 2)),
-                end: end,
+                end,
                 iters: iters - 1,
                 lineWidth
             });
