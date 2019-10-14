@@ -129,21 +129,32 @@ export default class Drawing {
         }
     }
 
-    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1, err=1 }) {
-        const id = `${Math.round(center.x)},${Math.round(center.y)}`;
-        if(this.cache.has(id) ||
-            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y)}`) ||
-            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y)}`) ||
-            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) + err}`) ||
-            this.cache.has(`${Math.round(center.x)},${Math.round(center.y) - err}`) ||
-            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y) + err}`) ||
-            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y) + err}`) ||
-            this.cache.has(`${Math.round(center.x) + err},${Math.round(center.y) - err}`) ||
-            this.cache.has(`${Math.round(center.x) - err},${Math.round(center.y) - err}`)
-            ){
+    getCacheId(center){
+        return `${Math.round(center.x)},${Math.round(center.y)}`;
+
+    }
+    inCache(center, err = 1){
+        const id = this.getCacheId(center)
+        const possNeibs = [
+            center,
+            translate(center, {x: 1, y: 0}),
+            translate(center, {x: -1, y: 0}),
+            translate(center, {x: 0, y: 1}),
+            translate(center, {x: 0, y: -1}),
+            translate(center, {x: 1, y: 1}),
+            translate(center, {x: 1, y: -1}),
+            translate(center, {x: -1, y: -1}),
+            translate(center, {x: -1, y: 1}),
+        ]
+        return possNeibs.filter((neib) => this.cache.has(this.getCacheId(neib))).length > 0
+    }
+
+
+    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
+        if(this.inCache(center)){
             return
-        } else {
-            this.cache.add(id)
+        } else { 
+            this.cache.add(this.getCacheId(center))
         }
         const points = [];
         const num = 3;
