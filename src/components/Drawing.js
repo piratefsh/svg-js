@@ -37,189 +37,95 @@ export default class Drawing {
         this.width = width;
         this.height = height;
 
-        this.cache = new Set();
+        this.center = { x: width / 2, y: height / 2 };
     }
 
     draw() {
-        const { ctx, styles, width, height } = this;
+        const { ctx, styles, width, height, center } = this;
         ctx.draw(() => {
-            if(DRAW_BG){
-                ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
-                ctx.rect(width, height, 0, 0);
-            }
             ctx.setStyles(styles);
-            this.kochTessel2(
-                { x: width / 2, y: height / 2 },
-                chordToRad(width/3, THIRD_TWO_PI),
-                3,
-                3
-            );
+            const seeds = [];
+            const numSeeds = 10;
+            for (let i = 0; i < numSeeds; i++) {
+                const seed = {
+                    pos: {
+                        x: Math.trunc(random(50, width-50)),
+                        y: Math.trunc(random(50, height-50))
+                    },
+                    radius: Math.trunc(random(20, 50)),
+                    growthVel: random(2, 5),
+                    growthAcc: random(0, 1),
+                    growing: true,
+                    viable: true
+                };
+
+                seeds.push(seed);
+            }
+
+            seeds.forEach(seed => {
+                if (this.intersects(seeds, seed) ||
+                    this.reachedBounds(seed, center, width / 2)
+                ) {
+                    this.stop(seed);
+                    seed.viable = false;
+                } else {
+                    this.grow(seed);
+                }
+            });
+
+            seeds.forEach(seed => {
+                if (seed.viable) {
+                    ctx.setStyles({ stroke: "red" });
+                } else {
+                    ctx.setStyles({ stroke: "blue" });
+                }
+                this.drawSeed(seed);
+            });
         });
     }
 
-    kochTessel3(center, radius, depth = 1, iters = 1, i = 2) {
-        const childRad = radius / 2;
-        if (depth == 0) {
-            this.kochSnowflake({
-                center,
-                radius,
-                offsetRot: Math.PI / 6,
-                iters
-            });
-        } else {
-            for (let i = 0; i < 6; i++) {
-                const theta = Math.PI / 6 + (i / 6) * TWO_PI;
-                const spoke = radius;
-                const pos = translate(
-                    {
-                        x: spoke * Math.sin(theta),
-                        y: spoke * Math.cos(theta)
-                    },
-                    center
-                );
-                this.kochTessel3(pos, childRad, depth - 1, iters, i);
+    drawSeed(seed) {
+        this.ctx.ellipse(seed.radius*2, seed.radius*2, seed.pos.x, seed.pos.y);
+    }
+
+    hasGrowing(s) {
+        for (let i = 0; i < seeds.length; i++) {
+            const s = seeds[i];
+            if (s.growing) {
+                return true;
             }
         }
+
+        return false;
     }
 
-    kochTessel2(
-        center,
-        radius,
-        depth = 1,
-        iters = 1,
-        offsetRot = Math.PI / 6
-    ) {
-        if (debug) {
-            this.ctx.ellipse(2, 2, center.x, center.y);
-            this.ctx.ellipse(radius * 2, radius * 2, center.x, center.y);
-        }
+    reachedBounds(seed, center, boundsRadius) {
+        return dist(seed.pos, center) + seed.radius >= boundsRadius;
+    }
 
-        if (depth == 0) {
-            if (debug) {
-                return;
+    intersects(seeds, seed) {
+        for (let i = 0; i < seeds.length; i++) {
+            const other = seeds[i];
+            if (other == seed) {
+                continue;
             }
-            this.kochSnowflake({
-                center,
-                radius: equiTriangleHeight(radius),
-                offsetRot: offsetRot + Math.PI / 6,
-                iters
-            });
-        } else {
-            const childRad = radius * (2 - ROOT_2);
-            for (let i = 0; i < 6; i++) {
-                const theta = offsetRot + (i * Math.PI) / 3;
-                // unsure why minus 1 here, might be something to do with line calcs
-                const spoke = radius - 1.4;
-                const pos = translate(
-                    {
-                        x: spoke * Math.sin(theta),
-                        y: spoke * Math.cos(theta)
-                    },
-                    center
-                );
-
-                this.kochTessel2(
-                    pos,
-                    childRad,
-                    depth - 1,
-                    iters,
-                    offsetRot + Math.PI / 6
-                );
+            if (dist(other.pos, seed.pos) < other.radius + seed.radius) {
+                console.log(other.pos, other.radius, seed.pos, seed.radius);
+                return true;
             }
         }
+        return false;
     }
 
-    getCacheId(center){
-        return `${Math.round(center.x)},${Math.round(center.y)}`;
-
-    }
-    inCache(center, err = 1){
-        const id = this.getCacheId(center)
-        const possNeibs = [
-            center,
-            translate(center, {x: 1, y: 0}),
-            translate(center, {x: -1, y: 0}),
-            translate(center, {x: 0, y: 1}),
-            translate(center, {x: 0, y: -1}),
-            translate(center, {x: 1, y: 1}),
-            translate(center, {x: 1, y: -1}),
-            translate(center, {x: -1, y: -1}),
-            translate(center, {x: -1, y: 1}),
-        ]
-        return possNeibs.filter((neib) => this.cache.has(this.getCacheId(neib))).length > 0
+    stop(seed) {
+        seed.growing = false;
     }
 
-
-    kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
-        if(this.inCache(center)){
-            return
-        } else { 
-            this.cache.add(this.getCacheId(center))
-        }
-        const points = [];
-        const num = 3;
-        for (let i = 0; i < num; i++) {
-            const theta = offsetRot + (-i / num) * TWO_PI;
-            points.push(
-                translate(
-                    {
-                        x: radius * Math.sin(theta),
-                        y: radius * Math.cos(theta)
-                    },
-                    center
-                )
-            );
-        }
-
-        points.forEach((start, i) => {
-            const end = points[i + 1 > points.length - 1 ? 0 : i + 1];
-
-            this.kochCurve({ start, end, iters, lineWidth });
-        });
-    }
-
-    kochCurve({ start, end, iters = 3, lineWidth = 1 }) {
-        const len = {
-            x: (end.x - start.x) / 3,
-            y: (end.y - start.y) / 3
-        };
-
-        const { ctx } = this;
-        if (iters == 0) {
-            this.thiccLine(start.x, start.y, end.x, end.y, lineWidth);
-        } else {
-            this.kochCurve({
-                start,
-                end: translate(start, len),
-                iters: iters - 1,
-                lineWidth
-            });
-            this.kochCurve({
-                start: translate(start, len),
-                end: translate(
-                    rotate(len, -Math.PI / 3),
-                    translate(start, len)
-                ),
-                iters: iters - 1,
-                lineWidth
-            });
-
-            this.kochCurve({
-                start: translate(
-                    rotate(len, -Math.PI / 3),
-                    translate(start, len)
-                ),
-                end: translate(start, mult(len, 2)),
-                iters: iters - 1,
-                lineWidth
-            });
-            this.kochCurve({
-                start: translate(start, mult(len, 2)),
-                end,
-                iters: iters - 1,
-                lineWidth
-            });
-        }
+    grow(seed) {
+        const { growthVel: vel, pos, growthAcc: acc } = seed
+        seed.pos.x += vel;
+        seed.pos.y += vel;
+        seed.growthVel += acc;
     }
 
     thiccLine(sx, sy, ex, ey, lineWidth = 1) {
