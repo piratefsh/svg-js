@@ -1,14 +1,12 @@
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
-        this.styles = Object.assign(
-            {
-                stroke: "black",
-                strokeWidth: 1,
-                fill: "rgba(0, 0, 0, 0.1)"
-            },
-            styles
-        );
+        this.styles = {
+            stroke: "black",
+            strokeWidth: 1,
+            fill: "rgba(0, 0, 0, 0.1)",
+            ...styles
+        };
 
         // set drawing contesxt
         this.ctx = ctx;

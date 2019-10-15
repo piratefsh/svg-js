@@ -15,13 +15,12 @@ export default class ContextInterface {
         this.instantiate(parentNode);
     }
 
-
     /* eslint-disable class-methods-use-this */
     instantiate(options) {
         return `instantiate ${options}`;
     }
 
-    animate(){
+    animate() {
         return "animate";
     }
 
@@ -56,10 +55,6 @@ export default class ContextInterface {
 
     endLine() {
         return `endLine`;
-    }
-
-    endBezier() {
-        return `endBezier`;
     }
 
     endBezier() {
