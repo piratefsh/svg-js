@@ -21,17 +21,17 @@
     },
     "homepage": "",
     "dependencies": {
-        "@babel/plugin-transform-destructuring": "^7.6.0",
         "mathjs": "^5.1.1",
         "normalize.css": "^8.0.0",
         "p5": "^0.7.2",
         "svg.js": "^2.6.6"
     },
     "devDependencies": {
+        "babel-loader": "^8.0.6",
+        "@babel/core": "^7.6.4",
+        "@babel/plugin-transform-destructuring": "^7.6.0",
+        "@babel/preset-env": "^7.6.3",
         "ajv": "^6.3.0",
-        "babel-core": "^6.26.0",
-        "babel-loader": "^7.1.4",
-        "babel-preset-env": "^1.6.1",
         "clean-webpack-plugin": "^0.1.19",
         "css-loader": "^0.28.11",
         "cssnano": "^3.10.0",
