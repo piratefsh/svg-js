@@ -45,60 +45,172 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(styles);
             const seeds = [];
-            let numSeeds = 10;
-            const velMag = 5;
-            while(seeds.length < numSeeds){
+            const numSeeds = 5;
+            const velMag = 7;
+            const accMag = 0.5;
+            const branchMag = 1;
+
+            // ctx.ellipse(width-60, height-60, center.x, center.y)
+            while (seeds.length < numSeeds) {
+                const i = seeds.length / numSeeds;
+                const theta = i * PI - PI / 2;
+                const pos = {
+                    x: width / 2 + ((width - 30) / 2) * Math.sin(PI),
+                    y: height / 2 + ((height - 30) / 2) * Math.cos((PI / 4) * i)
+                };
+
+                const velX =
+                    width / 2 + ((width - 30) / 2) * Math.sin(theta + PI);
+                const growthVel = mult(
+                    normalize({
+                        x: pos.x - velX,
+                        y: pos.y - center.y - height / 4
+                    }),
+                    -velMag
+                );
                 const seed = {
                     id: seeds.length,
-                    pos: {
-                        x: Math.trunc(random(50, width-50)),
-                        y: Math.trunc(random(50, height-50))
+                    pos,
+                    radius: randomSelect([1, 4, 9, 16]),
+                    growthVel,
+                    growthAcc: {
+                        x: random(-0.5, 0.5) * accMag,
+                        y: random(-2, 0) * accMag
                     },
-                    radius: randomSelect([1, 4, 9, 16, 25, 6*6]),
-                    growthVel: {x: random(-1, 1)*velMag, y: random(-1, 1)*velMag},
-                    growthAcc: {x: random(-1, 1), y: random(-1, 1)},
                     growing: true,
                     viable: true
                 };
 
-                if(!this.crowded(seeds, seed)){
+                if (!this.crowded(seeds, seed)) {
                     seeds.push(seed);
                 }
             }
 
-            let rounds = 0
+            let rounds = 0;
+            const maxRounds = 13;
 
-            while(this.hasGrowing(seeds)){
-                rounds++
+            while (rounds < maxRounds) {
+                rounds++;
                 seeds.forEach(seed => {
+                    if (!seed.growing) {
+                        return;
+                    }
                     // this.drawSeed(seed);
-                    const before = Object.assign({}, seed.pos )
+                    const isTip = rounds == maxRounds
+                    const before = Object.assign({}, seed.pos);
+
                     if (this.canGrowWithoutCrowding(seeds, seed)) {
                         this.grow(seed);
                     } else {
                         this.stop(seed);
                     }
-                    ctx.line(before.x, before.y, seed.pos.x, seed.pos.y)
+
+                    // draw branches
+                    const rot = PI + randomSelect([PI / 3]);
+                    const { pos } = seed;
+
+                    let normVec = normalize({
+                        x: pos.x - before.x,
+                        y: pos.y - before.y
+                    });
+
+                    const brMag = branchMag * (0.12 + 1 - rounds / maxRounds);
+
+                    if (isTip) {
+                        normVec = rotate(normVec, 0);
+                    }
+
+                    const normVec1 = rotate(normVec, PI / 3);
+                    const normVec2 = rotate(normVec, -PI / 3);
+
+                    ctx.line(
+                        before.x,
+                        before.y,
+                        before.x + normVec.x * 10,
+                        before.y + normVec.y * 10
+                    );
+
+                    let lineWidth = 3;
+                    if (maxRounds - rounds < 2) {
+                        lineWidth = maxRounds - rounds + 1;
+                    }
+                    this.thiccLine(before.x, before.y, pos.x, pos.y, lineWidth);
+
+                    if (isTip || random(0, 1) > 0.3) {
+                        this.branch(
+                            seed.pos,
+                            mult(normVec1, seed.radius * brMag),
+                            2,
+                            2
+                        );
+                    }
+                    if (isTip || random(0, 1) > 0.3) {
+                        this.branch(
+                            seed.pos,
+                            mult(normVec2, seed.radius * brMag),
+                            2,
+                            2
+                        );
+                    }
                 });
             }
 
-            seeds.forEach(seed => {
-                this.drawSeed(seed);
-            });
-
             // seeds.forEach(seed => this.drawSeed(seed))
-
-            console.log(rounds)
-
         });
     }
 
-    crowded(seeds, seed){
-        return this.intersects(seeds, seed) || this.reachedBounds(seed, this.center, this.width / 2)
+    branch(pos, velocity, maxSteps = 3, lineWidth) {
+        if (maxSteps == 0) {
+            return;
+        }
+
+        const { ctx } = this;
+        const { x, y } = pos;
+
+        // draw this line
+        const end = translate(pos, velocity);
+        this.thiccLine(x, y, end.x, end.y, lineWidth);
+
+        this.branch(
+            translate(pos, mult(velocity, 1)),
+            rotate(mult(velocity, 0.3), Math.PI * 0.2),
+            lineWidth,
+            maxSteps - 1
+        );
+
+        this.branch(
+            translate(pos, mult(velocity, 1)),
+            rotate(mult(velocity, 0.3), -Math.PI * 0.2),
+            lineWidth,
+            maxSteps - 1
+        );
+
+        this.branch(
+            translate(pos, mult(velocity, 0.6)),
+            rotate(mult(velocity, 0.4), -Math.PI * 0.25),
+            lineWidth,
+            maxSteps - 1
+        );
+
+        this.branch(
+            translate(pos, mult(velocity, 0.5)),
+            rotate(mult(velocity, 0.4), Math.PI * 0.25),
+            lineWidth,
+            maxSteps - 1
+        );
+    }
+
+    crowded(seeds, seed) {
+        return this.reachedRectBounds(seed, this.center, this.width / 2);
     }
 
     drawSeed(seed) {
-        this.ctx.ellipse(seed.radius*2, seed.radius*2, seed.pos.x, seed.pos.y);
+        this.ctx.ellipse(
+            seed.radius * 2,
+            seed.radius * 2,
+            seed.pos.x,
+            seed.pos.y
+        );
     }
 
     hasGrowing(seeds) {
@@ -110,6 +222,12 @@ export default class Drawing {
         }
 
         return false;
+    }
+
+    reachedRectBounds(seed) {
+        const { x, y } = seed.pos;
+        const { width, height } = this;
+        return x < 0 || y < 0 || x > width || y > height;
     }
 
     reachedBounds(seed, center, boundsRadius) {
@@ -133,19 +251,18 @@ export default class Drawing {
         seed.growing = false;
     }
 
-    canGrowWithoutCrowding(seeds, seed){
-        const hypothetical = Object.assign({}, seed)
-        this.grow(hypothetical)
-        return !this.crowded(seeds, hypothetical)
+    canGrowWithoutCrowding(seeds, seed) {
+        const hypothetical = Object.assign({}, seed);
+        this.grow(hypothetical);
+        return !this.crowded(seeds, hypothetical);
     }
 
     grow(seed) {
-        const { growthVel: vel, pos, growthAcc: acc } = seed
+        const { growthVel: vel, pos, growthAcc: acc } = seed;
         seed.radius += Math.abs(vel.x);
         seed.pos.x += vel.x;
         seed.pos.y += vel.y;
-        if(pos.x )
-        seed.growthVel.x += acc.x;
+        if (pos.x) seed.growthVel.x += acc.x;
         seed.growthVel.y += acc.y;
     }
 
