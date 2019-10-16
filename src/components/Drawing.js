@@ -45,7 +45,8 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(styles);
             const seeds = [];
-            let numSeeds = 40;
+            let numSeeds = 10;
+            const velMag = 5;
             while(seeds.length < numSeeds){
                 const seed = {
                     id: seeds.length,
@@ -53,9 +54,9 @@ export default class Drawing {
                         x: Math.trunc(random(50, width-50)),
                         y: Math.trunc(random(50, height-50))
                     },
-                    radius: Math.trunc(random(10, 30)),
-                    growthVel: {x: random(3, 8), y: random(-5, 5)},
-                    growthAcc: {x: random(1, 2), y: random(-1, 1)},
+                    radius: randomSelect([1, 4, 9, 16, 25, 6*6]),
+                    growthVel: {x: random(-1, 1)*velMag, y: random(-1, 1)*velMag},
+                    growthAcc: {x: random(-1, 1), y: random(-1, 1)},
                     growing: true,
                     viable: true
                 };
@@ -70,16 +71,22 @@ export default class Drawing {
             while(this.hasGrowing(seeds)){
                 rounds++
                 seeds.forEach(seed => {
-                    this.drawSeed(seed);
+                    // this.drawSeed(seed);
+                    const before = Object.assign({}, seed.pos )
                     if (this.canGrowWithoutCrowding(seeds, seed)) {
                         this.grow(seed);
                     } else {
                         this.stop(seed);
                     }
+                    ctx.line(before.x, before.y, seed.pos.x, seed.pos.y)
                 });
             }
 
-            seeds.forEach(seed => this.drawSeed(seed))
+            seeds.forEach(seed => {
+                this.drawSeed(seed);
+            });
+
+            // seeds.forEach(seed => this.drawSeed(seed))
 
             console.log(rounds)
 
@@ -134,9 +141,10 @@ export default class Drawing {
 
     grow(seed) {
         const { growthVel: vel, pos, growthAcc: acc } = seed
-        // seed.pos.x += vel.x;
-        // seed.pos.y += vel.y;
-        seed.radius = vel.x;
+        seed.radius += Math.abs(vel.x);
+        seed.pos.x += vel.x;
+        seed.pos.y += vel.y;
+        if(pos.x )
         seed.growthVel.x += acc.x;
         seed.growthVel.y += acc.y;
     }
