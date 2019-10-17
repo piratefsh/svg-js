@@ -48,30 +48,26 @@ export default class Drawing {
             const numSeeds = 5;
             const velMag = 7;
             const accMag = 0.5;
-            const branchMag = 1;
+            const branchMag = 1.3;
+            const maxRounds = 5;
 
-            // ctx.ellipse(width-60, height-60, center.x, center.y)
-            while (seeds.length < numSeeds) {
-                const i = seeds.length / numSeeds;
+            const gx = 6;
+            const gy = 4;
+
+            grid2d(width, height, gx, gy, (x, y, cx, cy, i) => {
                 const theta = i * PI - PI / 2;
-                const pos = {
-                    x: width / 2 + ((width - 30) / 2) * Math.sin(PI),
-                    y: height / 2 + ((height - 30) / 2) * Math.cos((PI / 4) * i)
-                };
-
-                const velX =
-                    width / 2 + ((width - 30) / 2) * Math.sin(theta + PI);
+                const pos = { x: x+cx/2, y: y+cy/2};
                 const growthVel = mult(
                     normalize({
-                        x: pos.x - velX,
-                        y: pos.y - center.y - height / 4
+                        x: 0,
+                        y: 10
                     }),
-                    -velMag
+                    -(velMag * (1 - i/gx))
                 );
                 const seed = {
                     id: seeds.length,
                     pos,
-                    radius: randomSelect([1, 4, 9, 16]),
+                    radius: randomSelect([4, 9, 16]),
                     growthVel,
                     growthAcc: {
                         x: random(-0.5, 0.5) * accMag,
@@ -84,19 +80,22 @@ export default class Drawing {
                 if (!this.crowded(seeds, seed)) {
                     seeds.push(seed);
                 }
-            }
+            });
 
             let rounds = 0;
-            const maxRounds = 13;
-
             while (rounds < maxRounds) {
                 rounds++;
                 seeds.forEach(seed => {
                     if (!seed.growing) {
                         return;
                     }
-                    // this.drawSeed(seed);
-                    const isTip = rounds == maxRounds
+
+                    // skip some seeds
+                    if (random(0, 1) > 0.9) {
+                        return;
+                    }
+
+                    const isTip = rounds == maxRounds;
                     const before = Object.assign({}, seed.pos);
 
                     if (this.canGrowWithoutCrowding(seeds, seed)) {
@@ -106,7 +105,7 @@ export default class Drawing {
                     }
 
                     // draw branches
-                    const rot = PI + randomSelect([PI / 3]);
+                    const rot = PI + PI/3;
                     const { pos } = seed;
 
                     let normVec = normalize({
@@ -114,7 +113,8 @@ export default class Drawing {
                         y: pos.y - before.y
                     });
 
-                    const brMag = branchMag * (0.12 + 1 - rounds / maxRounds);
+                    const brMag1 = branchMag * (0.22 + 1 - rounds / maxRounds);
+                    const brMag2 = branchMag * (0.22 + 1 - rounds / maxRounds);
 
                     if (isTip) {
                         normVec = rotate(normVec, 0);
@@ -130,24 +130,24 @@ export default class Drawing {
                         before.y + normVec.y * 10
                     );
 
-                    let lineWidth = 3;
+                    let lineWidth = 2;
                     if (maxRounds - rounds < 2) {
                         lineWidth = maxRounds - rounds + 1;
                     }
                     this.thiccLine(before.x, before.y, pos.x, pos.y, lineWidth);
 
-                    if (isTip || random(0, 1) > 0.3) {
+                    if (isTip || random(0, 1) > 0.1) {
                         this.branch(
                             seed.pos,
-                            mult(normVec1, seed.radius * brMag),
+                            mult(normVec1, seed.radius * brMag1),
                             2,
                             2
                         );
                     }
-                    if (isTip || random(0, 1) > 0.3) {
+                    if (isTip || random(0, 1) > 0.1) {
                         this.branch(
                             seed.pos,
-                            mult(normVec2, seed.radius * brMag),
+                            mult(normVec2, seed.radius * brMag2),
                             2,
                             2
                         );
