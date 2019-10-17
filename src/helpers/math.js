@@ -1,3 +1,6 @@
+const TWO_PI = Math.PI * 2;
+const THIRD_TWO_PI = TWO_PI / 3;
+
 function random(start, end) {
     return Math.random() * (end - start) + start;
 }

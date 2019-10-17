@@ -42,6 +42,7 @@
         "eslint-plugin-import": "^2.18.2",
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-prettier": "^3.1.1",
+        "eslint-plugin-react": "^7.16.0",
         "extract-text-webpack-plugin": "^4.0.0-beta.0",
         "favicons-webpack-plugin": "0.0.8",
         "file-loader": "^1.1.11",

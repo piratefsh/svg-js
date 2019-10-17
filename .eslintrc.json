@@ -1,12 +1,14 @@
 {
-  "extends": ["plugin:prettier/recommended"],
+ "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": [
       "prettier"
   ],
+  "parserOptions": { "ecmaVersion": 10, "sourceType": "module" },
   "rules": {
       "prettier/prettier": "error"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true
   }
 }
