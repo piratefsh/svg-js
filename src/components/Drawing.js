@@ -36,7 +36,7 @@ export default class Drawing {
             ctx.lineVertex(400, 400);
             ctx.endLine();
 
-            ctx.setStyles({ fill: "none" });
+            ctx.setStyles({ fill: "rgba(0,0,0,0)" });
             ctx.thickLine(30, 100, 50, 200, 4);
             ctx.thickDot(60, 220, 20);
         });
