@@ -1,4 +1,4 @@
-import { translate, normalize } from "../helpers/math";
+import { translate, normalize, rotate, mult } from "../helpers/math";
 
 export default class ContextInterface {
     constructor(parentNode, width, height) {
@@ -83,7 +83,7 @@ export default class ContextInterface {
         return null;
     }
 
-        thickLine(sx, sy, ex, ey, lineWidth = 1) {
+    thickLine(sx, sy, ex, ey, lineWidth = 1) {
         lineWidth = Math.trunc(lineWidth);
         const vec = normalize(rotate({ x: sx - ex, y: sy - ey }, Math.PI / 2));
         for (let i = 0; i < lineWidth; i++) {

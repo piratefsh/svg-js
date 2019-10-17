@@ -35,6 +35,9 @@ export default class Drawing {
             ctx.lineVertex(100, 200);
             ctx.lineVertex(400, 400);
             ctx.endLine();
+
+            ctx.thickLine(30, 100, 50, 200, 4)
+            ctx.thickDot(60, 220, 20)
         });
     }
 
