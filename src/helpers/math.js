@@ -73,6 +73,10 @@ function chordToRad(len, theta = THIRD_TWO_PI) {
 function equiTriangleHeight(len) {
     return Math.sqrt(len * len - Math.pow(len / 2, 2));
 }
+
+export function map(scaleStart, scaleEnd, valStart, valEnd, val) {
+    return ((val-valStart) / (valEnd-valStart)) * (scaleEnd - scaleStart) + scaleStart;
+}
 export {
     radToChord,
     chordToRad,
