@@ -1,5 +1,6 @@
 import {
     random,
+    randomSelect,
     translate,
     rotate,
     dist,
@@ -16,7 +17,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.3)",
+                stroke: "hsla(340, 100%, 50%, 0.7)",
                 strokeWidth: 1,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -37,15 +38,13 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(styles);
             const seeds = [];
-            let numSeeds = 40;
+            let numSeeds = 80;
             let count = 0;
             while (seeds.length < numSeeds) {
                 count++;
                 const pos = {
                     x: Math.trunc(random(50, width - 50)),
                     y: Math.trunc(random(50, height - 50))
-                    // x: (count + 1) * 50,
-                    // y: (count + 1) * 50
                 };
                 const radius = Math.trunc(
                     map(5, 60, 0, width, dist(pos, center))
@@ -55,10 +54,10 @@ export default class Drawing {
                     id: seeds.length,
                     pos,
                     radius,
-                    // growthVel: { x: random(3, 8), y: random(-5, 5) },
-                    // growthAcc: { x: random(1, 2), y: random(-1, 1) },
-                    growthVel: { x: 1, y: 1 },
-                    growthAcc: { x: 1, y: 1 },
+                    growthVel: { x: random(3, 8), y: random(-5, 5) },
+                    growthAcc: { x: random(1, 2), y: random(-1, 1) },
+                    // growthVel: { x: 1, y: 1 },
+                    // growthAcc: { x: 1, y: 1 },
                     growing: true,
                     viable: true
                 };
@@ -70,17 +69,17 @@ export default class Drawing {
 
             let rounds = 0;
 
-            // while (this.hasGrowing(seeds)) {
-            //     rounds++;
-            //     seeds.forEach(seed => {
-            //         this.drawSeed(seed);
-            //         if (this.canGrowWithoutCrowding(seeds, seed)) {
-            //             this.grow(seed);
-            //         } else {
-            //             this.stop(seed);
-            //         }
-            //     });
-            // }
+            while (this.hasGrowing(seeds)) {
+                rounds++;
+                seeds.forEach(seed => {
+                    // this.drawSeed(seed);
+                    if (this.canGrowWithoutCrowding(seeds, seed)) {
+                        this.grow(seed);
+                    } else {
+                        this.stop(seed);
+                    }
+                });
+            }
 
             seeds.forEach(seed => this.drawSeed(seed));
 
@@ -95,31 +94,21 @@ export default class Drawing {
         );
     }
 
-    drawSeed(seed, numPetals = 6) {
+    drawSeed(seed) {
         const { radius, pos } = seed;
-        // this.ctx.ellipse(radius * 2, radius * 2, pos.x, pos.y);
-        const offsetR = 0;
-        // random(0, Math.PI/2);
+        const r = radius * 0.6;
+        const numPetals = radius < 7 ? 6 : randomSelect([6, 12, 24])
+        const offsetR = random(0, Math.PI/2);
         for (let i = 0; i < numPetals; i++) {
-            const r = radius / 2;
-            const theta = offsetR + (i / numPetals) * TWO_PI
+            const theta = offsetR + (i / numPetals) * TWO_PI;
             const x = r * Math.sin(theta);
             const y = r * Math.cos(theta);
-            // this.ctx.ellipse(r * 2, r * 2, x + pos.x, y + pos.y);
-            const st = PI/2 - theta + PI/3
-            const et = PI*3/2 - PI/3 - theta
+            const st = PI / 2 - theta + PI / 3;
+            const et = (PI * 3) / 2 - theta;
             this.ctx.arc(x + pos.x, y + pos.y, r, r, st, et);
-        }
-
-        for (let i = 0; i < numPetals; i++) {
-            const r = radius / 2;
-            const theta = TWO_PI - offsetR + (i / numPetals) * TWO_PI
-            const x = r * Math.sin(theta);
-            const y = r * Math.cos(theta);
-            // this.ctx.ellipse(r * 2, r * 2, x + pos.x, y + pos.y);
-            const st = PI/2 - theta + PI
-            const et = PI*3/2 - PI/3 - theta + PI
-            this.ctx.arc(x + pos.x, y + pos.y, r, r, st, et);
+            const st2 = PI / 2 - theta + PI;
+            const et2 = (PI * 3) / 2 - PI / 3 - theta + PI;
+            this.ctx.arc(x + pos.x, y + pos.y, r, r, st2, et2);
         }
     }
 
