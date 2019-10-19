@@ -1,3 +1,5 @@
+import { translate, normalize, rotate, mult } from "../helpers/math";
+
 export default class ContextInterface {
     constructor(parentNode, width, height) {
         this.instance = null;
@@ -15,13 +17,12 @@ export default class ContextInterface {
         this.instantiate(parentNode);
     }
 
-
     /* eslint-disable class-methods-use-this */
     instantiate(options) {
         return `instantiate ${options}`;
     }
 
-    animate(){
+    animate() {
         return "animate";
     }
 
@@ -62,10 +63,6 @@ export default class ContextInterface {
         return `endBezier`;
     }
 
-    endBezier() {
-        return `endBezier`;
-    }
-
     bezierVertex(x, y) {
         return `bezierVertex ${x}, ${y}`;
     }
@@ -84,6 +81,23 @@ export default class ContextInterface {
 
     getDOMElement() {
         return null;
+    }
+
+    thickLine(sx, sy, ex, ey, lineWidth = 1) {
+        lineWidth = Math.trunc(lineWidth);
+        const vec = normalize(rotate({ x: sx - ex, y: sy - ey }, Math.PI / 2));
+        for (let i = 0; i < lineWidth; i++) {
+            const offset = mult(vec, i - Math.floor(lineWidth / 2));
+            const st = translate({ x: sx, y: sy }, offset);
+            const en = translate({ x: ex, y: ey }, offset);
+            this.line(st.x, st.y, en.x, en.y);
+        }
+    }
+
+    thickDot(x, y, size = 1) {
+        for (let i = 0; i < size; i++) {
+            this.ellipse(i, i, x, y);
+        }
     }
 }
 

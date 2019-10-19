@@ -46,29 +46,29 @@ export default class Drawing {
             ctx.setStyles(styles);
             const seeds = [];
             let numSeeds = 40;
-            while(seeds.length < numSeeds){
+            while (seeds.length < numSeeds) {
                 const seed = {
                     id: seeds.length,
                     pos: {
-                        x: Math.trunc(random(50, width-50)),
-                        y: Math.trunc(random(50, height-50))
+                        x: Math.trunc(random(50, width - 50)),
+                        y: Math.trunc(random(50, height - 50))
                     },
                     radius: Math.trunc(random(10, 30)),
-                    growthVel: {x: random(3, 8), y: random(-5, 5)},
-                    growthAcc: {x: random(1, 2), y: random(-1, 1)},
+                    growthVel: { x: random(3, 8), y: random(-5, 5) },
+                    growthAcc: { x: random(1, 2), y: random(-1, 1) },
                     growing: true,
                     viable: true
                 };
 
-                if(!this.crowded(seeds, seed)){
+                if (!this.crowded(seeds, seed)) {
                     seeds.push(seed);
                 }
             }
 
-            let rounds = 0
+            let rounds = 0;
 
-            while(this.hasGrowing(seeds)){
-                rounds++
+            while (this.hasGrowing(seeds)) {
+                rounds++;
                 seeds.forEach(seed => {
                     this.drawSeed(seed);
                     if (this.canGrowWithoutCrowding(seeds, seed)) {
@@ -79,19 +79,26 @@ export default class Drawing {
                 });
             }
 
-            seeds.forEach(seed => this.drawSeed(seed))
+            seeds.forEach(seed => this.drawSeed(seed));
 
-            console.log(rounds)
-
+            console.log(rounds);
         });
     }
 
-    crowded(seeds, seed){
-        return this.intersects(seeds, seed) || this.reachedBounds(seed, this.center, this.width / 2)
+    crowded(seeds, seed) {
+        return (
+            this.intersects(seeds, seed) ||
+            this.reachedBounds(seed, this.center, this.width / 2)
+        );
     }
 
     drawSeed(seed) {
-        this.ctx.ellipse(seed.radius*2, seed.radius*2, seed.pos.x, seed.pos.y);
+        this.ctx.ellipse(
+            seed.radius * 2,
+            seed.radius * 2,
+            seed.pos.x,
+            seed.pos.y
+        );
     }
 
     hasGrowing(seeds) {
@@ -126,14 +133,14 @@ export default class Drawing {
         seed.growing = false;
     }
 
-    canGrowWithoutCrowding(seeds, seed){
-        const hypothetical = Object.assign({}, seed)
-        this.grow(hypothetical)
-        return !this.crowded(seeds, hypothetical)
+    canGrowWithoutCrowding(seeds, seed) {
+        const hypothetical = Object.assign({}, seed);
+        this.grow(hypothetical);
+        return !this.crowded(seeds, hypothetical);
     }
 
     grow(seed) {
-        const { growthVel: vel, pos, growthAcc: acc } = seed
+        const { growthVel: vel, pos, growthAcc: acc } = seed;
         // seed.pos.x += vel.x;
         // seed.pos.y += vel.y;
         seed.radius = vel.x;
