@@ -1,4 +1,4 @@
-import { mult, chordToRad, dist } from "../helpers/math";
+import { mult, midpoint } from "../helpers/math";
 
 const SQRT_2 = Math.sqrt(2);
 const PI = Math.PI;
@@ -11,7 +11,7 @@ export default class Drawing {
         this.styles = {
             stroke: "black",
             strokeWidth: 1,
-            fill: "rgba(0, 0, 0, 0.1)",
+            fill: "rgba(0, 0, 0, 0.0)",
             ...styles
         };
 
@@ -27,50 +27,31 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(this.styles);
             const pos = mult({ x: width, y: height }, 0.5);
-            const len = 150;
-            ctx.startLine();
-            this.sub(len, pos, 3);
-            ctx.endLine();
+            const len = height;
+            const iters = 6;
+            this.sub(
+                [{ x: 0, y: len }, { x: 0, y: 0 }, { x: len, y: 0 }],
+                iters
+            );
+            this.sub(
+                [{ x: 0, y: len }, { x: len, y: len }, { x: len, y: 0 }],
+                iters
+            );
         });
     }
 
-    sub(len, pos, iters = 1, rot = PI / 2) {
+    sub(pos, iters = 1) {
         const { ctx } = this;
-
-        const points = [];
-        const egdes = [];
-        const r = (len * SQRT_2) / 2;
-        const sides = 4;
-        for (let i = 0; i < sides; i++) {
-            const t = (i / sides) * TWO_PI + rot;
-            const p = {
-                x: r * Math.sin(t - PI / 2) + pos.x,
-                y: r * Math.cos(t - PI / 2) + pos.y
-            };
-
-            const e = {
-                x: r * Math.sin(t + PI / 4) + pos.x,
-                y: r * Math.cos(t + PI / 4) + pos.y
-            };
-            points.push(p);
-            egdes.push(e);
-
-            if (debug) {
-                ctx.setStyles({ stroke: "pink" });
-                ctx.line(pos.x, pos.y, e.x, e.y);
-                ctx.setStyles(this.styles);
-            }
-        }
+        const [p1, p2, p3] = pos;
+        ctx.startLine();
+        pos.forEach(p => ctx.lineVertex(p.x, p.y));
+        ctx.endLine();
 
         if (iters == 1) {
-            points.forEach(p => {
-                ctx.lineVertex(p.x, p.y);
-            });
+            return;
         } else {
-            egdes.forEach((p, i) => {
-                ctx.ellipse(i * 5, i * 5, p.x, p.y);
-                this.sub(len / 2, p, iters - 1, (TWO_PI / 4) * i + rot);
-            });
+            this.sub([p1, midpoint(p1, p3), p2], iters - 1);
+            this.sub([p2, midpoint(p1, p3), p3], iters - 1);
         }
     }
 
