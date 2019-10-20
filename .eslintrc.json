@@ -1,13 +1,15 @@
 {
-  "extends": ["eslint-config-airbnb", "plugin:prettier/recommended", "prettier/react"],
+ "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": [
       "prettier"
   ],
+  "parserOptions": { "ecmaVersion": 10, "sourceType": "module" },
   "rules": {
       "prettier/prettier": "error",
       "no-plusplus": "off"
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true
   }
 }

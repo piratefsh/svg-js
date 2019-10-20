@@ -12,7 +12,6 @@ export default class Drawing {
             },
             styles
         );
-
         // set drawing contesxt
         this.ctx = ctx;
 
