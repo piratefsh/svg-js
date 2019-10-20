@@ -9,8 +9,8 @@ export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
         this.styles = {
-            stroke: "black",
-            strokeWidth: 1,
+            stroke: "hsla(350, 80%, 50%, 0.3)",
+            strokeWidth: 3,
             fill: "rgba(0, 0, 0, 0.0)",
             ...styles
         };
@@ -26,9 +26,8 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            const pos = mult({ x: width, y: height }, 0.5);
             const len = height;
-            const iters = 6;
+            const iters = 8;
             this.sub(
                 [{ x: 0, y: len }, { x: 0, y: 0 }, { x: len, y: 0 }],
                 iters
