@@ -38,7 +38,7 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(styles);
             const seeds = [];
-            let numSeeds = 80;
+            let numSeeds = 70;
             let count = 0;
             while (seeds.length < numSeeds) {
                 count++;
@@ -95,20 +95,21 @@ export default class Drawing {
     }
 
     drawSeed(seed) {
+        const scale = [6, 12, 18]
         const { radius, pos } = seed;
-        const r = radius * 0.6;
-        const numPetals = radius < 7 ? 6 : randomSelect([6, 12, 24])
-        const offsetR = random(0, Math.PI/2);
+        const numPetals = radius < 8 ? scale[2] : randomSelect(scale);
+        const offsetR = random(0, Math.PI);
+        const thickness =
+            numPetals == scale[0]
+                ? randomSelect([1, 2, 3])
+                : numPetals == scale[1]
+                ? randomSelect([1, 2])
+                : 1;
         for (let i = 0; i < numPetals; i++) {
             const theta = offsetR + (i / numPetals) * TWO_PI;
-            const x = r * Math.sin(theta);
-            const y = r * Math.cos(theta);
-            const st = PI / 2 - theta + PI / 3;
-            const et = (PI * 3) / 2 - theta;
-            this.ctx.arc(x + pos.x, y + pos.y, r, r, st, et);
-            const st2 = PI / 2 - theta + PI;
-            const et2 = (PI * 3) / 2 - PI / 3 - theta + PI;
-            this.ctx.arc(x + pos.x, y + pos.y, r, r, st2, et2);
+            const x = radius * Math.sin(theta);
+            const y = radius * Math.cos(theta);
+            this.ctx.thickLine(pos.x, pos.y, pos.x + x, pos.y + y, thickness);
         }
     }
 
@@ -157,23 +158,6 @@ export default class Drawing {
         seed.radius = vel.x;
         seed.growthVel.x += acc.x;
         seed.growthVel.y += acc.y;
-    }
-
-    thiccLine(sx, sy, ex, ey, lineWidth = 1) {
-        lineWidth = Math.trunc(lineWidth);
-        const vec = normalize(rotate({ x: sx - ex, y: sy - ey }, Math.PI / 2));
-        for (let i = 0; i < lineWidth; i++) {
-            const offset = mult(vec, i - Math.floor(lineWidth / 2));
-            const st = translate({ x: sx, y: sy }, offset);
-            const en = translate({ x: ex, y: ey }, offset);
-            this.ctx.line(st.x, st.y, en.x, en.y);
-        }
-    }
-
-    thiccDot(x, y, size) {
-        for (let i = 0; i < size; i++) {
-            this.ctx.ellipse(i, i, x, y);
-        }
     }
 
     save() {
