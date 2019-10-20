@@ -10,16 +10,16 @@ const seed = Math.random();
 
 const makeDrawing = ({ Context, width, height }) => {
     const parent = document.body;
-    parent.innerHTML = '';
+    parent.innerHTML = "";
     const ctx = new Context(parent, width, height);
     const options = {
         ctx,
         width,
         height,
         seed: seed,
-        time: counter,
+        time: counter
     };
-    counter += 0.1
+    counter += 0.1;
     const instance = new Drawing(options);
     instance.draw();
     makeSaveButton({
@@ -33,8 +33,8 @@ const main = () => {
     const height = 500;
 
     const frame = () => {
-        makeDrawing({ Context: SVGContext, width, height });
-        requestAnimationFrame(frame);
+        // makeDrawing({ Context: SVGContext, width, height });
+        // requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
     makeDrawing({ Context: SVGContext, width, height });

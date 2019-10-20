@@ -18,7 +18,7 @@ export default class Drawing {
         this.width = width;
         this.height = height;
         this.lineStep = 5;
-        this.radiusStep = 0.08;
+        this.radiusStep = 0.06;
         this.numLines = this.height / this.lineStep;
         this.seed = seed;
         this.time = time;
