@@ -34,7 +34,7 @@ export default class Drawing {
         });
     }
 
-    sub(len, pos, iters = 1, rot = PI/2) {
+    sub(len, pos, iters = 1, rot = PI / 2) {
         const { ctx } = this;
 
         const points = [];
@@ -44,8 +44,8 @@ export default class Drawing {
         for (let i = 0; i < sides; i++) {
             const t = (i / sides) * TWO_PI + rot;
             const p = {
-                x: r * Math.sin(t - PI/2) + pos.x,
-                y: r * Math.cos(t - PI/2) + pos.y
+                x: r * Math.sin(t - PI / 2) + pos.x,
+                y: r * Math.cos(t - PI / 2) + pos.y
             };
 
             const e = {
@@ -69,7 +69,7 @@ export default class Drawing {
         } else {
             egdes.forEach((p, i) => {
                 ctx.ellipse(i * 5, i * 5, p.x, p.y);
-                this.sub(len / 2, p, iters - 1, rot + (TWO_PI/4) * i);
+                this.sub(len / 2, p, iters - 1, (TWO_PI / 4) * i + rot);
             });
         }
     }
