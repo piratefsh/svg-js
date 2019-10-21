@@ -27,34 +27,42 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(this.styles);
             const len = height;
-            const iters = 8;
+            const iters = 9;
+            const lineWidth = 1;
 
-            ctx.startLine();
-            this.sub(
+            const half1 = this.sub(
                 [{ x: 0, y: len }, { x: 0, y: 0 }, { x: len, y: 0 }],
                 iters
             );
-            this.sub(
+            const half2 = this.sub(
                 [{ x: len, y: 0 }, { x: len, y: len }, { x: 0, y: len }],
                 iters
             );
-            ctx.endLine();
+
+            const points = [...half1, ...half2];
+            points.forEach((p, i) => {
+                const n = points[(i + 1) % points.length];
+                ctx.thickLine(p.x, p.y, n.x, n.y, lineWidth);
+            });
         });
     }
 
     sub(pos, iters = 1) {
-        const { ctx } = this;
         const [p1, p2, p3] = pos;
+        const points = [];
 
         const centroid = triangleCentroid(...pos);
         if (iters == 0) {
-            ctx.lineVertex(centroid.x, centroid.y);
+            points.push(centroid);
+            // ctx.lineVertex(centroid.x, centroid.y);
         } else {
             const sub1 = [p1, midpoint(p1, p3), p2];
             const sub2 = [p2, midpoint(p1, p3), p3];
-            this.sub(sub1, iters - 1);
-            this.sub(sub2, iters - 1);
+            points.push(...this.sub(sub1, iters - 1));
+            points.push(...this.sub(sub2, iters - 1));
         }
+
+        return points;
     }
 
     save() {
