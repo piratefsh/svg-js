@@ -74,6 +74,12 @@ function equiTriangleHeight(len) {
     return Math.sqrt(len * len - Math.pow(len / 2, 2));
 }
 
+export function triangleCentroid(a1, a2, a3) {
+    const x = (a1.x + a2.x + a3.x) / 3;
+    const y = (a1.y + a2.y + a3.y) / 3;
+    return { x, y };
+}
+
 export function midpoint(a, b) {
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 }
