@@ -23,15 +23,23 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            this.curveOfPursuit(6, 6*16, width/2, {
-                x: width/2,
-                y: height/2
+            const sectors = 6;
+            this.curveOfPursuit(sectors, sectors * 16, width, {
+                x: width / 2,
+                y: height / 2
             });
 
-            // this.curveOfPursuit(4, 60, width/2, {
-            //     x: width/2,
-            //     y: height/2
-            // }, -1, 'skyblue');
+            this.curveOfPursuit(
+                sectors,
+                sectors * 16,
+                width,
+                {
+                    x: width / 2,
+                    y: height / 2
+                },
+                -1,
+                "skyblue"
+            );
         });
     }
 
@@ -42,20 +50,24 @@ export default class Drawing {
         size = this.width,
         center = { x: this.width / 2, y: this.height / 2 },
         dir = 1,
-        color = 'deeppink'
+        color = "deeppink"
     ) {
         const { ctx } = this;
-        ctx.setStyles({stroke: color})
+        ctx.setStyles({ stroke: color });
         ctx.ellipse(size, size, center.x, center.y);
         const l = (size * PI) / granularity;
         const dogStep = (2 * PI) / sectors;
         const hareStep = (2 * PI) / granularity;
         for (let b = -PI; b < PI; b += dogStep) {
             let dog = { x: 0, y: 0 };
-            for (let t = (PI * 2) / sectors + b; t > b; t -= hareStep) {
+            for (
+                let t = (PI * 2) / sectors + b * dir;
+                t > b * dir;
+                t -= hareStep
+            ) {
                 const hare = {
-                    x: size/2 * Math.sin(t),
-                    y: size/2 * Math.cos(t)
+                    x: (size / 2) * Math.sin(dir * t),
+                    y: (size / 2) * Math.cos(dir * t)
                 };
                 ctx.line(
                     center.x + dog.x,
