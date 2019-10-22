@@ -25,7 +25,7 @@ export default class Drawing {
             ctx.setStyles({ fill: this.styles.fill, strokeWidth: 0 });
             ctx.rect(width, height, 0, 0);
             ctx.setStyles(this.styles);
-            const iters = 9;
+            const iters = 3;
             this.sierCurve(height - 40, iters, 1, {
                 x: 20,
                 y: 20
