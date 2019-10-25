@@ -24,19 +24,24 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(this.styles);
             const sectors = 6;
-            this.curveOfPursuit(sectors, sectors * 16, width, {
+            const multiplier = 14;
+            const center = {
                 x: width / 2,
                 y: height / 2
-            });
+            };
 
             this.curveOfPursuit(
                 sectors,
-                sectors * 16,
-                width,
-                {
-                    x: width / 2,
-                    y: height / 2
-                },
+                sectors * multiplier,
+                width * 0.75,
+                center
+            );
+
+            this.curveOfPursuit(
+                sectors,
+                sectors * multiplier,
+                width * 0.75,
+                center,
                 -1,
                 "skyblue"
             );
