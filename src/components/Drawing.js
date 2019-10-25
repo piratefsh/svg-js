@@ -1,6 +1,4 @@
-import { translate, midpoint, triangleCentroid } from "../helpers/math";
-
-const PI = Math.PI;
+import { grid2d } from "../helpers/grids";
 
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
@@ -23,72 +21,10 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            const sectors = 6;
-            const multiplier = 14;
-            const center = {
-                x: width / 2,
-                y: height / 2
-            };
-
-            this.curveOfPursuit(
-                sectors,
-                sectors * multiplier,
-                width * 0.75,
-                center
-            );
-
-            this.curveOfPursuit(
-                sectors,
-                sectors * multiplier,
-                width * 0.75,
-                center,
-                -1,
-                "skyblue"
-            );
+            grid2d(20, 20, width, height, (x, y, cx, cy) => {
+                ctx.ellipse(2, 2, x, y)
+            })
         });
-    }
-
-    // from Curve Stitching by Jon Milligan
-    curveOfPursuit(
-        sectors = 3,
-        granularity = 60,
-        size = this.width,
-        center = { x: this.width / 2, y: this.height / 2 },
-        dir = 1,
-        color = "deeppink"
-    ) {
-        const { ctx } = this;
-        ctx.setStyles({ stroke: color });
-        ctx.ellipse(size, size, center.x, center.y);
-        const l = (size * PI) / granularity;
-        const dogStep = (2 * PI) / sectors;
-        const hareStep = (2 * PI) / granularity;
-        for (let b = -PI; b < PI; b += dogStep) {
-            let dog = { x: 0, y: 0 };
-            for (
-                let t = (PI * 2) / sectors + b * dir;
-                t > b * dir;
-                t -= hareStep
-            ) {
-                const hare = {
-                    x: (size / 2) * Math.sin(dir * t),
-                    y: (size / 2) * Math.cos(dir * t)
-                };
-                ctx.line(
-                    center.x + dog.x,
-                    center.y + dog.y,
-                    center.x + hare.x,
-                    center.y + hare.y
-                );
-
-                let h = Math.sqrt(
-                    (hare.x - dog.x) * (hare.x - dog.x) +
-                        (hare.y - dog.y) * (hare.y - dog.y)
-                );
-                dog.x += (l * (hare.x - dog.x)) / h;
-                dog.y += (l * (hare.y - dog.y)) / h;
-            }
-        }
     }
     save() {
         this.ctx.save();
