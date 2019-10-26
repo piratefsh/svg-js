@@ -1,5 +1,5 @@
-const TWO_PI = Math.PI * 2;
-const THIRD_TWO_PI = TWO_PI / 3;
+export const TWO_PI = Math.PI * 2;
+export const THIRD_TWO_PI = TWO_PI / 3;
 
 function random(start, end) {
     return Math.random() * (end - start) + start;
@@ -72,6 +72,13 @@ function chordToRad(len, theta = THIRD_TWO_PI) {
 
 function equiTriangleHeight(len) {
     return Math.sqrt(len * len - Math.pow(len / 2, 2));
+}
+
+export function ellipseCoord(rx, ry, theta){
+    return {
+        x: rx * Math.sin(theta),
+        y: ry * Math.cos(theta)
+    }
 }
 
 export function triangleCentroid(a1, a2, a3) {

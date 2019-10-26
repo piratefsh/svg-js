@@ -1,5 +1,4 @@
-import { grid2d } from "../helpers/grids";
-
+import { TWO_PI, ellipseCoord, translate } from "../helpers/math";
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
         // add defaults
@@ -21,26 +20,29 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            const gutter = 60;
-            const num = 30;
-            ctx.rect(width - 1, height - 1, 1, 1);
-            grid2d(
-                width - gutter,
-                height - gutter,
-                num,
-                1,
-                (x, y, cx, cy, i, j) => {
-                    if (i == 0) {
-                        return;
-                    }
-                    ctx.thickLine(
-                        x + gutter / 2,
-                        y + gutter / 2,
-                        x + gutter / 2,
-                        y + cy + gutter / 2, 2
+            const numRings = 6;
+            const granularity = 30;
+            const size = { x: 40, y: 30 };
+            const vel = {x: 0, y: -1}
+            const rvel = {x: 0.2, y: 0.2}
+            const center = { x: width / 2, y: height-50 };
+            ctx.startLine();
+            for (let j = 0; j < numRings; j++) {
+                for (let i = 0; i < granularity; i++) {
+                    console.log(i);
+                    const theta = (i / granularity) * TWO_PI;
+                    const pos = translate(
+                        ellipseCoord(size.x, size.y, theta),
+                        center
                     );
+                    ctx.lineVertex(pos.x, pos.y);
+                    center.x += vel.x;
+                    center.y += vel.y;
+                    size.x += rvel.x;
+                    size.y += rvel.y;
                 }
-            );
+            }
+            ctx.endLine();
         });
     }
     save() {
