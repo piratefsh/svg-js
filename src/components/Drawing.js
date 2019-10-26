@@ -22,11 +22,25 @@ export default class Drawing {
         ctx.draw(() => {
             ctx.setStyles(this.styles);
             const gutter = 60;
-            const num = 40;
+            const num = 30;
             ctx.rect(width - 1, height - 1, 1, 1);
-            grid2d(width-gutter, height-gutter, num, num, (x, y, cx, cy) => {
-                ctx.ellipse(2, 2, x + cx / 2 + gutter/2, y + cy / 2 + gutter/2);
-            });
+            grid2d(
+                width - gutter,
+                height - gutter,
+                num,
+                1,
+                (x, y, cx, cy, i, j) => {
+                    if (i == 0) {
+                        return;
+                    }
+                    ctx.thickLine(
+                        x + gutter / 2,
+                        y + gutter / 2,
+                        x + gutter / 2,
+                        y + cy + gutter / 2, 2
+                    );
+                }
+            );
         });
     }
     save() {
