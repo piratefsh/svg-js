@@ -25,7 +25,6 @@ export default class Drawing {
     draw() {
         const { ctx, width, height, styles } = this;
         ctx.draw(() => {
-            // ctx.setStyles({ fill: "#eee" });
             ctx.setStyles(this.fillStyle);
             ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
@@ -122,10 +121,6 @@ export default class Drawing {
 
     sqFractal(x, y, size, rounds = 4, rot = 0, depth = 0, tube = false) {
         const { ctx } = this;
-
-        // ctx.setStyles(this.fillStyle);
-        // ctx.crect(size, size, x, y);
-        // ctx.setStyles(this.styles);
 
         if (depth === rounds) {
             return;
