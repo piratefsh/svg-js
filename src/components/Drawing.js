@@ -4,6 +4,7 @@ import {
     translate,
     normalize,
     random,
+    randomSelect,
     rotate,
     mult
 } from "../helpers/math";
@@ -28,50 +29,24 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            const numRings = 9;
-            const granularity = 30;
-            const size = { x: 20, y: 8 };
-            const vel = { x: 0.1, y: -1.4 };
-            const acc = { x: 0, y: 0.001 };
-            const rvel = { x: 0.1, y: 0.03 };
-            const racc = { x: 0.0045, y: 0.003 };
-            const center = { x: width / 2, y: height - 50 };
-            let prevPoint = { x: center.x, y: center.y + 50 };
+            const len = 20;
+            const numStrokes = 1400;
+            for (let i = 0; i < numStrokes; i++) {
+                const s = {
+                    x: random(0, width),
+                    y: random(0, height)
+                };
+                const e = translate(s, {
+                    x: randomSelect([0, -len, len]),
+                    y: randomSelect([-len, 0, len])
+                });
 
-            for (let j = 0; j < numRings; j++) {
-                for (let i = 0; i < granularity; i++) {
-                    const jitter = random(-0.05, 0.05);
-                    const theta = (i / granularity) * TWO_PI + jitter;
-
-                    const p = ellipseCoord(size.x, size.y, theta);
-                    const pos = translate(p, center);
-
-                    const perp = translate(
-                        mult(normalize(p), (j / numRings) * 20),
-                        pos
-                    );
-                    const thickness = (j / numRings) * 3 + 2;
-                    ctx.thickLine(pos.x, pos.y, perp.x, perp.y, 2);
-                    ctx.thickLine(prevPoint.x, prevPoint.y, pos.x, pos.y, 2);
-                    ctx.thickDot(
-                        perp.x,
-                        perp.y,
-                        thickness,
-                        thickness,
-                        thickness
-                    );
-                    center.x += vel.x;
-                    center.y += vel.y;
-                    size.x += rvel.x;
-                    size.y += rvel.y;
-
-                    rvel.x += racc.x;
-                    rvel.y += racc.y;
-                    vel.x += acc.x;
-                    vel.y += acc.y;
-
-                    prevPoint = pos;
+                if(s.x < 0 || s.x > width || s.y < 0 || s.y > height ||
+                    e.x < 0 || e.x > width || e.y < 0 || e.y > height){
+                    continue
                 }
+
+                ctx.thickLine(s.x, s.y, e.x, e.y, 1);
             }
         });
     }
