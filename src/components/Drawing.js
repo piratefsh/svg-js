@@ -29,25 +29,56 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
+            const thickness = 23;
             const len = 20;
-            const numStrokes = 1400;
+            const numStrokes = 11;
+            const r = height / numStrokes;
+            let s;
+            let e;
             for (let i = 0; i < numStrokes; i++) {
-                const s = {
-                    x: random(0, width),
-                    y: random(0, height)
+                const h = (i / numStrokes) * height;
+                s = {
+                    x: r,
+                    y: h
                 };
-                const e = translate(s, {
-                    x: randomSelect([0, -len, len]),
-                    y: randomSelect([-len, 0, len])
-                });
+                e = {
+                    x: width - r,
+                    y: h
+                };
 
-                if(s.x < 0 || s.x > width || s.y < 0 || s.y > height ||
-                    e.x < 0 || e.x > width || e.y < 0 || e.y > height){
-                    continue
+                ctx.thickLine(s.x, s.y, e.x, e.y, thickness);
+
+                if (i == 0) {
+                    ctx.thickLine(s.x, s.y, s.x - r / 2, s.y, thickness);
+                } else if (i % 2 == 0) {
+                    ctx.thickArc(
+                        s.x,
+                        s.y - r / 2,
+                        r / 2,
+                        r / 2,
+                        Math.PI * 0.5,
+                        -Math.PI * 0.5,
+                        thickness
+                    );
+                } else {
+                    ctx.thickArc(
+                        e.x,
+                        e.y - r / 2,
+                        r / 2,
+                        r / 2,
+                        -Math.PI * 0.5,
+                        Math.PI * 0.5,
+                        thickness
+                    );
                 }
-
-                ctx.thickLine(s.x, s.y, e.x, e.y, 1);
             }
+            ctx.thickLine(
+                s.x + width - r*2,
+                s.y,
+                s.x + width - r - r / 2,
+                s.y,
+                thickness
+            );
         });
     }
     save() {

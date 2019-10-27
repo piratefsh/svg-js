@@ -99,6 +99,12 @@ export default class ContextInterface {
             this.ellipse(i, i, x, y);
         }
     }
+
+    thickArc(x, y, rx, ry, s, e, size = 1) {
+        for (let i = 0; i < size; i++) {
+            this.arc(x, y, rx-size/2 + i, ry-size/2 + i, s, e);
+        }
+    }
 }
 
 ContextInterface.COUNTER = 0;
