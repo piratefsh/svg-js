@@ -1,4 +1,4 @@
-import { rotate, translate } from "../helpers/math";
+import { rotate } from "../helpers/math";
 
 export default class Drawing {
     constructor({ styles, ctx, width, height }) {
@@ -29,7 +29,7 @@ export default class Drawing {
             ctx.setStyles(this.fillStyle);
             ctx.rect(width, height, 0, 0);
             ctx.setStyles(styles);
-            this.sqFractal(width / 2, height / 2, width - width / 2);
+            this.sqFractal(width / 2, height / 2, width - width / 2, 3);
         });
     }
 
@@ -120,7 +120,7 @@ export default class Drawing {
         ];
     }
 
-    sqFractal(x, y, size, rot = 0, depth = 0, tube = false, rounds = 5) {
+    sqFractal(x, y, size, rounds = 4, rot = 0, depth = 0, tube = false) {
         const { ctx } = this;
 
         // ctx.setStyles(this.fillStyle);
@@ -169,10 +169,10 @@ export default class Drawing {
                 sx,
                 sy,
                 s,
+                rounds,
                 rot + (Math.PI / 2) * (i + 3),
                 depth + 1,
-                (i === 3 || (i === 1 && tube)) && depth > 0,
-                rounds
+                (i === 3 || (i === 1 && tube)) && depth > 0
             );
         });
     }
