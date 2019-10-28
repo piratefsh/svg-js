@@ -6,7 +6,7 @@ export default class Drawing {
         this.styles = {
             stroke: "black",
             strokeWidth: 1,
-            fill: "rgba(0, 0, 0, 0.1)",
+            fill: "rgba(0, 0, 0, 0)",
             ...styles
         };
 
@@ -16,17 +16,12 @@ export default class Drawing {
         this.width = width;
         this.height = height;
 
-        this.fillStyle = {
-            fill: "hsla(200, 50%, 10%, 1)",
-            strokeWidth: 0
-        };
     }
 
     draw() {
         const { ctx, width, height, styles } = this;
         ctx.draw(() => {
-            ctx.setStyles(this.fillStyle);
-            ctx.rect(width, height, 0, 0);
+            ctx.setStyles(this.styles);
             ctx.setStyles(styles);
             this.sqFractal(width / 2, height / 2, width - width / 2, 3);
         });
@@ -128,7 +123,6 @@ export default class Drawing {
 
         // draw sq for each corner
         const s = size / 2;
-        ctx.setStyles({ strokeWidth: rounds - depth });
 
         for (let i = 0; i < 4; i += 1) {
             const theta = rot + (Math.PI / 2) * (i + 1);
@@ -139,16 +133,15 @@ export default class Drawing {
                 line = Drawing.sqCornerPoints(x, y, size / 2);
             }
 
-            ctx.startLine();
-            line.forEach(pos => {
+            line.forEach((pos, i) => {
+                if (pos.move) return;
                 const p = rotate(pos, theta, { x, y });
-                if (pos.move) {
-                    ctx.lineMove(p.x, p.y);
-                } else {
-                    ctx.lineVertex(p.x, p.y);
+                const prev = line[i - 1];
+                if (prev) {
+                    const pr = rotate(prev, theta, { x, y });
+                    ctx.thickLine(pr.x, pr.y, p.x, p.y, rounds - depth);
                 }
             });
-            ctx.endLine();
         }
 
         const shift = size / 2;

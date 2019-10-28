@@ -10,12 +10,7 @@ const makeDrawing = ({ Context, width, height }) => {
     const options = {
         ctx,
         width,
-        height,
-        styles: {
-            strokeWidth: 1,
-            stroke: "hsla(200, 0%, 90%, 0.6)",
-            fill: "none"
-        }
+        height
     };
     const instance = new Drawing(options);
     instance.draw();
@@ -26,8 +21,8 @@ const makeDrawing = ({ Context, width, height }) => {
     });
 };
 const main = () => {
-    const width = 300;
-    const height = 300;
+    const width = 400;
+    const height = 400;
 
     // makeDrawing({ Context: P5Context, width, height });
     makeDrawing({ Context: SVGContext, width, height });
