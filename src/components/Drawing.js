@@ -29,16 +29,28 @@ export default class Drawing {
         const { ctx, width, height } = this;
         ctx.draw(() => {
             ctx.setStyles(this.styles);
-            const thickness = 25;
-            const numStrokes = 9;
-            this.squiggle({x: 0, y: 0}, {x: width, y: height},thickness, numStrokes, 'hsla(200, 50%, 50%, 0.5)');
-            this.squiggle({x: width/4, y: height/4}, {x: width, y: height},thickness, numStrokes, 'hsla(360, 50%, 50%, 0.5)');
+            const thickness = 17;
+            const numStrokes = 7;
+            this.squiggle(
+                { x: 0, y: 0 },
+                { x: width * 0.6, y: height * 0.75 },
+                thickness,
+                numStrokes,
+                "hsla(360, 50%, 50%, 0.5)"
+            );
+            this.squiggle(
+                { x: width * 0.15, y: height * 0.11 },
+                { x: width * 0.6, y: height * 0.75 },
+                thickness,
+                numStrokes,
+                "hsla(360, 50%, 50%, 0.5)"
+            );
         });
     }
 
     squiggle(pos, size, thickness, numStrokes, color) {
         const { ctx, width, height } = this;
-        ctx.setStyles({stroke: color})
+        ctx.setStyles({ stroke: color });
 
         const r = size.y / numStrokes;
         let s;

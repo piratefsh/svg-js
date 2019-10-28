@@ -101,8 +101,9 @@ export default class ContextInterface {
     }
 
     thickArc(x, y, rx, ry, s, e, size = 1) {
+        const rad = Math.floor(size / 2);
         for (let i = 0; i < size; i++) {
-            this.arc(x, y, rx-size/2 + i, ry-size/2 + i, s, e);
+            this.arc(x, y, rx - rad + i, ry - rad + i, s, e);
         }
     }
 }
