@@ -42,7 +42,7 @@ export default class Drawing {
             this.squiggle(
                 { x: thickness / 2, y: height * 0.11 },
                 { x: width * 0.6, y: height * 0.75 },
-                thickness: thickness - 0,
+                thickness,
                 numStrokes,
                 "hsla(200, 50%, 50%, 0.5)",
                 1
