@@ -105,10 +105,9 @@ export default class Drawing {
                 iters
             });
         } else {
-            const childRad = radius / Math.sqrt(3)
+            const childRad = radius / Math.sqrt(3);
             for (let i = 0; i < 6; i++) {
                 const theta = offsetRot + (i * Math.PI) / 3;
-                // unsure why minus 1 here, might be something to do with line calcs
                 const spoke = radius;
                 const pos = translate(
                     {
