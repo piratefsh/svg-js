@@ -14,6 +14,7 @@ import { grid2d } from "../helpers/grids";
 const debug = false;
 
 const DRAW_BG = true;
+const ALLOW_OVERLAP = true;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
@@ -24,7 +25,7 @@ export default class Drawing {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.8)",
+                stroke: "hsla(340, 100%, 50%, 0.4)",
                 strokeWidth: 2,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
@@ -43,16 +44,19 @@ export default class Drawing {
     draw() {
         const { ctx, styles, width, height } = this;
         ctx.draw(() => {
-            if(DRAW_BG){
-                ctx.setStyles({ strokeWidth: 0, fill: "hsla(350, 50%, 10%, 1)" });
+            if (DRAW_BG) {
+                ctx.setStyles({
+                    strokeWidth: 0,
+                    fill: "hsla(350, 50%, 10%, )"
+                });
                 ctx.rect(width, height, 0, 0);
             }
             ctx.setStyles(styles);
             this.kochTessel2(
                 { x: width / 2, y: height / 2 },
-                chordToRad(width/3, THIRD_TWO_PI),
+                chordToRad(width / 3, THIRD_TWO_PI),
                 3,
-                2
+                3
             );
         });
     }
@@ -82,13 +86,7 @@ export default class Drawing {
         }
     }
 
-    kochTessel2(
-        center,
-        radius,
-        depth = 1,
-        iters = 1,
-        offsetRot = Math.PI / 6
-    ) {
+    kochTessel2(center, radius, depth = 1, iters = 1, offsetRot = Math.PI / 6) {
         if (debug) {
             this.ctx.ellipse(2, 2, center.x, center.y);
             this.ctx.ellipse(radius * 2, radius * 2, center.x, center.y);
@@ -128,33 +126,38 @@ export default class Drawing {
         }
     }
 
-    getCacheId(center){
+    getCacheId(center) {
         return `${Math.round(center.x)},${Math.round(center.y)}`;
-
     }
-    inCache(center, err = 1){
-        const id = this.getCacheId(center)
+
+    inCache(center, err = 1) {
+        // skip caching for overlap effect
+        if (ALLOW_OVERLAP) return false;
+
+        const id = this.getCacheId(center);
         const possNeibs = [
             center,
-            translate(center, {x: 1, y: 0}),
-            translate(center, {x: -1, y: 0}),
-            translate(center, {x: 0, y: 1}),
-            translate(center, {x: 0, y: -1}),
-            translate(center, {x: 1, y: 1}),
-            translate(center, {x: 1, y: -1}),
-            translate(center, {x: -1, y: -1}),
-            translate(center, {x: -1, y: 1}),
-        ]
-        return possNeibs.filter((neib) => this.cache.has(this.getCacheId(neib))).length > 0
+            translate(center, { x: 1, y: 0 }),
+            translate(center, { x: -1, y: 0 }),
+            translate(center, { x: 0, y: 1 }),
+            translate(center, { x: 0, y: -1 }),
+            translate(center, { x: 1, y: 1 }),
+            translate(center, { x: 1, y: -1 }),
+            translate(center, { x: -1, y: -1 }),
+            translate(center, { x: -1, y: 1 })
+        ];
+        return (
+            possNeibs.filter(neib => this.cache.has(this.getCacheId(neib)))
+                .length > 0
+        );
     }
 
-
     kochSnowflake({ center, radius, offsetRot, iters, lineWidth = 1 }) {
-        if(this.inCache(center)){
-            return
-        } else { 
-            this.cache.add(this.getCacheId(center))
+        if (this.inCache(center)) {
+            return;
         }
+        this.cache.add(this.getCacheId(center));
+
         const points = [];
         const num = 3;
         for (let i = 0; i < num; i++) {
