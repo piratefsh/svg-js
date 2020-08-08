@@ -13,7 +13,7 @@ import { grid2d } from "../helpers/grids";
 
 const debug = false;
 
-const DRAW_BG = false;
+const DRAW_BG = true;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
@@ -25,7 +25,7 @@ export default class Drawing {
         this.styles = Object.assign(
             {
                 stroke: "hsla(340, 100%, 50%, 0.8)",
-                strokeWidth: 1,
+                strokeWidth: 2,
                 fill: "rgba(0, 0, 0, 0.0)"
             },
             styles
@@ -52,7 +52,7 @@ export default class Drawing {
                 { x: width / 2, y: height / 2 },
                 chordToRad(width/3, THIRD_TWO_PI),
                 3,
-                3
+                2
             );
         });
     }
@@ -105,11 +105,11 @@ export default class Drawing {
                 iters
             });
         } else {
-            const childRad = radius * (2 - ROOT_2);
+            const childRad = radius / Math.sqrt(3)
             for (let i = 0; i < 6; i++) {
                 const theta = offsetRot + (i * Math.PI) / 3;
                 // unsure why minus 1 here, might be something to do with line calcs
-                const spoke = radius - 1.4;
+                const spoke = radius;
                 const pos = translate(
                     {
                         x: spoke * Math.sin(theta),
