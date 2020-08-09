@@ -3,12 +3,12 @@ import { translate, midpoint, triangleCentroid } from "../helpers/math";
 const PI = Math.PI;
 
 export default class Drawing {
-    constructor({ styles, ctx, width, height }) {
+    constructor({ styles, ctx, width, height, iters=3, bgColor, strokeColor, strokeWidth=2 }) {
         // add defaults
         this.styles = {
-            stroke: "hsla(355, 90%, 70%, 0.7)",
-            strokeWidth: 3,
-            fill: "hsla(355, 90%, 10%, 1)",
+            stroke: strokeColor || "white",
+            strokeWidth: strokeWidth,
+            fill: bgColor || "rebeccapurple",
             ...styles
         };
 
@@ -17,6 +17,8 @@ export default class Drawing {
 
         this.width = width;
         this.height = height;
+
+        this.iters = iters;
     }
 
     draw() {
@@ -25,8 +27,7 @@ export default class Drawing {
             ctx.setStyles({ fill: this.styles.fill, strokeWidth: 0 });
             ctx.rect(width, height, 0, 0);
             ctx.setStyles(this.styles);
-            const iters = 3;
-            this.sierCurve(height - 40, iters, 1, {
+            this.sierCurve(height - 40, this.iters, 1, {
                 x: 20,
                 y: 20
             });
@@ -49,10 +50,11 @@ export default class Drawing {
 
         //combine points and draw
         const points = [...half1, ...half2];
-        points.forEach((p, i) => {
-            const n = points[(i + 1) % points.length];
-            this.ctx.thickLine(p.x, p.y, n.x, n.y, lineWidth);
+        this.ctx.startLine();
+        [...points, points[0]].forEach((p, i) => {
+            this.ctx.lineVertex(p.x, p.y);
         });
+        this.ctx.endLine();
     }
 
     // as described in https://www.youtube.com/watch?v=Ps9itT9KcdM

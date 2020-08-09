@@ -6,7 +6,15 @@
     <title>svg-js</title>
 </head>
 <body>
-  <h1>Hello world</h1>
-    <div id="my-drawing"></div>
+  <h1>Sierpinski's curve</h1>
+  <div class="control-row">
+    <label>iterations (max 12)</label><input value="1" min="1" max="12" id="iters-input" type="number"/>
+    <button id="save-btn">Download SVG</button>
+  </div>
+  <div class="control-row">
+    <label>stroke color</label><input type="color" value="#7980ff" id="strokeColor-input"/>
+    <label>background color</label><input type="color" value="#ffffff" id="bgColor-input"/>
+    <label>stroke width</label><input type="number" value="2" min="1" max="40" id="strokeWidth-input"/>
+  </div>
 </body>
 </html>

@@ -4,7 +4,9 @@
     border: 1px solid #ddd;
 }
 
-div{
-  display: inline-block;
-  border: 1px solid #ccc;
+.control-row {
+  margin: 16px 0px;
+  input, label {
+    margin-right: 8px;
+  }
 }
