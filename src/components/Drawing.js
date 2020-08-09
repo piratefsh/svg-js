@@ -99,7 +99,7 @@ export default class Drawing {
             this.kochSnowflake({
                 center,
                 radius: equiTriangleHeight(radius),
-                offsetRot: offsetRot + Math.PI / 6,
+                offsetRot: Math.PI / 6,
                 iters
             });
         } else {
