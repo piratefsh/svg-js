@@ -25,8 +25,8 @@ const makeDrawing = ({ Context, width, height, ...others }) => {
 
 };
 const main = () => {
-    const width = 800;
-    const height = 800;
+    const width = 640;
+    const height = 640;
 
     // makeDrawing({ Context: P5Context, width, height });
     makeDrawing({ Context: SVGContext, width, height });
@@ -45,8 +45,10 @@ const main = () => {
         input.addEventListener('change', (e) => {
             const iters = e.target.value;
             //remove old drawing if exists
-            const old = document.querySelector('.container')
-            if(old) old.remove();
+            const old = document.querySelectorAll('.container')
+            if(old) {
+                old.forEach(o => o.remove());
+            }
 
             // indicate wait
             document.querySelector('.loading').classList.add('show');
