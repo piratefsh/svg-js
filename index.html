@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>svg-js</title>
+    <title>Koch snowflake tessellation</title>
 </head>
 <body>
-  <h1>Hello world</h1>
-    <div id="my-drawing"></div>
+  <h1>Koch snowflake tessellation</h1>
+  <div class="control-row">
+    <label>tessellation iterations (max 5)</label><input value="3" min="1" max="5" id="iters-input" type="number"/>
+  </div>
+  <div class="control-row">
+    <label>snowflake iterations (max 3)</label><input value="2" min="1" max="3" id="snowflake-iters-input" type="number"/>
+  </div>
+  <div class="control-row">
+    <label>allow overlap? this might take longer to draw.</label><input type="checkbox" id="overlap-input"/>
+    <label>stroke color</label><input type="text" value="hsla(340, 100%, 50%, 1)" id="strokeColor-input"/>
+    <label>background color</label><input type="text" value="hsla(350, 50%, 10%, 1)" id="bgColor-input"/>
+    <label>stroke width</label><input type="number" value="" min="1" max="40" id="strokeWidth-input"/>
+  </div>
+  <div class="control-row">
+    <button id="save-btn">Download SVG</button>
+    <span class="loading">drawing...</span>
+  </div>
+  <p>please credit any use to <a href="https://piratefsh.github.io">piratefsh</a></p>
 </body>
 </html>

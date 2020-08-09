@@ -14,31 +14,33 @@ import { grid2d } from "../helpers/grids";
 const debug = false;
 
 const DRAW_BG = true;
-const ALLOW_OVERLAP = true;
 const PI = Math.PI;
 const TWO_PI = 2 * PI;
 const THIRD_TWO_PI = TWO_PI / 3;
 const ROOT_2 = Math.sqrt(2);
 
 export default class Drawing {
-    constructor({ styles, ctx, width, height }) {
+    constructor({ styles, ctx, width, height, iters, snowflakeIters, strokeColor, strokeWidth=2, bgColor, canOverlap=false }) {
         // add defaults
         this.styles = Object.assign(
             {
-                stroke: "hsla(340, 100%, 50%, 0.4)",
-                strokeWidth: 2,
-                fill: "rgba(0, 0, 0, 0.0)"
+                stroke: strokeColor || "hsla(340, 100%, 50%, 0.4)",
+                strokeWidth: strokeWidth
             },
             styles
         );
 
-        // set drawing contesxt
-        this.ctx = ctx;
-
-        this.width = width;
-        this.height = height;
-
         this.cache = new Set();
+
+        Object.assign(this, {
+            ctx,
+            width,
+            height,
+            iters,
+            bgColor,
+            snowflakeIters,
+            canOverlap
+        })
     }
 
     draw() {
@@ -47,7 +49,7 @@ export default class Drawing {
             if (DRAW_BG) {
                 ctx.setStyles({
                     strokeWidth: 0,
-                    fill: "hsla(350, 50%, 10%, )"
+                    fill: this.bgColor
                 });
                 ctx.rect(width, height, 0, 0);
             }
@@ -55,8 +57,8 @@ export default class Drawing {
             this.kochTessel2(
                 { x: width / 2, y: height / 2 },
                 chordToRad(width / 3, THIRD_TWO_PI),
-                3,
-                3
+                this.iters,
+                this.snowflakeIters,
             );
         });
     }
@@ -99,7 +101,7 @@ export default class Drawing {
             this.kochSnowflake({
                 center,
                 radius: equiTriangleHeight(radius),
-                offsetRot: Math.PI / 6,
+                offsetRot: offsetRot + Math.PI / 6,
                 iters
             });
         } else {
@@ -132,7 +134,7 @@ export default class Drawing {
 
     inCache(center, err = 1) {
         // skip caching for overlap effect
-        if (ALLOW_OVERLAP) return false;
+        if (this.canOverlap) return false;
 
         const id = this.getCacheId(center);
         const possNeibs = [

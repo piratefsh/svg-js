@@ -13,6 +13,7 @@ const makeSaveButton = ({ label, fn, element }) => {
 const makeContextContainer = (id = "drawing") => {
     const node = document.createElement("div");
     node.id = id;
+    node.classList.add('container');
     document.body.appendChild(node);
 
     return node;
