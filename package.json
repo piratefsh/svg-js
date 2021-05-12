@@ -22,7 +22,7 @@
     "homepage": "",
     "dependencies": {
         "core-js": "3",
-        "mathjs": "^5.1.1",
+        "mathjs": "^7.5.1",
         "normalize.css": "^8.0.0",
         "p5": "^0.7.2",
         "svg.js": "^2.7.1"
