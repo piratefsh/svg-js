@@ -31,7 +31,7 @@
         "@babel/core": "^7.6.4",
         "@babel/plugin-transform-destructuring": "^7.6.0",
         "@babel/preset-env": "^7.6.3",
-        "ajv": "^6.3.0",
+        "ajv": "^6.12.3",
         "babel-loader": "^8.0.6",
         "clean-webpack-plugin": "^0.1.19",
         "css-loader": "^0.28.11",
